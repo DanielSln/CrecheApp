@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -26,7 +26,7 @@ import { Router } from '@angular/router';
     HttpClientModule
   ],
 })
-export class LoginProfessorPage implements OnInit {
+export class LoginProfessorPage implements OnInit, OnDestroy {
   nome: string = '';
   id: string = '';
   senha: string = '';
@@ -38,7 +38,22 @@ export class LoginProfessorPage implements OnInit {
     private alertController: AlertController
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    // Remove tabindex quando a página está ativa
+    this.setTabIndex('0');
+  }
+
+  ngOnDestroy() {
+    // Define tabindex como -1 quando sair da página
+    this.setTabIndex('-1');
+  }
+
+  private setTabIndex(value: string) {
+    const focusableElements = document.querySelectorAll('#nome, #id, #senha, #aceitar, #aluno-page');
+    focusableElements.forEach(element => {
+      (element as HTMLElement).setAttribute('tabindex', value);
+    });
+  }
 
   irParaLoginAluno() {
     this.router.navigateByUrl('/login-aluno');
