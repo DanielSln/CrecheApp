@@ -40,7 +40,9 @@ export class FilhoPage implements OnInit {
 
   carregarDados() {
     this.nome = localStorage.getItem('userName') || 'Não informado';
-    this.matricula = localStorage.getItem('userEmail') || 'Não informado';
+    const matriculaCompleta = localStorage.getItem('userEmail') || 'Não informado';
+    // Extrai apenas o número da matrícula
+    this.matricula = matriculaCompleta.includes(':') ? matriculaCompleta.split(':')[1].trim() : matriculaCompleta;
     // Adicione outras informações conforme necessário
   }
 
