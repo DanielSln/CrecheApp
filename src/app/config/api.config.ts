@@ -1,6 +1,5 @@
 export const API_CONFIG = {
-  // Substitua pela URL do seu deploy no Vercel
-  BASE_URL: 'https://seu-projeto.vercel.app',
+  BASE_URL: 'https://api-cadastro-six.vercel.app',
   
   ENDPOINTS: {
     LOGIN_ALUNO: '/login/aluno',

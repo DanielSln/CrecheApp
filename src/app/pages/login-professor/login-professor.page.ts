@@ -50,17 +50,9 @@ export class LoginProfessorPage implements OnInit {
       return;
     }
 
-    // MODO TESTE - Remove quando o backend estiver funcionando
-    localStorage.setItem('userType', 'docente');
-    localStorage.setItem('userName', this.nome);
-    localStorage.setItem('userEmail', 'Cargo: Docente');
-    await this.mostrarAlerta('Sucesso', 'Login realizado com sucesso! (Modo teste)');
-    this.router.navigateByUrl('/menu-docente');
-    return;
-
-    /* CÓDIGO ORIGINAL - Descomente quando o backend funcionar
     this.isLoading = true;
-    this.http.post('http://127.0.0.1:3000/login/docente', {
+    
+    this.http.post('https://api-cadastro-six.vercel.app/login/docente', {
       identificador: this.id,
       senha: this.senha
     }).subscribe({
@@ -79,10 +71,10 @@ export class LoginProfessorPage implements OnInit {
       },
       error: async (error: any) => {
         this.isLoading = false;
+        console.error('Erro na requisição:', error);
         await this.mostrarAlerta('Erro', 'Erro ao conectar com o servidor!');
       }
     });
-    */
   }
 
   private async mostrarAlerta(titulo: string, mensagem: string) {

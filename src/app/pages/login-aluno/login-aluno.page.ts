@@ -54,15 +54,9 @@ export class LoginAlunoPage implements OnInit {
       return;
     }
 
-    // Temporário: pular verificação do servidor
-    localStorage.setItem('userType', 'aluno');
-    localStorage.setItem('userName', this.nome);
-    localStorage.setItem('userEmail', 'Matrícula: ' + this.matricula);
-    this.router.navigateByUrl('/termos');
-
-    /* Descomente quando o servidor estiver rodando:
     this.isLoading = true;
-    this.http.post('http://127.0.0.1:3000/login/aluno', {
+    
+    this.http.post('https://api-cadastro-six.vercel.app/login/aluno', {
       matricula: this.matricula,
       cpf: this.cpf
     }).subscribe({
@@ -81,10 +75,10 @@ export class LoginAlunoPage implements OnInit {
       },
       error: async (error: any) => {
         this.isLoading = false;
+        console.error('Erro na requisição:', error);
         await this.mostrarAlerta('Erro', 'Erro ao conectar com o servidor!');
       }
     });
-    */
   }
 
   private async mostrarAlerta(titulo: string, mensagem: string) {
