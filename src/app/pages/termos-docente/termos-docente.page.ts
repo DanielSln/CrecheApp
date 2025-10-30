@@ -12,7 +12,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-termos',
+  selector: 'app-termos-docente',
   templateUrl: 'termos-docente.page.html',
   styleUrls: ['termos-docente.page.scss'],
   imports: [
