@@ -49,7 +49,7 @@ export class LoginProfessorPage implements OnInit, OnDestroy {
   }
 
   private setTabIndex(value: string) {
-    const focusableElements = document.querySelectorAll('#nome, #id, #senha, #aceitar, #aluno-page');
+    const focusableElements = document.querySelectorAll('#nome-professor, #id-professor, #senha-professor, #aceitar, #aluno-page');
     focusableElements.forEach(element => {
       (element as HTMLElement).setAttribute('tabindex', value);
     });
