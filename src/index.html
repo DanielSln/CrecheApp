@@ -22,6 +22,17 @@
 
 <body>
   <app-root></app-root>
+  <script>
+    // Suprime warnings de acessibilidade do Angular/Ionic em desenvolvimento
+    const originalConsoleWarn = console.warn;
+    console.warn = function(...args) {
+      const message = args.join(' ');
+      if (message.includes('aria-hidden') || message.includes('NG0912')) {
+        return; // Suprime estes warnings específicos
+      }
+      originalConsoleWarn.apply(console, args);
+    };
+  </script>
 </body>
 
 </html>

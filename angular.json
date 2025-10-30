@@ -65,7 +65,9 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true
+              "namedChunks": true,
+              "vendorChunk": true,
+              "buildOptimizer": false
             },
             "ci": {
               "progress": false
