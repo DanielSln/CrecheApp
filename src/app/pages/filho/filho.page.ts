@@ -31,8 +31,6 @@ export class FilhoPage implements OnInit {
   nome: string = '';
   matricula: string = '';
   escola: string = 'SENAC';
-  idade: string = '';
-  serie: string = '';
 
   constructor(private router: Router) {}
 
