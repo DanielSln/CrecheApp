@@ -10,6 +10,7 @@ import {
   IonMenuButton,
   IonButton,
   IonIcon,
+  IonBackButton,
 } from '@ionic/angular/standalone';
 import { pencil } from 'ionicons/icons';
 
@@ -28,6 +29,7 @@ import { pencil } from 'ionicons/icons';
     IonIcon,
     CommonModule,
     FormsModule,
+    IonBackButton,
   ],
 })
 export class ComunicadosDocentePage implements OnInit {
