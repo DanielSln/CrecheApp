@@ -51,21 +51,18 @@ export class LoginProfessorPage implements OnInit {
     }
 
     this.isLoading = true;
-    alert('Tentando conectar ao servidor em http://127.0.0.1:3000');
-
-    this.http.post('http://127.0.0.1:3000/login/docente', {
+    
+    this.http.post('https://api-cadastro-six.vercel.app/login/docente', {
       identificador: this.id,
       senha: this.senha
     }).subscribe({
       next: async (response: any) => {
         this.isLoading = false;
-
         if (response.success && response.user) {
           localStorage.setItem('userType', 'docente');
           localStorage.setItem('userName', response.user.nome);
           localStorage.setItem('userEmail', 'Cargo: Docente');
           localStorage.setItem('userToken', response.token || '');
-
           await this.mostrarAlerta('Sucesso', 'Login realizado com sucesso!');
           this.router.navigateByUrl('/menu-docente');
         } else {
@@ -74,7 +71,6 @@ export class LoginProfessorPage implements OnInit {
       },
       error: async (error: any) => {
         this.isLoading = false;
-        alert('Erro na requisição: ' + JSON.stringify(error.message));
         console.error('Erro na requisição:', error);
         await this.mostrarAlerta('Erro', 'Erro ao conectar com o servidor!');
       }
