@@ -11,9 +11,9 @@
 
       <!-- Botões de seleção -->
       <div class="balao-topo">
-        <button 
-          type="button" 
-          class="botao-Aluno" 
+        <button
+          type="button"
+          class="botao-Aluno"
           id="aluno-page"
           (click)="irParaLoginAluno()"
         >
@@ -21,9 +21,9 @@
         </button>
 
         <button
-          type="button" 
-          class="botao-Professor" 
-          id="professor-page" 
+          type="button"
+          class="botao-Professor"
+          id="professor-page"
           (click)="irParaLoginProfessor()"
         >
           Docente
@@ -33,40 +33,38 @@
       <!-- Formulário -->
       <div class="balao-interno">
         <form>
-          <input 
-            type="text" 
-            id="nome-aluno" 
-            name="nome" 
+          <input
+            type="text"
+            id="nome-aluno"
+            name="nome"
             placeholder="Nome"
             [(ngModel)]="nome"
           />
-          <input 
-            type="text" 
-            id="cpf-aluno" 
-            name="cpf" 
-            placeholder="CPF" 
+          <input
+            type="text"
+            id="cpf-aluno"
+            name="cpf"
+            placeholder="CPF"
             [(ngModel)]="cpf"
           />
-          <input 
-            type="text" 
-            id="matricula-aluno" 
-            name="matricula" 
-            placeholder="Nº Matrícula" 
+          <input
+            type="text"
+            id="matricula-aluno"
+            name="matricula"
+            placeholder="Nº Matrícula"
             [(ngModel)]="matricula"
           />
 
           <button
-            type="button" 
-            class="btn-submit" 
+            type="button"
+            class="btn-submit"
             expand="block"
             (click)="irParaTermos()"
             [disabled]="isLoading"
           >
             {{ isLoading ? 'Carregando...' : 'Logar' }}
           </button>
-          <li>
-            <a href="">Cadastre seu filho</a>
-          </li>
+          <a href="">Cadastre seu filho</a>
         </form>
       </div>
     </div>
