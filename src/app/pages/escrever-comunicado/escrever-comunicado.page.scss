@@ -1,11 +1,10 @@
 .compose-toolbar {
-  --background: #202124;
-  --color: #ffffff;
+  --background: #c4680b;
+  --color: #000000;
 }
 
 ion-content.compose-content {
-  --background: #202124;
-  color: #ffffff;
+  --background: #f6d0a7;
   font-family: Roboto, sans-serif;
 }
 
@@ -23,46 +22,46 @@ ion-content.compose-content {
 }
 
 .compose-label {
-  color: #9aa0a6;
+  color: #000;
   font-size: 14px;
   margin-right: 8px;
 }
 
 .compose-value {
   flex: 1;
-  color: #e8eaed;
+  color: #000;
   font-size: 14px;
 }
 
 .compose-input {
   flex: 1;
-  color: #e8eaed;
-  --placeholder-color: #9aa0a6;
+  color: #000;
+  --placeholder-color: #000;
   font-size: 14px;
 }
 
 .compose-subject {
-  color: #e8eaed;
+  color: #000;
   font-size: 15px;
   margin-top: 4px;
-  --placeholder-color: #9aa0a6;
+  --placeholder-color: #000;
 }
 
 .compose-textarea {
   margin-top: 12px;
-  color: #ffffff;
+  color: #000;
   font-size: 15px;
-  --placeholder-color: #9aa0a6;
+  --placeholder-color: #000;
 }
 
 ion-icon {
-  color: #9aa0a6;
+  color: #000;
   font-size: 18px;
   margin-left: 6px;
 }
 
 .divider {
   height: 1px;
-  background-color: #3c4043;
+  background-color: #000;
   margin: 4px 0;
 }
