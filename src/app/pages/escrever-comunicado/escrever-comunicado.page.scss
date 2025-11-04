@@ -14,6 +14,8 @@
 
 .close-btn, .action-btn {
   --color: white;
+  --ripple-color: rgba(255, 255, 255, 0.2);
+  --color-activated: rgba(255, 255, 255, 0.8);
   
   ion-icon {
     font-size: 20px;
@@ -89,6 +91,8 @@
 
 .dropdown-btn {
   --color: #c4680b;
+  --ripple-color: rgba(196, 104, 11, 0.2);
+  --color-activated: #a35207;
   margin-left: 8px;
   
   ion-icon {
@@ -110,6 +114,8 @@
   
   ion-button {
     --color: #c4680b;
+    --ripple-color: rgba(196, 104, 11, 0.2);
+    --color-activated: #a35207;
     font-size: 12px;
     text-transform: none;
     margin: 0;
@@ -157,6 +163,8 @@
 
 .format-btn {
   --color: #c4680b;
+  --ripple-color: rgba(196, 104, 11, 0.2);
+  --color-activated: #a35207;
   --padding-start: 8px;
   --padding-end: 8px;
   height: 32px;
@@ -180,6 +188,8 @@
   --background: #c4680b;
   --color: white;
   --border-radius: 16px;
+  --ripple-color: rgba(255, 255, 255, 0.3);
+  --background-activated: #a35207;
   height: 48px;
   font-weight: 600;
   margin-bottom: 12px;
@@ -204,6 +214,8 @@
 
 .secondary-btn {
   --color: #3c2500;
+  --ripple-color: rgba(196, 104, 11, 0.2);
+  --color-activated: #c4680b;
   font-size: 12px;
   text-transform: none;
   flex: 1;
@@ -260,4 +272,25 @@
 .recipient-input:focus-within,
 .subject-input:focus-within {
   --highlight-color-focused: #c4680b;
+}
+
+// Remove cores verdes do ripple effect e estados ativos
+ion-button {
+  --ripple-color: rgba(196, 104, 11, 0.2);
+  --color-activated: #c4680b;
+  --color-focused: #c4680b;
+}
+
+ion-input, ion-textarea {
+  --highlight-color-focused: #c4680b;
+  --highlight-color-valid: #c4680b;
+  --highlight-color-invalid: #ff6b6b;
+}
+
+// Remove efeitos verdes globalmente
+* {
+  --ion-color-step-50: rgba(196, 104, 11, 0.05);
+  --ion-color-step-100: rgba(196, 104, 11, 0.1);
+  --ion-color-step-150: rgba(196, 104, 11, 0.15);
+  --ion-color-step-200: rgba(196, 104, 11, 0.2);
 }
