@@ -7,7 +7,10 @@ import {
   IonHeader,
   IonTitle,
   IonToolbar,
-  AlertController
+  AlertController,
+  IonItem,
+  IonCheckbox,
+  IonLabel,
 } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 
@@ -23,7 +26,10 @@ import { Router } from '@angular/router';
     IonToolbar,
     CommonModule,
     FormsModule,
-    HttpClientModule
+    IonItem,
+    IonCheckbox,
+    IonLabel,
+    HttpClientModule,
   ],
 })
 export class LoginProfessorPage implements OnInit {
@@ -31,6 +37,7 @@ export class LoginProfessorPage implements OnInit {
   id: string = '';
   senha: string = '';
   isLoading: boolean = false;
+  rememberMe: boolean = false;
 
   constructor(
     private router: Router,
@@ -38,10 +45,16 @@ export class LoginProfessorPage implements OnInit {
     private alertController: AlertController
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    const savedId = localStorage.getItem('rememberedId');
+    const savedSenha = localStorage.getItem('rememberedSenha');
+    const savedRemember = localStorage.getItem('rememberMe');
 
-  irParaLoginAluno() {
-    this.router.navigateByUrl('/login-aluno');
+    if (savedRemember === 'true' && savedId && savedSenha) {
+      this.id = savedId;
+      this.senha = savedSenha;
+      this.rememberMe = true;
+    }
   }
 
   async aceitarTermos() {
@@ -51,38 +64,59 @@ export class LoginProfessorPage implements OnInit {
     }
 
     this.isLoading = true;
-    
-    this.http.post('https://api-cadastro-six.vercel.app/login/docente', {
-      identificador: this.id,
-      senha: this.senha
-    }).subscribe({
-      next: async (response: any) => {
-        this.isLoading = false;
-        if (response.success && response.user) {
-          localStorage.setItem('userType', 'docente');
-          localStorage.setItem('userName', response.user.nome);
-          localStorage.setItem('userEmail', 'Cargo: Docente');
-          localStorage.setItem('userToken', response.token || '');
-          await this.mostrarAlerta('Sucesso', 'Login realizado com sucesso!');
-          this.router.navigateByUrl('/menu-docente');
-        } else {
-          await this.mostrarAlerta('Erro', response.message || 'Credenciais inválidas!');
-        }
-      },
-      error: async (error: any) => {
-        this.isLoading = false;
-        console.error('Erro na requisição:', error);
-        await this.mostrarAlerta('Erro', 'Erro ao conectar com o servidor!');
-      }
-    });
+
+    this.http
+      .post('https://api-cadastro-six.vercel.app/login/docente', {
+        identificador: this.id,
+        senha: this.senha,
+      })
+      .subscribe({
+        next: async (response: any) => {
+          this.isLoading = false;
+          if (response.success && response.user) {
+            localStorage.setItem('userType', 'docente');
+            localStorage.setItem('userName', response.user.nome);
+            localStorage.setItem('userEmail', 'Cargo: Docente');
+            localStorage.setItem('userToken', response.token || '');
+
+            if (this.rememberMe) {
+              localStorage.setItem('rememberedId', this.id);
+              localStorage.setItem('rememberedSenha', this.senha);
+              localStorage.setItem('rememberMe', 'true');
+            } else {
+              localStorage.removeItem('rememberedId');
+              localStorage.removeItem('rememberedSenha');
+              localStorage.removeItem('rememberMe');
+            }
+
+            await this.mostrarAlerta('Sucesso', 'Login realizado com sucesso!');
+            this.router.navigateByUrl('/menu-docente');
+          } else {
+            await this.mostrarAlerta(
+              'Erro',
+              response.message || 'Credenciais inválidas!'
+            );
+          }
+        },
+        error: async (error: any) => {
+          this.isLoading = false;
+          console.error('Erro na requisição:', error);
+          await this.mostrarAlerta('Erro', 'Erro ao conectar com o servidor!');
+        },
+      });
   }
 
   private async mostrarAlerta(titulo: string, mensagem: string) {
     const alert = await this.alertController.create({
       header: titulo,
       message: mensagem,
-      buttons: ['OK']
+      buttons: ['OK'],
     });
     await alert.present();
+  }
+
+  // ✅ Corrige o erro do HTML
+  irParaLoginAluno() {
+    this.router.navigateByUrl('/login-aluno');
   }
 }
