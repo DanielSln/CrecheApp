@@ -89,31 +89,15 @@ export class EscreverComunicadoPage {
     });
   }
 
-  async toggleCcBcc() {
-    console.log('toggleCcBcc executado');
-    const toast = await this.toastController.create({
-      message: 'Botão CC/BCC funcionando!',
-      duration: 2000,
-      position: 'bottom'
-    });
-    await toast.present();
+  toggleCcBcc() {
     this.showCcBcc = !this.showCcBcc;
   }
 
-  async fecharComposer() {
-    console.log('fecharComposer executado');
-    const toast = await this.toastController.create({
-      message: 'Botão fechar funcionando!',
-      duration: 2000,
-      position: 'bottom'
-    });
-    await toast.present();
+  fecharComposer() {
     this.location.back();
   }
 
-  selecionarRemetente() {
-    console.log('selecionarRemetente executado');
-    alert('Botão remetente funcionando!');
+  async selecionarRemetente() {
     
     const remetentes = [
       { email: 'docente@crecheapp.com', nome: 'Professor(a)' },
@@ -121,28 +105,64 @@ export class EscreverComunicadoPage {
       { email: 'direcao@crecheapp.com', nome: 'Direção' }
     ];
     
-    const opcoes = remetentes.map((r: any) => `${r.nome} (${r.email})`).join('\n');
-    const escolha = prompt(`Selecione o remetente:\n${opcoes}\n\nDigite 1, 2 ou 3:`);
+    const alert = await this.alertController.create({
+      header: 'Selecionar Remetente',
+      inputs: remetentes.map((r, i) => ({
+        name: 'remetente',
+        type: 'radio',
+        label: `${r.nome} (${r.email})`,
+        value: i,
+        checked: this.from === r.email
+      })),
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'OK',
+          handler: (data: any) => {
+            if (data !== undefined) {
+              this.from = remetentes[data].email;
+            }
+          }
+        }
+      ]
+    });
     
-    if (escolha && ['1', '2', '3'].includes(escolha)) {
-      this.from = remetentes[parseInt(escolha) - 1].email;
-      console.log('Remetente selecionado:', this.from);
-      alert(`Remetente alterado para: ${this.from}`);
-    }
+    await alert.present();
   }
 
-  selecionarDestinatarios() {
-    console.log('selecionarDestinatarios executado');
-    alert('Botão destinatários funcionando!');
+  async selecionarDestinatarios() {
     
     const grupos = ['Todos os Pais', 'Professores', 'Funcionários'];
-    const opcoes = grupos.map((g: string, i: number) => `${i + 1}. ${g}`).join('\n');
-    const escolha = prompt(`Selecione os destinatários:\n${opcoes}\n\nDigite o número:`);
     
-    if (escolha && parseInt(escolha) > 0 && parseInt(escolha) <= grupos.length) {
-      this.to = grupos[parseInt(escolha) - 1];
-      alert(`Destinatários selecionados: ${this.to}`);
-    }
+    const alert = await this.alertController.create({
+      header: 'Selecionar Destinatários',
+      inputs: grupos.map((g, i) => ({
+        name: 'destinatario',
+        type: 'radio',
+        label: g,
+        value: i,
+        checked: this.to === g
+      })),
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'OK',
+          handler: (data: any) => {
+            if (data !== undefined) {
+              this.to = grupos[data];
+            }
+          }
+        }
+      ]
+    });
+    
+    await alert.present();
   }
   
   selecionarPaisEspecificos(pais: any[]) {
@@ -171,44 +191,120 @@ export class EscreverComunicadoPage {
     }
   }
 
-  agendarEnvio() {
-    console.log('agendarEnvio executado');
-    alert('Botão agendar funcionando!');
+  async agendarEnvio() {
     
-    const opcoes = ['1. Em 1 hora', '2. Amanhã 8h', '3. Segunda-feira'];
-    const escolha = prompt(`Quando enviar?\n${opcoes.join('\n')}\n\nDigite o número:`);
+    const opcoes = ['Em 1 hora', 'Amanhã às 8h', 'Segunda-feira'];
     
-    if (escolha) {
-      alert(`Agendamento selecionado: Opção ${escolha}`);
-    }
+    const alert = await this.alertController.create({
+      header: 'Agendar Envio',
+      message: 'Quando enviar o comunicado?',
+      inputs: opcoes.map((opcao, i) => ({
+        name: 'agendamento',
+        type: 'radio',
+        label: opcao,
+        value: i
+      })),
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'OK',
+          handler: async (data: any) => {
+            if (data !== undefined) {
+              const toast = await this.toastController.create({
+                message: `Agendado: ${opcoes[data]}`,
+                duration: 2000,
+                position: 'bottom'
+              });
+              await toast.present();
+            }
+          }
+        }
+      ]
+    });
+    
+    await alert.present();
   }
 
-  inserirLink() {
-    console.log('inserirLink executado');
-    alert('Botão inserir link funcionando!');
+  async inserirLink() {
     
-    const texto = prompt('Digite o texto do link:');
-    if (texto) {
-      const url = prompt('Digite a URL:');
-      if (url) {
-        this.message += ` [${texto}](${url})`;
-        alert('Link adicionado!');
-      }
-    }
+    const alert = await this.alertController.create({
+      header: 'Inserir Link',
+      inputs: [
+        {
+          name: 'texto',
+          type: 'text',
+          placeholder: 'Texto do link'
+        },
+        {
+          name: 'url',
+          type: 'url',
+          placeholder: 'URL (https://...)'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Adicionar',
+          handler: async (data: any) => {
+            if (data.texto && data.url) {
+              this.message += ` [${data.texto}](${data.url})`;
+              const toast = await this.toastController.create({
+                message: 'Link adicionado!',
+                duration: 2000,
+                position: 'bottom'
+              });
+              await toast.present();
+            }
+          }
+        }
+      ]
+    });
+    
+    await alert.present();
   }
 
-  inserirEmoji() {
-    console.log('inserirEmoji executado');
-    alert('Botão inserir emoji funcionando!');
+  async inserirEmoji() {
     
-    const emojis = ['😊', '👍', '❤️', '🎉', '⭐'];
-    const escolha = prompt(`Escolha um emoji:\n1. 😊\n2. 👍\n3. ❤️\n4. 🎉\n5. ⭐\n\nDigite o número:`);
+    const emojis = ['😊', '👍', '❤️', '🎉', '⭐', '🎄', '🎂', '🎨'];
     
-    if (escolha && parseInt(escolha) > 0 && parseInt(escolha) <= emojis.length) {
-      const emoji = emojis[parseInt(escolha) - 1];
-      this.message += ` ${emoji}`;
-      alert(`Emoji ${emoji} adicionado!`);
-    }
+    const alert = await this.alertController.create({
+      header: 'Inserir Emoji',
+      inputs: emojis.map((emoji, i) => ({
+        name: 'emoji',
+        type: 'radio',
+        label: emoji,
+        value: i
+      })),
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Adicionar',
+          handler: async (data: any) => {
+            if (data !== undefined) {
+              const emoji = emojis[data];
+              this.message += ` ${emoji}`;
+              const toast = await this.toastController.create({
+                message: `Emoji ${emoji} adicionado!`,
+                duration: 2000,
+                position: 'bottom'
+              });
+              await toast.present();
+            }
+          }
+        }
+      ]
+    });
+    
+    await alert.present();
   }
   
   selecionarEmoji(emojis: string[], categoria: string) {
@@ -253,16 +349,46 @@ export class EscreverComunicadoPage {
     }
   }
 
-  definirPrioridade() {
-    console.log('definirPrioridade executado');
-    alert('Botão prioridade funcionando!');
+  async definirPrioridade() {
     
-    const opcoes = ['1. Baixa', '2. Normal', '3. Alta', '4. Urgente'];
-    const escolha = prompt(`Definir prioridade:\n${opcoes.join('\n')}\n\nDigite o número:`);
+    const prioridades = [
+      { nivel: 'Baixa', icone: '📝' },
+      { nivel: 'Normal', icone: '📢' },
+      { nivel: 'Alta', icone: '⚠️' },
+      { nivel: 'Urgente', icone: '🚨' }
+    ];
     
-    if (escolha) {
-      alert(`Prioridade selecionada: Opção ${escolha}`);
-    }
+    const alert = await this.alertController.create({
+      header: 'Definir Prioridade',
+      inputs: prioridades.map((p, i) => ({
+        name: 'prioridade',
+        type: 'radio',
+        label: `${p.icone} ${p.nivel}`,
+        value: i
+      })),
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'OK',
+          handler: async (data: any) => {
+            if (data !== undefined) {
+              this.selectedIcon = prioridades[data].icone;
+              const toast = await this.toastController.create({
+                message: `Prioridade: ${prioridades[data].nivel}`,
+                duration: 2000,
+                position: 'bottom'
+              });
+              await toast.present();
+            }
+          }
+        }
+      ]
+    });
+    
+    await alert.present();
   }
 
   mostrarOpcoes() {
@@ -439,27 +565,77 @@ export class EscreverComunicadoPage {
     return `${maisUsado} (${contagem[maisUsado]}x)`;
   }
 
-  aplicarNegrito() {
-    console.log('aplicarNegrito executado');
-    alert('Botão formatar texto funcionando!');
+  async aplicarNegrito() {
     
-    const texto = prompt('Digite o texto para negrito:');
-    if (texto) {
-      this.message += ` **${texto}**`;
-      alert('Texto em negrito adicionado!');
-    }
+    const alert = await this.alertController.create({
+      header: 'Formatar Texto',
+      inputs: [
+        {
+          name: 'texto',
+          type: 'text',
+          placeholder: 'Digite o texto para negrito'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Adicionar',
+          handler: async (data: any) => {
+            if (data.texto) {
+              this.message += ` **${data.texto}**`;
+              const toast = await this.toastController.create({
+                message: 'Texto em negrito adicionado!',
+                duration: 2000,
+                position: 'bottom'
+              });
+              await toast.present();
+            }
+          }
+        }
+      ]
+    });
+    
+    await alert.present();
   }
   
-  criarLista() {
-    console.log('criarLista executado');
-    alert('Botão criar lista funcionando!');
+  async criarLista() {
     
-    const itens = prompt('Digite os itens (separados por vírgula):');
-    if (itens) {
-      const lista = itens.split(',').map((item: string) => `• ${item.trim()}`).join('\n');
-      this.message += `\n\n${lista}\n`;
-      alert('Lista adicionada!');
-    }
+    const alert = await this.alertController.create({
+      header: 'Criar Lista',
+      inputs: [
+        {
+          name: 'itens',
+          type: 'textarea',
+          placeholder: 'Digite os itens (separados por vírgula)'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Adicionar',
+          handler: async (data: any) => {
+            if (data.itens) {
+              const lista = data.itens.split(',').map((item: string) => `• ${item.trim()}`).join('\n');
+              this.message += `\n\n${lista}\n`;
+              const toast = await this.toastController.create({
+                message: 'Lista adicionada!',
+                duration: 2000,
+                position: 'bottom'
+              });
+              await toast.present();
+            }
+          }
+        }
+      ]
+    });
+    
+    await alert.present();
   }
   
   criarCronograma() {
@@ -547,82 +723,121 @@ export class EscreverComunicadoPage {
     console.log('Lista de materiais adicionada');
   }
 
-  async mostrarIcones() {
-    console.log('mostrarIcones executado');
-    const toast = await this.toastController.create({
-      message: 'Botão ícones funcionando!',
-      duration: 2000,
-      position: 'bottom'
-    });
-    await toast.present();
+  mostrarIcones() {
     this.showIconPicker = !this.showIconPicker;
   }
 
-  async selecionarIcone(icon: string) {
-    console.log('selecionarIcone executado:', icon);
-    const toast = await this.toastController.create({
-      message: `Ícone selecionado: ${icon}`,
-      duration: 2000,
-      position: 'bottom'
-    });
-    await toast.present();
+  selecionarIcone(icon: string) {
     this.selectedIcon = icon;
     this.showIconPicker = false;
   }
 
-  salvarRascunho() {
-    console.log('salvarRascunho executado');
-    alert('Botão salvar rascunho funcionando!');
+  async salvarRascunho() {
     
     if (!this.subject && !this.message) {
-      alert('Nada para salvar! Digite pelo menos o assunto ou mensagem.');
+      const toast = await this.toastController.create({
+        message: 'Nada para salvar! Digite pelo menos o assunto ou mensagem.',
+        duration: 3000,
+        position: 'bottom',
+        color: 'warning'
+      });
+      await toast.present();
       return;
     }
     
-    alert('Rascunho salvo com sucesso!');
+    const toast = await this.toastController.create({
+      message: 'Rascunho salvo com sucesso!',
+      duration: 2000,
+      position: 'bottom',
+      color: 'success'
+    });
+    await toast.present();
   }
 
-  descartarComunicado() {
-    const temConteudo = this.to || this.subject || this.message || this.cc || this.bcc;
+  async descartarComunicado() {
+    const temConteudo = this.to || this.subject || this.message;
     
     if (!temConteudo) {
-      alert('Não há conteúdo para descartar.');
+      const toast = await this.toastController.create({
+        message: 'Não há conteúdo para descartar.',
+        duration: 2000,
+        position: 'bottom',
+        color: 'warning'
+      });
+      await toast.present();
       return;
     }
     
-    const confirmar = confirm(
-      'Tem certeza que deseja descartar este comunicado?\n\n' +
-      'Todo o conteúdo será perdido e não poderá ser recuperado.'
-    );
+    const alert = await this.alertController.create({
+      header: 'Descartar Comunicado',
+      message: 'Tem certeza que deseja descartar este comunicado? Todo o conteúdo será perdido.',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Descartar',
+          role: 'destructive',
+          handler: async () => {
+            this.to = '';
+            this.subject = '';
+            this.message = '';
+            this.selectedIcon = '📝';
+            this.showIconPicker = false;
+            
+            const toast = await this.toastController.create({
+              message: 'Comunicado descartado com sucesso!',
+              duration: 2000,
+              position: 'bottom',
+              color: 'success'
+            });
+            await toast.present();
+          }
+        }
+      ]
+    });
     
-    if (confirmar) {
-      this.to = '';
-      this.cc = '';
-      this.bcc = '';
-      this.subject = '';
-      this.message = '';
-      this.selectedIcon = '📝';
-      this.showCcBcc = false;
-      this.showIconPicker = false;
-      
-      console.log('Comunicado descartado');
-      alert('🗑️ Comunicado descartado com sucesso!');
-    }
+    await alert.present();
   }
 
-  enviarComunicado() {
-    console.log('enviarComunicado executado');
-    alert('Botão enviar funcionando!');
+  async enviarComunicado() {
     
     if (!this.to || !this.subject || !this.message) {
-      alert('Preencha todos os campos obrigatórios!');
+      const toast = await this.toastController.create({
+        message: 'Preencha todos os campos obrigatórios!',
+        duration: 3000,
+        position: 'bottom',
+        color: 'warning'
+      });
+      await toast.present();
       return;
     }
     
-    const confirmacao = confirm('Confirmar envio do comunicado?');
-    if (confirmacao) {
-      alert('Comunicado enviado com sucesso!');
-      this.router.navigateByUrl('/menu-docente');
-    }
+    const alert = await this.alertController.create({
+      header: 'Confirmar Envio',
+      message: `Enviar comunicado para: ${this.to}?`,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Enviar',
+          handler: async () => {
+            const toast = await this.toastController.create({
+              message: 'Comunicado enviado com sucesso!',
+              duration: 2000,
+              position: 'bottom',
+              color: 'success'
+            });
+            await toast.present();
+            this.router.navigateByUrl('/menu-docente');
+          }
+        }
+      ]
+    });
+    
+    await alert.present();
   }
 }
