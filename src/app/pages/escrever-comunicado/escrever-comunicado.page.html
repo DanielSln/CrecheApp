@@ -1,17 +1,25 @@
 <ion-header>
   <ion-toolbar class="compose-toolbar">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/menu-docente" text=""></ion-back-button>
+      <ion-button fill="clear" class="close-btn">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
 
     <ion-buttons slot="end">
-      <ion-button fill="clear">
+      <ion-button fill="clear" class="action-btn">
         <ion-icon name="attach-outline"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" (click)="enviarComunicado()">
-        <ion-icon name="send-outline"></ion-icon>
+      <ion-button fill="clear" class="action-btn">
+        <ion-icon name="link-outline"></ion-icon>
       </ion-button>
-      <ion-button fill="clear">
+      <ion-button fill="clear" class="action-btn">
+        <ion-icon name="happy-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" class="action-btn">
+        <ion-icon name="image-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" class="action-btn">
         <ion-icon name="ellipsis-vertical"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -19,40 +27,125 @@
 </ion-header>
 
 <ion-content class="compose-content">
-  <div class="compose-wrapper">
-    <div class="compose-row">
-      <span class="compose-label">From</span>
-      <span class="compose-value">{{ from }}</span>
-      <ion-icon name="chevron-down-outline"></ion-icon>
+  <div class="compose-container">
+    <!-- Campo From -->
+    <div class="compose-field">
+      <div class="field-row">
+        <span class="field-label">De</span>
+        <div class="field-content">
+          <span class="from-email">{{ from }}</span>
+          <ion-button fill="clear" size="small" class="dropdown-btn">
+            <ion-icon name="chevron-down-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
     </div>
 
-    <div class="divider"></div>
+    <!-- Campo To -->
+    <div class="compose-field">
+      <div class="field-row">
+        <span class="field-label">Para</span>
+        <div class="field-content">
+          <ion-input
+            [(ngModel)]="to"
+            placeholder="Destinatários"
+            class="recipient-input"
+            fill="outline"
+          ></ion-input>
+          <ion-button fill="clear" size="small" class="dropdown-btn">
+            <ion-icon name="chevron-down-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+    </div>
 
-    <div class="compose-row">
-      <span class="compose-label">To</span>
+    <!-- Campos CC e BCC (opcionais) -->
+    <div class="compose-field cc-bcc-field" *ngIf="showCcBcc">
+      <div class="field-row">
+        <span class="field-label">Cc</span>
+        <div class="field-content">
+          <ion-input
+            [(ngModel)]="cc"
+            placeholder=""
+            class="recipient-input"
+            fill="outline"
+          ></ion-input>
+        </div>
+      </div>
+      <div class="field-row">
+        <span class="field-label">Cco</span>
+        <div class="field-content">
+          <ion-input
+            [(ngModel)]="bcc"
+            placeholder=""
+            class="recipient-input"
+            fill="outline"
+          ></ion-input>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botão para mostrar CC/BCC -->
+    <div class="cc-bcc-toggle" *ngIf="!showCcBcc">
+      <ion-button fill="clear" size="small" (click)="toggleCcBcc()">
+        Cc/Cco
+      </ion-button>
+    </div>
+
+    <!-- Campo Subject -->
+    <div class="compose-field subject-field">
       <ion-input
-        [(ngModel)]="to"
-        placeholder=""
-        class="compose-input"
+        [(ngModel)]="subject"
+        placeholder="Assunto"
+        class="subject-input"
+        fill="outline"
       ></ion-input>
-      <ion-icon name="chevron-down-outline"></ion-icon>
     </div>
 
-    <div class="divider"></div>
+    <!-- Área de composição -->
+    <div class="compose-body">
+      <ion-textarea
+        [(ngModel)]="message"
+        placeholder="Escreva sua mensagem..."
+        autoGrow="true"
+        class="message-textarea"
+        rows="15"
+      ></ion-textarea>
+    </div>
 
-    <ion-input
-      [(ngModel)]="subject"
-      placeholder="Subject"
-      class="compose-subject"
-    ></ion-input>
+    <!-- Barra de ferramentas de formatação -->
+    <div class="formatting-toolbar">
+      <ion-button fill="clear" size="small" class="format-btn">
+        <ion-icon name="text-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" size="small" class="format-btn">
+        <ion-icon name="attach-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" size="small" class="format-btn">
+        <ion-icon name="link-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" size="small" class="format-btn">
+        <ion-icon name="image-outline"></ion-icon>
+      </ion-button>
+    </div>
 
-    <div class="divider"></div>
+    <!-- Botões de ação -->
+    <div class="action-buttons">
+      <ion-button expand="block" class="send-btn" (click)="enviarComunicado()">
+        <ion-icon name="send-outline" slot="start"></ion-icon>
+        Enviar
+      </ion-button>
 
-    <ion-textarea
-      [(ngModel)]="message"
-      placeholder="Compose email"
-      autoGrow="true"
-      class="compose-textarea"
-    ></ion-textarea>
+      <div class="secondary-actions">
+        <ion-button fill="clear" class="secondary-btn">
+          <ion-icon name="save-outline"></ion-icon>
+          Salvar rascunho
+        </ion-button>
+        <ion-button fill="clear" class="secondary-btn">
+          <ion-icon name="trash-outline"></ion-icon>
+          Descartar
+        </ion-button>
+      </div>
+    </div>
   </div>
 </ion-content>

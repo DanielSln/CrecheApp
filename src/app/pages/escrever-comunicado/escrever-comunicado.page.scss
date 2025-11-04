@@ -1,67 +1,263 @@
+// Estilo inspirado no Gmail mantendo padrões de cores do projeto
+
 .compose-toolbar {
   --background: #c4680b;
-  --color: #000000;
+  --color: white;
+  border-bottom: 1px solid #d17a00;
 }
 
-ion-content.compose-content {
+.compose-title {
+  font-size: 18px;
+  font-weight: 600;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.close-btn, .action-btn {
+  --color: white;
+  
+  ion-icon {
+    font-size: 20px;
+  }
+}
+
+.compose-content {
   --background: #f6d0a7;
-  font-family: Roboto, sans-serif;
 }
 
-.compose-wrapper {
-  display: flex;
-  flex-direction: column;
-  padding: 8px 12px;
+.compose-container {
+  max-width: 100%;
+  margin: 0 auto;
+  background: #f0c79f;
+  border-radius: 20px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  margin: 16px;
+  overflow: hidden;
 }
 
-.compose-row {
+.compose-field {
+  border-bottom: 1px solid #d17a00;
+  
+  &:last-of-type {
+    border-bottom: none;
+  }
+}
+
+.field-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 6px 0;
+  padding: 12px 16px;
+  min-height: 48px;
 }
 
-.compose-label {
-  color: #000;
+.field-label {
+  min-width: 60px;
   font-size: 14px;
-  margin-right: 8px;
+  color: #3c2500;
+  font-weight: 600;
+  margin-right: 16px;
+  font-family: "Segoe UI", sans-serif;
 }
 
-.compose-value {
+.field-content {
   flex: 1;
-  color: #000;
-  font-size: 14px;
+  display: flex;
+  align-items: center;
 }
 
-.compose-input {
+.from-email {
   flex: 1;
-  color: #000;
-  --placeholder-color: #000;
   font-size: 14px;
+  color: #3c2500;
+  font-family: "Segoe UI", sans-serif;
 }
 
-.compose-subject {
-  color: #000;
-  font-size: 15px;
-  margin-top: 4px;
-  --placeholder-color: #000;
+.recipient-input, .subject-input {
+  --border-color: #c99a62;
+  --highlight-color-focused: #c4680b;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  font-size: 14px;
+  --background: white;
+  --color: #4b3a00;
+  font-family: "Segoe UI", sans-serif;
+  
+  &.ios {
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+  }
 }
 
-.compose-textarea {
-  margin-top: 12px;
-  color: #000;
-  font-size: 15px;
-  --placeholder-color: #000;
+.dropdown-btn {
+  --color: #c4680b;
+  margin-left: 8px;
+  
+  ion-icon {
+    font-size: 16px;
+  }
 }
 
-ion-icon {
-  color: #000;
-  font-size: 18px;
-  margin-left: 6px;
+.cc-bcc-field {
+  background: #f4cba1;
+  
+  .field-row {
+    padding: 8px 16px;
+    min-height: 40px;
+  }
 }
 
-.divider {
-  height: 1px;
-  background-color: #000;
-  margin: 4px 0;
+.cc-bcc-toggle {
+  padding: 8px 16px;
+  
+  ion-button {
+    --color: #c4680b;
+    font-size: 12px;
+    text-transform: none;
+    margin: 0;
+    height: 32px;
+    font-weight: 600;
+  }
+}
+
+.subject-field {
+  .field-row {
+    padding: 16px;
+  }
+}
+
+.compose-body {
+  padding: 16px;
+  min-height: 300px;
+}
+
+.message-textarea {
+  --border-style: none;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  --color: #4b3a00;
+  font-family: "Segoe UI", sans-serif;
+  
+  &::part(native) {
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
+
+.formatting-toolbar {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  border-top: 1px solid #d17a00;
+  background: #f4cba1;
+  gap: 4px;
+}
+
+.format-btn {
+  --color: #c4680b;
+  --padding-start: 8px;
+  --padding-end: 8px;
+  height: 32px;
+  
+  ion-icon {
+    font-size: 16px;
+  }
+  
+  &:hover {
+    --background: rgba(196, 104, 11, 0.1);
+  }
+}
+
+.action-buttons {
+  padding: 16px;
+  background: #f0c79f;
+  border-top: 1px solid #d17a00;
+}
+
+.send-btn {
+  --background: #c4680b;
+  --color: white;
+  --border-radius: 16px;
+  height: 48px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  font-family: "Segoe UI", sans-serif;
+  --box-shadow: 0 8px 25px rgba(196, 104, 11, 0.2);
+  
+  ion-icon {
+    margin-right: 8px;
+  }
+  
+  &:hover {
+    --background: #a35207;
+    --box-shadow: 0 12px 35px rgba(196, 104, 11, 0.3);
+  }
+}
+
+.secondary-actions {
+  display: flex;
+  justify-content: space-around;
+  gap: 16px;
+}
+
+.secondary-btn {
+  --color: #3c2500;
+  font-size: 12px;
+  text-transform: none;
+  flex: 1;
+  font-weight: 500;
+  
+  ion-icon {
+    font-size: 16px;
+    margin-right: 4px;
+  }
+  
+  &:hover {
+    --color: #c4680b;
+  }
+}
+
+// Responsividade para tablets e desktop
+@media (min-width: 768px) {
+  .compose-container {
+    max-width: 680px;
+    margin: 24px auto;
+  }
+  
+  .field-row {
+    padding: 16px 24px;
+  }
+  
+  .compose-body {
+    padding: 24px;
+  }
+  
+  .formatting-toolbar {
+    padding: 12px 24px;
+  }
+  
+  .action-buttons {
+    padding: 24px;
+  }
+}
+
+// Animações suaves
+.compose-field {
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+}
+
+.format-btn, .secondary-btn {
+  transition: all 0.2s ease;
+}
+
+// Estados de foco
+.recipient-input:focus-within,
+.subject-input:focus-within {
+  --highlight-color-focused: #c4680b;
 }

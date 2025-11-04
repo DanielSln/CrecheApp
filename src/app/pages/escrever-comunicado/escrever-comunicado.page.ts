@@ -9,6 +9,7 @@ import {
   IonIcon,
   IonInput,
   IonTextarea,
+  IonTitle,
 } from '@ionic/angular/standalone';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -29,6 +30,7 @@ import { Router } from '@angular/router';
     IonIcon,
     IonInput,
     IonTextarea,
+    IonTitle,
     CommonModule,
     FormsModule,
   ],
@@ -36,14 +38,28 @@ import { Router } from '@angular/router';
 export class EscreverComunicadoPage {
   from: string = 'docente@crecheapp.com';
   to: string = '';
+  cc: string = '';
+  bcc: string = '';
   subject: string = '';
   message: string = '';
+  showCcBcc: boolean = false;
 
   constructor(private router: Router) {}
 
+  toggleCcBcc() {
+    this.showCcBcc = !this.showCcBcc;
+  }
+
   enviarComunicado() {
     console.log('Enviando comunicado...');
-    console.log({ from: this.from, to: this.to, subject: this.subject, message: this.message });
+    console.log({ 
+      from: this.from, 
+      to: this.to, 
+      cc: this.cc,
+      bcc: this.bcc,
+      subject: this.subject, 
+      message: this.message 
+    });
     this.router.navigateByUrl('/menu-docente');
   }
 }
