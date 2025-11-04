@@ -182,4 +182,12 @@ ion-item {
   --color: #000; /* cor do texto, se precisar */
   padding-left: 0;
   margin-top: 8px;
+  /* Remove o ripple (onda de clique) */
+  --ripple-color: transparent;
+  --ripple-opacity: 0;
+
+  /* Remove qualquer highlight interno */
+    &::part(native) {
+    background: transparent !important;
+    }
 }
