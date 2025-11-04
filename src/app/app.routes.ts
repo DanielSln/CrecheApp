@@ -32,17 +32,22 @@ export const routes: Routes = [
   },
   {
     path: 'comunicados',
-    loadComponent: () =>
-      import('./pages/comunicados/comunicados.page').then(
-        (m) => m.ComunicadosPage
-      ),
-  },
-  {
-    path: 'comunicado-detalhes/:id',
-    loadComponent: () =>
-      import('./pages/comunicado-detalhes/comunicado-detalhes.page').then(
-        (m) => m.ComunicadoDetalhesPage
-      ),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/comunicados/comunicados.page').then(
+            (m) => m.ComunicadosPage
+          ),
+      },
+      {
+        path: 'detalhes/:id',
+        loadComponent: () =>
+          import('./pages/comunicado-detalhes/comunicado-detalhes.page').then(
+            (m) => m.ComunicadoDetalhesPage
+          ),
+      }
+    ]
   },
   {
     path: 'login-aluno',
@@ -74,10 +79,22 @@ export const routes: Routes = [
   },
   {
     path: 'comunicados-docente',
-    loadComponent: () =>
-      import('./pages/comunicados-docente/comunicados-docente.page').then(
-        (m) => m.ComunicadosDocentePage
-      ),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./pages/comunicados-docente/comunicados-docente.page').then(
+            (m) => m.ComunicadosDocentePage
+          ),
+      },
+      {
+        path: 'detalhes/:id',
+        loadComponent: () =>
+          import('./pages/comunicado-detalhes/comunicado-detalhes.page').then(
+            (m) => m.ComunicadoDetalhesPage
+          ),
+      }
+    ]
   },
   {
     path: 'docente',

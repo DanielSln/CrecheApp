@@ -191,7 +191,7 @@ export class ComunicadosDocentePage implements OnInit {
     console.log('Abrindo comunicado:', comunicado.title);
     console.log('ID do comunicado:', comunicado.id);
     console.log('Comunicado completo:', comunicado);
-    this.router.navigate(['/comunicado-detalhes', comunicado.id]);
+    this.router.navigate(['/comunicados-docente/detalhes', comunicado.id]);
   }
 
   goToMenu() {

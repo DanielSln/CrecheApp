@@ -147,6 +147,10 @@ export class ComunicadoDetalhesPage implements OnInit {
     return userType === 'docente' ? '/comunicados-docente' : '/comunicados';
   }
 
+  isDocente(): boolean {
+    return localStorage.getItem('userType') === 'docente';
+  }
+
   async excluirComunicado() {
     const alert = await this.alertController.create({
       header: 'Excluir Comunicado',
@@ -186,7 +190,9 @@ export class ComunicadoDetalhesPage implements OnInit {
       await toast.present();
 
       // Voltar para a página anterior
-      this.router.navigateByUrl('/comunicados-docente');
+      const userType = localStorage.getItem('userType');
+      const backUrl = userType === 'docente' ? '/comunicados-docente' : '/comunicados';
+      this.router.navigateByUrl(backUrl);
     } catch (error) {
       const toast = await this.toastController.create({
         message: 'Erro ao excluir comunicado!',
