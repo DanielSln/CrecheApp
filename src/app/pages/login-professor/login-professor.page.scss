@@ -155,15 +155,14 @@ a:hover {
 
 ion-checkbox {
   --background: transparent;
-  --background-checked: #d17a00; /* cor marrom alaranjada do botão */
+  --checkbox-background-checked: #ff9d00; /* 🎨 cor de fundo ao marcar */
   --border-color: #d17a00;
-  --border-color-checked: #d17a00;
+  --border-color-checked: #ff9d00;
   --checkmark-color: #fff;
   --size: 22px;
   margin-right: -75px;
-
+  transition: all 0.3 ease;
 }
-
 
 ion-label {
   font-size: 14px;
@@ -172,3 +171,10 @@ ion-label {
   align-items: center;
 }
 
+ion-item {
+  --background: transparent !important;
+  --ion-item-background: transparent !important;
+  --color: #000; /* cor do texto, se precisar */
+  padding-left: 0;
+  margin-top: 8px;
+}
