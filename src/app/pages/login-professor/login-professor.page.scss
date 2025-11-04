@@ -172,23 +172,14 @@ ion-label {
 }
 
 ion-item {
-  --background: transparent !important;
   --ion-item-background: transparent !important;
+  --background: transparent;
+  --background-hover: transparent;
+  --background-activated: transparent;
+  --ion-item-background: transparent;
+  --ion-item-background-hover: transparent;
+  --ion-item-background-activated: transparent;
   --color: #000; /* cor do texto, se precisar */
   padding-left: 0;
   margin-top: 8px;
 }
-
-
-/* Hover no ion-item */
-ion-item:hover {
-  --background: rgba(209, 122, 0, 0.15); /* leve destaque marrom-alaranjado */
-  transform: scale(1.02); /* pequeno aumento pra dar vida */
-}
-
-/* Efeito de foco (opcional, caso queira melhorar a navegação por teclado) */
-/*
-ion-item:focus-within {
-  --background: rgba(209, 122, 0, 0.25);
-}
-*/
