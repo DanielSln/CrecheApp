@@ -102,5 +102,9 @@ export const routes: Routes = [
     path: 'turmas',
     loadComponent: () =>
       import('./pages/turmas/turmas.page').then((m) => m.TurmasPage),
+  },  {
+    path: 'escrever-comunicado',
+    loadComponent: () => import('./pages/escrever-comunicado/escrever-comunicado.page').then( m => m.EscreverComunicadoPage)
   },
+
 ];
