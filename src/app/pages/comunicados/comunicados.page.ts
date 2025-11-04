@@ -111,6 +111,7 @@ export class ComunicadosPage implements OnInit {
   openComunicado(index: number) {
     const comunicado = this.comunicados[index];
     console.log('Abrindo comunicado:', comunicado.title);
+    console.log('ID do comunicado:', comunicado.id);
     this.router.navigate(['/comunicado-detalhes', comunicado.id]);
   }
 

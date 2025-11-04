@@ -90,8 +90,28 @@ export class ComunicadoDetalhesPage implements OnInit {
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.comunicado = this.comunicados.find(c => c.id === id);
+    const id = this.route.snapshot.paramMap.get('id');
+    console.log('ID recebido:', id);
+    
+    // Buscar primeiro nos comunicados enviados (localStorage)
+    const comunicadosEnviados = JSON.parse(localStorage.getItem('comunicados_enviados') || '[]');
+    console.log('Comunicados do localStorage:', comunicadosEnviados);
+    
+    // Combinar todos os comunicados (localStorage + estáticos)
+    const todosComunicados = [...comunicadosEnviados, ...this.comunicados];
+    console.log('Todos os comunicados:', todosComunicados);
+    
+    // Buscar por ID (convertendo para string para comparação)
+    this.comunicado = todosComunicados.find(c => 
+      String(c.id) === String(id)
+    );
+    
+    console.log('Comunicado encontrado:', this.comunicado);
+    
+    if (!this.comunicado) {
+      console.error('Comunicado não encontrado para ID:', id);
+      console.log('IDs disponíveis:', todosComunicados.map(c => c.id));
+    }
   }
 
   getBadgeText(type: string): string {
