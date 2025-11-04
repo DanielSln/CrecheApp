@@ -11,6 +11,20 @@ import {
   IonTextarea,
   IonTitle,
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { 
+  closeOutline, 
+  attachOutline, 
+  linkOutline, 
+  happyOutline, 
+  imageOutline, 
+  ellipsisVertical,
+  chevronDownOutline,
+  sendOutline,
+  textOutline,
+  saveOutline,
+  trashOutline
+} from 'ionicons/icons';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -44,7 +58,21 @@ export class EscreverComunicadoPage {
   message: string = '';
   showCcBcc: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    addIcons({
+      'close-outline': closeOutline,
+      'attach-outline': attachOutline,
+      'link-outline': linkOutline,
+      'happy-outline': happyOutline,
+      'image-outline': imageOutline,
+      'ellipsis-vertical': ellipsisVertical,
+      'chevron-down-outline': chevronDownOutline,
+      'send-outline': sendOutline,
+      'text-outline': textOutline,
+      'save-outline': saveOutline,
+      'trash-outline': trashOutline
+    });
+  }
 
   toggleCcBcc() {
     this.showCcBcc = !this.showCcBcc;
