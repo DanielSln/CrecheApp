@@ -46,11 +46,13 @@ export class LoginProfessorPage implements OnInit {
   ) {}
 
   ngOnInit() {
+    const savedNome = localStorage.getItem('rememberedNome');
     const savedId = localStorage.getItem('rememberedId');
     const savedSenha = localStorage.getItem('rememberedSenha');
     const savedRemember = localStorage.getItem('rememberMe');
 
     if (savedRemember === 'true' && savedId && savedSenha) {
+      this.nome = savedNome || '';
       this.id = savedId;
       this.senha = savedSenha;
       this.rememberMe = true;
@@ -80,10 +82,12 @@ export class LoginProfessorPage implements OnInit {
             localStorage.setItem('userToken', response.token || '');
 
             if (this.rememberMe) {
+              localStorage.setItem('rememberedNome', this.nome);
               localStorage.setItem('rememberedId', this.id);
               localStorage.setItem('rememberedSenha', this.senha);
               localStorage.setItem('rememberMe', 'true');
             } else {
+              localStorage.removeItem('rememberedNome');
               localStorage.removeItem('rememberedId');
               localStorage.removeItem('rememberedSenha');
               localStorage.removeItem('rememberMe');
