@@ -102,6 +102,33 @@
       ></ion-input>
     </div>
 
+    <!-- Campo Ícone -->
+    <div class="compose-field icon-field">
+      <div class="field-row">
+        <span class="field-label">Ícone</span>
+        <div class="field-content">
+          <div class="icon-selector">
+            <div class="selected-icon" (click)="mostrarIcones()">
+              <span class="icon-display">{{ selectedIcon }}</span>
+              <ion-icon name="chevron-down-outline"></ion-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Lista de ícones -->
+      <div class="icon-grid" *ngIf="showIconPicker">
+        <div 
+          class="icon-option" 
+          *ngFor="let icon of availableIcons" 
+          (click)="selecionarIcone(icon)"
+          [class.selected]="selectedIcon === icon"
+        >
+          {{ icon }}
+        </div>
+      </div>
+    </div>
+
     <!-- Área de composição -->
     <div class="compose-body">
       <ion-textarea

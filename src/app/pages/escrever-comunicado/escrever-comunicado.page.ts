@@ -58,6 +58,9 @@ export class EscreverComunicadoPage {
   subject: string = '';
   message: string = '';
   showCcBcc: boolean = false;
+  selectedIcon: string = '📝';
+  showIconPicker: boolean = false;
+  availableIcons: string[] = ['🚨', '📝', '🎄', '🍽️', '📚', '🏅', '🎆', '📢', '⚠️', '💡', '🎉', '📅'];
 
   constructor(private router: Router, private location: Location) {
     addIcons({
@@ -84,35 +87,61 @@ export class EscreverComunicadoPage {
   }
 
   selecionarRemetente() {
-    console.log('Selecionar remetente');
+    const remetentes = ['docente@crecheapp.com', 'coordenacao@crecheapp.com', 'direcao@crecheapp.com'];
+    console.log('Remetentes disponíveis:', remetentes);
   }
 
   selecionarDestinatarios() {
-    console.log('Selecionar destinatários');
+    const grupos = ['Todos os Pais', 'Turma A', 'Turma B', 'Turma C', 'Professores'];
+    console.log('Grupos disponíveis:', grupos);
   }
 
   anexarArquivo() {
-    console.log('Anexar arquivo');
+    console.log('Abrindo seletor de arquivos...');
+    // Simular seleção de arquivo
+    const tiposPermitidos = ['.pdf', '.doc', '.docx', '.jpg', '.png'];
+    console.log('Tipos permitidos:', tiposPermitidos);
   }
 
   inserirLink() {
-    console.log('Inserir link');
+    const url = prompt('Digite a URL do link:');
+    if (url) {
+      this.message += ` ${url}`;
+      console.log('Link inserido:', url);
+    }
   }
 
   inserirEmoji() {
-    console.log('Inserir emoji');
+    const emojis = ['😊', '👍', '❤️', '🎉', '⭐', '✅', '❗', '📌'];
+    console.log('Emojis disponíveis:', emojis);
+    // Adicionar primeiro emoji como exemplo
+    this.message += ' 😊';
   }
 
   inserirImagem() {
-    console.log('Inserir imagem');
+    console.log('Abrindo galeria de imagens...');
+    const formatosPermitidos = ['.jpg', '.jpeg', '.png', '.gif'];
+    console.log('Formatos permitidos:', formatosPermitidos);
   }
 
   mostrarOpcoes() {
-    console.log('Mostrar opções');
+    const opcoes = ['Agendar envio', 'Definir prioridade', 'Solicitar confirmação de leitura'];
+    console.log('Opções disponíveis:', opcoes);
   }
 
   formatarTexto() {
-    console.log('Formatar texto');
+    const opcoes = ['Negrito', 'Itálico', 'Sublinhado', 'Lista', 'Numeração'];
+    console.log('Opções de formatação:', opcoes);
+  }
+
+  mostrarIcones() {
+    this.showIconPicker = !this.showIconPicker;
+  }
+
+  selecionarIcone(icon: string) {
+    this.selectedIcon = icon;
+    this.showIconPicker = false;
+    console.log('Ícone selecionado:', icon);
   }
 
   salvarRascunho() {
@@ -128,16 +157,26 @@ export class EscreverComunicadoPage {
   }
 
   descartarComunicado() {
-    this.to = '';
-    this.cc = '';
-    this.bcc = '';
-    this.subject = '';
-    this.message = '';
-    this.showCcBcc = false;
-    console.log('Comunicado descartado');
+    const confirmar = confirm('Tem certeza que deseja descartar este comunicado?');
+    if (confirmar) {
+      this.to = '';
+      this.cc = '';
+      this.bcc = '';
+      this.subject = '';
+      this.message = '';
+      this.selectedIcon = '📝';
+      this.showCcBcc = false;
+      this.showIconPicker = false;
+      console.log('Comunicado descartado');
+    }
   }
 
   enviarComunicado() {
+    if (!this.to || !this.subject || !this.message) {
+      alert('Por favor, preencha todos os campos obrigatórios.');
+      return;
+    }
+    
     console.log('Enviando comunicado...');
     console.log({ 
       from: this.from, 
@@ -145,8 +184,12 @@ export class EscreverComunicadoPage {
       cc: this.cc,
       bcc: this.bcc,
       subject: this.subject, 
-      message: this.message 
+      message: this.message,
+      icon: this.selectedIcon,
+      timestamp: new Date().toISOString()
     });
+    
+    alert('Comunicado enviado com sucesso!');
     this.router.navigateByUrl('/menu-docente');
   }
 }

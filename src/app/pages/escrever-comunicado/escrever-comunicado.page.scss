@@ -274,6 +274,75 @@
   --highlight-color-focused: #c4680b;
 }
 
+// Seletor de ícones
+.icon-field {
+  position: relative;
+}
+
+.icon-selector {
+  flex: 1;
+}
+
+.selected-icon {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid #c99a62;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: "Segoe UI", sans-serif;
+  
+  &:hover {
+    border-color: #c4680b;
+  }
+}
+
+.icon-display {
+  font-size: 20px;
+  margin-right: 8px;
+}
+
+.icon-grid {
+  position: absolute;
+  top: 100%;
+  left: 16px;
+  right: 16px;
+  background: white;
+  border: 1px solid #c99a62;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  padding: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.icon-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(196, 104, 11, 0.1);
+  }
+  
+  &.selected {
+    background: #c4680b;
+    color: white;
+  }
+}
+
 // Remove cores verdes do ripple effect e estados ativos
 ion-button {
   --ripple-color: rgba(196, 104, 11, 0.2);
@@ -293,4 +362,11 @@ ion-input, ion-textarea {
   --ion-color-step-100: rgba(196, 104, 11, 0.1);
   --ion-color-step-150: rgba(196, 104, 11, 0.15);
   --ion-color-step-200: rgba(196, 104, 11, 0.2);
+}
+
+// Responsividade para o seletor de ícones
+@media (max-width: 480px) {
+  .icon-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
