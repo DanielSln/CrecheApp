@@ -1,9 +1,14 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/comunicados"></ion-back-button>
+      <ion-back-button [defaultHref]="getBackUrl()"></ion-back-button>
     </ion-buttons>
     <ion-title>{{ comunicado?.title }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="excluirComunicado()" *ngIf="comunicado">
+        <ion-icon name="trash-outline" class="trash-icon"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

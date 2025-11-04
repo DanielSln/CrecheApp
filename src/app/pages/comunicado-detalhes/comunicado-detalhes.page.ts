@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { addIcons } from 'ionicons';
+import { trashOutline } from 'ionicons/icons';
 import {
   IonContent,
   IonHeader,
@@ -8,6 +10,10 @@ import {
   IonToolbar,
   IonButtons,
   IonBackButton,
+  IonButton,
+  IonIcon,
+  AlertController,
+  ToastController,
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -22,6 +28,8 @@ import {
     IonToolbar,
     IonButtons,
     IonBackButton,
+    IonButton,
+    IonIcon,
     CommonModule,
   ],
 })
@@ -87,7 +95,14 @@ export class ComunicadoDetalhesPage implements OnInit {
     },
   ];
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private alertController: AlertController,
+    private toastController: ToastController
+  ) {
+    addIcons({ 'trash-outline': trashOutline });
+  }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -124,5 +139,62 @@ export class ComunicadoDetalhesPage implements OnInit {
 
   getFormattedContent(): string {
     return this.comunicado?.content.replace(/\n/g, '<br>') || '';
+  }
+
+  getBackUrl(): string {
+    // Verifica o tipo de usuário para determinar a página de volta
+    const userType = localStorage.getItem('userType');
+    return userType === 'docente' ? '/comunicados-docente' : '/comunicados';
+  }
+
+  async excluirComunicado() {
+    const alert = await this.alertController.create({
+      header: 'Excluir Comunicado',
+      message: 'Tem certeza que deseja excluir este comunicado? Esta ação não pode ser desfeita.',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Excluir',
+          role: 'destructive',
+          handler: async () => {
+            await this.confirmarExclusao();
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  async confirmarExclusao() {
+    try {
+      // Remover dos comunicados enviados (localStorage)
+      const comunicadosEnviados = JSON.parse(localStorage.getItem('comunicados_enviados') || '[]');
+      const comunicadosAtualizados = comunicadosEnviados.filter((c: any) => 
+        String(c.id) !== String(this.comunicado.id)
+      );
+      localStorage.setItem('comunicados_enviados', JSON.stringify(comunicadosAtualizados));
+
+      const toast = await this.toastController.create({
+        message: 'Comunicado excluído com sucesso!',
+        duration: 2000,
+        position: 'bottom',
+        color: 'success'
+      });
+      await toast.present();
+
+      // Voltar para a página anterior
+      this.router.navigateByUrl('/comunicados-docente');
+    } catch (error) {
+      const toast = await this.toastController.create({
+        message: 'Erro ao excluir comunicado!',
+        duration: 2000,
+        position: 'bottom',
+        color: 'danger'
+      });
+      await toast.present();
+    }
   }
 }
