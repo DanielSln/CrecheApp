@@ -148,3 +148,26 @@ a {
   margin-top: 10px;
   color: #3c2500;
 }
+
+a:hover {
+  text-decoration: underline;
+}
+
+ion-checkbox {
+  --size: 22px; /* tamanho */
+  --checkbox-background: white; /* fundo */
+  --checkbox-background-checked: #3880ff; /* fundo quando marcado */
+  --border-color: #ccc; /* borda */
+  --border-color-checked: #3880ff; /* borda quando marcado */
+  --checkmark-color: white; /* cor do ícone de check */
+  --background-checked: #3880ff;
+  margin-right: -75px;  
+}
+
+ion-label {
+  font-size: 14px;
+  color: white;
+  margin-left: 0px;
+  align-items: center;
+}
+
