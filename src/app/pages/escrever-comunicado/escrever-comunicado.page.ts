@@ -28,6 +28,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-escrever-comunicado',
@@ -58,7 +59,7 @@ export class EscreverComunicadoPage {
   message: string = '';
   showCcBcc: boolean = false;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private location: Location) {
     addIcons({
       'close-outline': closeOutline,
       'attach-outline': attachOutline,
@@ -79,7 +80,7 @@ export class EscreverComunicadoPage {
   }
 
   fecharComposer() {
-    this.router.navigateByUrl('/menu-docente');
+    this.location.back();
   }
 
   selecionarRemetente() {
