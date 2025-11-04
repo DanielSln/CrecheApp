@@ -10,6 +10,8 @@ import {
   IonInput,
   IonTextarea,
   IonTitle,
+  AlertController,
+  ToastController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
@@ -64,7 +66,13 @@ export class EscreverComunicadoPage {
   showIconPicker: boolean = false;
   availableIcons: string[] = ['🚨', '📝', '🎄', '🍽️', '📚', '🏅', '🎆', '📢', '⚠️', '💡', '🎉', '📅'];
 
-  constructor(private router: Router, private location: Location, private http: HttpClient) {
+  constructor(
+    private router: Router, 
+    private location: Location, 
+    private http: HttpClient,
+    private alertController: AlertController,
+    private toastController: ToastController
+  ) {
     addIcons({
       'close-outline': closeOutline,
       'link-outline': linkOutline,
@@ -81,15 +89,25 @@ export class EscreverComunicadoPage {
     });
   }
 
-  toggleCcBcc() {
+  async toggleCcBcc() {
     console.log('toggleCcBcc executado');
-    alert('Botão CC/BCC funcionando!');
+    const toast = await this.toastController.create({
+      message: 'Botão CC/BCC funcionando!',
+      duration: 2000,
+      position: 'bottom'
+    });
+    await toast.present();
     this.showCcBcc = !this.showCcBcc;
   }
 
-  fecharComposer() {
+  async fecharComposer() {
     console.log('fecharComposer executado');
-    alert('Botão fechar funcionando!');
+    const toast = await this.toastController.create({
+      message: 'Botão fechar funcionando!',
+      duration: 2000,
+      position: 'bottom'
+    });
+    await toast.present();
     this.location.back();
   }
 
@@ -529,15 +547,25 @@ export class EscreverComunicadoPage {
     console.log('Lista de materiais adicionada');
   }
 
-  mostrarIcones() {
+  async mostrarIcones() {
     console.log('mostrarIcones executado');
-    alert('Botão ícones funcionando!');
+    const toast = await this.toastController.create({
+      message: 'Botão ícones funcionando!',
+      duration: 2000,
+      position: 'bottom'
+    });
+    await toast.present();
     this.showIconPicker = !this.showIconPicker;
   }
 
-  selecionarIcone(icon: string) {
+  async selecionarIcone(icon: string) {
     console.log('selecionarIcone executado:', icon);
-    alert(`Ícone selecionado: ${icon}`);
+    const toast = await this.toastController.create({
+      message: `Ícone selecionado: ${icon}`,
+      duration: 2000,
+      position: 'bottom'
+    });
+    await toast.present();
     this.selectedIcon = icon;
     this.showIconPicker = false;
   }
