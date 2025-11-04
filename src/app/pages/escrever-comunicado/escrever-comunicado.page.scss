@@ -1,59 +1,68 @@
-.escrever-content {
-  --background: #f9f9f9;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 20px;
+.compose-toolbar {
+  --background: #202124;
+  --color: #ffffff;
 }
 
-.compose-container {
-  background: #fff;
-  width: 95%;
-  max-width: 700px;
-  margin: 0 auto;
-  border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  padding: 16px;
+ion-content.compose-content {
+  --background: #202124;
+  color: #ffffff;
+  font-family: Roboto, sans-serif;
+}
+
+.compose-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  padding: 8px 12px;
 }
 
-ion-item {
-  --background: transparent;
-  --padding-start: 0;
-  --inner-padding-end: 0;
-  --highlight-color-focused: #d17a00;
-}
-
-ion-label {
-  font-weight: 600;
-  color: #555;
-  margin-bottom: 6px;
-}
-
-ion-input,
-ion-textarea {
-  --padding-start: 8px;
-  --padding-end: 8px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #fafafa;
-  font-size: 15px;
-  color: #333;
-}
-
-ion-textarea {
-  min-height: 160px;
-}
-
-.actions {
+.compose-row {
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
 }
 
-ion-button {
-  border-radius: 10px;
+.compose-label {
+  color: #9aa0a6;
+  font-size: 14px;
+  margin-right: 8px;
+}
+
+.compose-value {
+  flex: 1;
+  color: #e8eaed;
+  font-size: 14px;
+}
+
+.compose-input {
+  flex: 1;
+  color: #e8eaed;
+  --placeholder-color: #9aa0a6;
+  font-size: 14px;
+}
+
+.compose-subject {
+  color: #e8eaed;
+  font-size: 15px;
+  margin-top: 4px;
+  --placeholder-color: #9aa0a6;
+}
+
+.compose-textarea {
+  margin-top: 12px;
+  color: #ffffff;
+  font-size: 15px;
+  --placeholder-color: #9aa0a6;
+}
+
+ion-icon {
+  color: #9aa0a6;
+  font-size: 18px;
+  margin-left: 6px;
+}
+
+.divider {
+  height: 1px;
+  background-color: #3c4043;
+  margin: 4px 0;
 }

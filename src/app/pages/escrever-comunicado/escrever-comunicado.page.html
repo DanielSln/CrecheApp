@@ -1,59 +1,58 @@
-<ion-header translucent>
-  <ion-toolbar>
+<ion-header>
+  <ion-toolbar class="compose-toolbar">
     <ion-buttons slot="start">
-      <ion-button fill="clear" color="medium" (click)="voltar()">
-        <ion-icon name="close-outline"></ion-icon>
-      </ion-button>
+      <ion-back-button defaultHref="/menu-docente" text=""></ion-back-button>
     </ion-buttons>
 
-    <ion-title>Escrever Comunicado</ion-title>
-
     <ion-buttons slot="end">
-      <ion-button color="primary" (click)="enviarComunicado()">
-        Enviar
+      <ion-button fill="clear">
+        <ion-icon name="attach-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" (click)="enviarComunicado()">
+        <ion-icon name="send-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear">
+        <ion-icon name="ellipsis-vertical"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="escrever-content" fullscreen>
-  <div class="compose-container">
-    <ion-item lines="none">
-      <ion-label position="stacked">Para</ion-label>
-      <ion-input
-        [(ngModel)]="destinatario"
-        placeholder="Ex: Pais da Turma A"
-      ></ion-input>
-    </ion-item>
-
-    <ion-item lines="none">
-      <ion-label position="stacked">Assunto</ion-label>
-      <ion-input
-        [(ngModel)]="assunto"
-        placeholder="Ex: Aviso importante sobre reunião"
-      ></ion-input>
-    </ion-item>
-
-    <ion-item lines="none">
-      <ion-label position="stacked">Mensagem</ion-label>
-      <ion-textarea
-        autoGrow="true"
-        rows="10"
-        placeholder="Digite sua mensagem..."
-        [(ngModel)]="mensagem"
-      ></ion-textarea>
-    </ion-item>
-
-    <div class="actions">
-      <ion-button color="primary" (click)="enviarComunicado()">
-        <ion-icon slot="start" name="send-outline"></ion-icon>
-        Enviar
-      </ion-button>
-
-      <ion-button fill="outline" color="medium" (click)="limparCampos()">
-        <ion-icon slot="start" name="trash-outline"></ion-icon>
-        Limpar
-      </ion-button>
+<ion-content class="compose-content">
+  <div class="compose-wrapper">
+    <div class="compose-row">
+      <span class="compose-label">From</span>
+      <span class="compose-value">{{ from }}</span>
+      <ion-icon name="chevron-down-outline"></ion-icon>
     </div>
+
+    <div class="divider"></div>
+
+    <div class="compose-row">
+      <span class="compose-label">To</span>
+      <ion-input
+        [(ngModel)]="to"
+        placeholder=""
+        class="compose-input"
+      ></ion-input>
+      <ion-icon name="chevron-down-outline"></ion-icon>
+    </div>
+
+    <div class="divider"></div>
+
+    <ion-input
+      [(ngModel)]="subject"
+      placeholder="Subject"
+      class="compose-subject"
+    ></ion-input>
+
+    <div class="divider"></div>
+
+    <ion-textarea
+      [(ngModel)]="message"
+      placeholder="Compose email"
+      autoGrow="true"
+      class="compose-textarea"
+    ></ion-textarea>
   </div>
 </ion-content>
