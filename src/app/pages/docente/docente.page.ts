@@ -28,9 +28,9 @@ import { Router } from '@angular/router';
   ],
 })
 export class DocentePage implements OnInit {
-  nome: string = '';
   instituicao: string = 'SENAC';
-  cargo: string = '';
+  nome: string = '';
+  id: string = '';
 
   constructor(private router: Router) {}
 
@@ -40,7 +40,12 @@ export class DocentePage implements OnInit {
 
   carregarDados() {
     this.nome = localStorage.getItem('userName') || 'Não informado';
-    this.cargo = localStorage.getItem('userEmail') || 'Não informado'; //arrumar isso aqui depois com as informaçoes que vierem do login
+    const loginCompleto = localStorage.getItem('userEmail') || 'Não informado';
+    // Extrai apenas o ID
+    //arrumar isso aqui depois com as informaçoes que vierem do login
+    this.id = loginCompleto.includes(':')
+      ? loginCompleto.split(':')[1].trim()
+      : loginCompleto;
     // Adicione outras informações conforme necessário
   }
 

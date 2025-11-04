@@ -28,9 +28,9 @@ import { Router } from '@angular/router';
   ],
 })
 export class FilhoPage implements OnInit {
+  escola: string = 'SENAC';
   nome: string = '';
   matricula: string = '';
-  escola: string = 'SENAC';
 
   constructor(private router: Router) {}
 
@@ -40,9 +40,12 @@ export class FilhoPage implements OnInit {
 
   carregarDados() {
     this.nome = localStorage.getItem('userName') || 'Não informado';
-    const matriculaCompleta = localStorage.getItem('userEmail') || 'Não informado';
+    const matriculaCompleta =
+      localStorage.getItem('userEmail') || 'Não informado';
     // Extrai apenas o número da matrícula
-    this.matricula = matriculaCompleta.includes(':') ? matriculaCompleta.split(':')[1].trim() : matriculaCompleta;
+    this.matricula = matriculaCompleta.includes(':')
+      ? matriculaCompleta.split(':')[1].trim()
+      : matriculaCompleta;
     // Adicione outras informações conforme necessário
   }
 
