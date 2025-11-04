@@ -1,25 +1,25 @@
 <ion-header>
   <ion-toolbar class="compose-toolbar">
     <ion-buttons slot="start">
-      <ion-button fill="clear" class="close-btn">
+      <ion-button fill="clear" class="close-btn" (click)="fecharComposer()">
         <ion-icon name="close-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
 
     <ion-buttons slot="end">
-      <ion-button fill="clear" class="action-btn">
+      <ion-button fill="clear" class="action-btn" (click)="anexarArquivo()">
         <ion-icon name="attach-outline"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" class="action-btn">
+      <ion-button fill="clear" class="action-btn" (click)="inserirLink()">
         <ion-icon name="link-outline"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" class="action-btn">
+      <ion-button fill="clear" class="action-btn" (click)="inserirEmoji()">
         <ion-icon name="happy-outline"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" class="action-btn">
+      <ion-button fill="clear" class="action-btn" (click)="inserirImagem()">
         <ion-icon name="image-outline"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" class="action-btn">
+      <ion-button fill="clear" class="action-btn" (click)="mostrarOpcoes()">
         <ion-icon name="ellipsis-vertical"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -34,7 +34,7 @@
         <span class="field-label">De</span>
         <div class="field-content">
           <span class="from-email">{{ from }}</span>
-          <ion-button fill="clear" size="small" class="dropdown-btn">
+          <ion-button fill="clear" size="small" class="dropdown-btn" (click)="selecionarRemetente()">
             <ion-icon name="chevron-down-outline"></ion-icon>
           </ion-button>
         </div>
@@ -52,7 +52,7 @@
             class="recipient-input"
             fill="outline"
           ></ion-input>
-          <ion-button fill="clear" size="small" class="dropdown-btn">
+          <ion-button fill="clear" size="small" class="dropdown-btn" (click)="selecionarDestinatarios()">
             <ion-icon name="chevron-down-outline"></ion-icon>
           </ion-button>
         </div>
@@ -115,16 +115,16 @@
 
     <!-- Barra de ferramentas de formatação -->
     <div class="formatting-toolbar">
-      <ion-button fill="clear" size="small" class="format-btn">
+      <ion-button fill="clear" size="small" class="format-btn" (click)="formatarTexto()">
         <ion-icon name="text-outline"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" size="small" class="format-btn">
+      <ion-button fill="clear" size="small" class="format-btn" (click)="anexarArquivo()">
         <ion-icon name="attach-outline"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" size="small" class="format-btn">
+      <ion-button fill="clear" size="small" class="format-btn" (click)="inserirLink()">
         <ion-icon name="link-outline"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" size="small" class="format-btn">
+      <ion-button fill="clear" size="small" class="format-btn" (click)="inserirImagem()">
         <ion-icon name="image-outline"></ion-icon>
       </ion-button>
     </div>
@@ -137,11 +137,11 @@
       </ion-button>
 
       <div class="secondary-actions">
-        <ion-button fill="clear" class="secondary-btn">
+        <ion-button fill="clear" class="secondary-btn" (click)="salvarRascunho()">
           <ion-icon name="save-outline"></ion-icon>
           Salvar rascunho
         </ion-button>
-        <ion-button fill="clear" class="secondary-btn">
+        <ion-button fill="clear" class="secondary-btn" (click)="descartarComunicado()">
           <ion-icon name="trash-outline"></ion-icon>
           Descartar
         </ion-button>

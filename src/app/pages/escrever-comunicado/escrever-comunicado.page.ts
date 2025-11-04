@@ -78,6 +78,64 @@ export class EscreverComunicadoPage {
     this.showCcBcc = !this.showCcBcc;
   }
 
+  fecharComposer() {
+    this.router.navigateByUrl('/menu-docente');
+  }
+
+  selecionarRemetente() {
+    console.log('Selecionar remetente');
+  }
+
+  selecionarDestinatarios() {
+    console.log('Selecionar destinatários');
+  }
+
+  anexarArquivo() {
+    console.log('Anexar arquivo');
+  }
+
+  inserirLink() {
+    console.log('Inserir link');
+  }
+
+  inserirEmoji() {
+    console.log('Inserir emoji');
+  }
+
+  inserirImagem() {
+    console.log('Inserir imagem');
+  }
+
+  mostrarOpcoes() {
+    console.log('Mostrar opções');
+  }
+
+  formatarTexto() {
+    console.log('Formatar texto');
+  }
+
+  salvarRascunho() {
+    console.log('Salvando rascunho...');
+    console.log({ 
+      from: this.from, 
+      to: this.to, 
+      cc: this.cc,
+      bcc: this.bcc,
+      subject: this.subject, 
+      message: this.message 
+    });
+  }
+
+  descartarComunicado() {
+    this.to = '';
+    this.cc = '';
+    this.bcc = '';
+    this.subject = '';
+    this.message = '';
+    this.showCcBcc = false;
+    console.log('Comunicado descartado');
+  }
+
   enviarComunicado() {
     console.log('Enviando comunicado...');
     console.log({ 
