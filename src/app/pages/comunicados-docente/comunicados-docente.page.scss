@@ -33,6 +33,12 @@ ion-menu-button {
   font-family: system-ui, sans-serif;
 }
 
+.counter {
+  color: #c4680b;
+  font-weight: 600;
+  font-size: 14px;
+}
+
 .page-content {
   padding: 0;
 }
@@ -155,7 +161,7 @@ ion-menu-button {
   width: 50px;
   height: 40px;
   margin-top: 70px ;
-  margin-left: 320px;
+  margin-left: 300px;
   --ripple-color: transparent;
   --background-activated: #34C759;
   --background-focused: #34C759;
