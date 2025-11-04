@@ -53,8 +53,8 @@ export class LoginAlunoPage implements OnInit {
 
     if (savedRemember === 'true' && savedCpf && savedMatricula) {
       this.nome = savedNome || '';
-      this.cpf = savedCpf;
-      this.matricula = savedMatricula;
+      this.cpf = savedCpf || '';
+      this.matricula = savedMatricula || '';
       this.rememberMe = true;
     }
   }
