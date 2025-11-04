@@ -30,6 +30,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { HttpClient, provideHttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-escrever-comunicado',
@@ -63,7 +64,7 @@ export class EscreverComunicadoPage {
   showIconPicker: boolean = false;
   availableIcons: string[] = ['🚨', '📝', '🎄', '🍽️', '📚', '🏅', '🎆', '📢', '⚠️', '💡', '🎉', '📅'];
 
-  constructor(private router: Router, private location: Location) {
+  constructor(private router: Router, private location: Location, private http: HttpClient) {
     addIcons({
       'close-outline': closeOutline,
       'link-outline': linkOutline,
@@ -95,7 +96,7 @@ export class EscreverComunicadoPage {
       { email: 'direcao@crecheapp.com', nome: 'Direção' }
     ];
     
-    const opcoes = remetentes.map(r => `${r.nome} (${r.email})`).join('\n');
+    const opcoes = remetentes.map((r: any) => `${r.nome} (${r.email})`).join('\n');
     const escolha = prompt(`Selecione o remetente:\n${opcoes}\n\nDigite 1, 2 ou 3:`);
     
     if (escolha && ['1', '2', '3'].includes(escolha)) {
@@ -105,36 +106,129 @@ export class EscreverComunicadoPage {
   }
 
   selecionarDestinatarios() {
-    const grupos = [
-      'Todos os Pais',
-      'Turma Berçário',
-      'Turma Maternal I', 
-      'Turma Maternal II',
-      'Turma Pré I',
-      'Turma Pré II',
-      'Professores',
-      'Funcionários'
-    ];
+    // Buscar pais do banco de dados
+    this.http.get<any[]>('https://api-cadastro-six.vercel.app/pais').subscribe({
+      next: (pais) => {
+        const opcoes = [
+          '1. Todos os Pais',
+          '2. Professores',
+          '3. Funcionários',
+          '4. Selecionar pais específicos'
+        ];
+        
+        const escolha = prompt(`Selecione os destinatários:\n${opcoes.join('\n')}\n\nDigite o número:`);
+        
+        switch(escolha) {
+          case '1':
+            this.to = `Todos os Pais (${pais.length} cadastrados)`;
+            break;
+          case '2':
+            this.to = 'Professores';
+            break;
+          case '3':
+            this.to = 'Funcionários';
+            break;
+          case '4':
+            this.selecionarPaisEspecificos(pais);
+            break;
+        }
+        
+        console.log('Destinatários selecionados:', this.to);
+      },
+      error: (error) => {
+        console.error('Erro ao buscar pais:', error);
+        alert('Erro ao conectar com o banco de dados. Usando opções padrão.');
+        // Fallback para opções estáticas
+        const grupos = ['Todos os Pais', 'Professores', 'Funcionários'];
+        const opcoes = grupos.map((g: string, i: number) => `${i + 1}. ${g}`).join('\n');
+        const escolha = prompt(`Selecione os destinatários:\n${opcoes}\n\nDigite o número:`);
+        
+        if (escolha && parseInt(escolha) > 0 && parseInt(escolha) <= grupos.length) {
+          this.to = grupos[parseInt(escolha) - 1];
+        }
+      }
+    });
+  }
+  
+  selecionarPaisEspecificos(pais: any[]) {
+    if (pais.length === 0) {
+      alert('Nenhum pai/responsável encontrado no banco de dados.');
+      return;
+    }
     
-    const opcoes = grupos.map((g, i) => `${i + 1}. ${g}`).join('\n');
-    const escolha = prompt(`Selecione os destinatários:\n${opcoes}\n\nDigite o número:`);
+    const lista = pais.map((pai: any, i: number) => 
+      `${i + 1}. ${pai.nome} (Email: ${pai.email || 'Não informado'})`
+    ).join('\n');
     
-    if (escolha && parseInt(escolha) > 0 && parseInt(escolha) <= grupos.length) {
-      this.to = grupos[parseInt(escolha) - 1];
-      console.log('Destinatários selecionados:', this.to);
+    const escolha = prompt(`Pais cadastrados (${pais.length}):\n${lista}\n\nDigite os números separados por vírgula ou 0 para todos:`);
+    
+    if (escolha === '0') {
+      this.to = `Todos os pais cadastrados (${pais.length} pais)`;
+    } else if (escolha) {
+      const indices = escolha.split(',').map((n: string) => parseInt(n.trim()) - 1);
+      const paisSelecionados = indices
+        .filter((i: number) => i >= 0 && i < pais.length)
+        .map((i: number) => pais[i].nome);
+      
+      if (paisSelecionados.length > 0) {
+        this.to = `Pais selecionados: ${paisSelecionados.join(', ')}`;
+      }
     }
   }
 
   agendarEnvio() {
+    const opcoes = [
+      '1. Enviar em 1 hora',
+      '2. Enviar amanhã às 8h',
+      '3. Enviar na segunda-feira',
+      '4. Definir data/hora personalizada'
+    ];
+    
+    const escolha = prompt(`Quando enviar o comunicado?\n${opcoes.join('\n')}\n\nDigite o número:`);
+    
     const agora = new Date();
-    const amanha = new Date(agora.getTime() + 24 * 60 * 60 * 1000);
-    const dataFormatada = amanha.toISOString().slice(0, 16);
+    let dataAgendada: Date;
     
-    const dataEscolhida = prompt(`Agendar envio para quando?\n\nFormato: AAAA-MM-DD HH:MM\nExemplo: ${dataFormatada}`);
+    switch(escolha) {
+      case '1':
+        dataAgendada = new Date(agora.getTime() + 60 * 60 * 1000);
+        break;
+      case '2':
+        dataAgendada = new Date(agora);
+        dataAgendada.setDate(dataAgendada.getDate() + 1);
+        dataAgendada.setHours(8, 0, 0, 0);
+        break;
+      case '3':
+        dataAgendada = new Date(agora);
+        const diasAteSegunda = (8 - dataAgendada.getDay()) % 7 || 7;
+        dataAgendada.setDate(dataAgendada.getDate() + diasAteSegunda);
+        dataAgendada.setHours(8, 0, 0, 0);
+        break;
+      case '4':
+        const dataPersonalizada = prompt('Digite a data e hora (formato: DD/MM/AAAA HH:MM):');
+        if (dataPersonalizada) {
+          try {
+            const [data, hora] = dataPersonalizada.split(' ');
+            const [dia, mes, ano] = data.split('/');
+            const [h, m] = hora.split(':');
+            dataAgendada = new Date(parseInt(ano), parseInt(mes) - 1, parseInt(dia), parseInt(h), parseInt(m));
+          } catch {
+            alert('Formato inválido. Use: DD/MM/AAAA HH:MM');
+            return;
+          }
+        } else {
+          return;
+        }
+        break;
+      default:
+        return;
+    }
     
-    if (dataEscolhida) {
-      console.log('Comunicado agendado para:', dataEscolhida);
-      alert(`Comunicado será enviado em: ${new Date(dataEscolhida).toLocaleString('pt-BR')}`);
+    if (dataAgendada && dataAgendada > agora) {
+      console.log('Comunicado agendado para:', dataAgendada);
+      alert(`⏰ Comunicado agendado para:\n${dataAgendada.toLocaleString('pt-BR')}`);
+    } else {
+      alert('Data inválida. Escolha uma data futura.');
     }
   }
 
@@ -248,19 +342,23 @@ export class EscreverComunicadoPage {
 
   definirPrioridade() {
     const prioridades = [
-      { nivel: 'baixa', cor: '🟢', desc: 'Informação geral' },
-      { nivel: 'normal', cor: '🟡', desc: 'Comunicado padrão' },
-      { nivel: 'alta', cor: '🟠', desc: 'Importante' },
-      { nivel: 'urgente', cor: '🔴', desc: 'Urgente - Ação necessária' }
+      { nivel: 'baixa', cor: '🟢', desc: 'Informação geral', icone: '📝' },
+      { nivel: 'normal', cor: '🟡', desc: 'Comunicado padrão', icone: '📢' },
+      { nivel: 'alta', cor: '🟠', desc: 'Importante', icone: '⚠️' },
+      { nivel: 'urgente', cor: '🔴', desc: 'Urgente - Ação necessária', icone: '🚨' }
     ];
     
-    const opcoes = prioridades.map((p, i) => `${i + 1}. ${p.cor} ${p.nivel.toUpperCase()} - ${p.desc}`).join('\n');
-    const escolha = prompt(`Definir prioridade:\n${opcoes}\n\nDigite o número:`);
+    const opcoes = prioridades.map((p: any, i: number) => `${i + 1}. ${p.cor} ${p.nivel.toUpperCase()} - ${p.desc}`).join('\n');
+    const escolha = prompt(`Definir prioridade do comunicado:\n${opcoes}\n\nDigite o número:`);
     
     if (escolha && parseInt(escolha) > 0 && parseInt(escolha) <= prioridades.length) {
       const prioridade = prioridades[parseInt(escolha) - 1];
+      
+      // Alterar ícone automaticamente baseado na prioridade
+      this.selectedIcon = prioridade.icone;
+      
       console.log('Prioridade definida:', prioridade);
-      alert(`Prioridade definida: ${prioridade.nivel.toUpperCase()}`);
+      alert(`${prioridade.cor} Prioridade definida: ${prioridade.nivel.toUpperCase()}\nÍcone alterado para: ${prioridade.icone}`);
     }
   }
 
@@ -302,7 +400,7 @@ export class EscreverComunicadoPage {
       return;
     }
     
-    const lista = rascunhos.map((r, i) => 
+    const lista = rascunhos.map((r: any, i: number) => 
       `${i + 1}. ${r.subject} (${r.savedAt})`
     ).join('\n');
     
@@ -335,7 +433,7 @@ export class EscreverComunicadoPage {
       return;
     }
     
-    const lista = enviados.slice(0, 5).map((c, i) => 
+    const lista = enviados.slice(0, 5).map((c: any, i: number) => 
       `${i + 1}. ${c.subject}\n   Para: ${c.to}\n   Enviado: ${c.sentAt}\n`
     ).join('\n');
     
@@ -409,7 +507,7 @@ export class EscreverComunicadoPage {
     const rascunhos = JSON.parse(localStorage.getItem('rascunhos') || '[]');
     
     const hoje = new Date().toDateString();
-    const enviadosHoje = enviados.filter(c => 
+    const enviadosHoje = enviados.filter((c: any) => 
       new Date(c.sentAt.split(' ')[0].split('/').reverse().join('-')).toDateString() === hoje
     ).length;
     
@@ -426,12 +524,12 @@ export class EscreverComunicadoPage {
   getDestinatarioMaisUsado(enviados: any[]): string {
     if (enviados.length === 0) return 'Nenhum';
     
-    const contagem = enviados.reduce((acc, c) => {
+    const contagem = enviados.reduce((acc: any, c: any) => {
       acc[c.to] = (acc[c.to] || 0) + 1;
       return acc;
-    }, {});
+    }, {} as any);
     
-    const maisUsado = Object.keys(contagem).reduce((a, b) => 
+    const maisUsado = Object.keys(contagem).reduce((a: string, b: string) => 
       contagem[a] > contagem[b] ? a : b
     );
     
@@ -440,10 +538,11 @@ export class EscreverComunicadoPage {
 
   aplicarNegrito() {
     const opcoes = [
-      '1. Adicionar texto em negrito',
-      '2. Adicionar texto em itálico', 
-      '3. Adicionar texto sublinhado',
-      '4. Adicionar cabeçalho'
+      '1. Texto em negrito',
+      '2. Texto em itálico', 
+      '3. Texto sublinhado',
+      '4. Cabeçalho',
+      '5. Texto destacado'
     ];
     
     const escolha = prompt(`Formatar texto:\n${opcoes.join('\n')}\n\nDigite o número:`);
@@ -451,19 +550,38 @@ export class EscreverComunicadoPage {
     switch(escolha) {
       case '1':
         const negrito = prompt('Digite o texto para negrito:');
-        if (negrito) this.message += ` **${negrito}**`;
+        if (negrito) {
+          this.message += ` **${negrito}**`;
+          console.log('Negrito adicionado:', negrito);
+        }
         break;
       case '2':
         const italico = prompt('Digite o texto para itálico:');
-        if (italico) this.message += ` *${italico}*`;
+        if (italico) {
+          this.message += ` *${italico}*`;
+          console.log('Itálico adicionado:', italico);
+        }
         break;
       case '3':
         const sublinhado = prompt('Digite o texto para sublinhar:');
-        if (sublinhado) this.message += ` __${sublinhado}__`;
+        if (sublinhado) {
+          this.message += ` __${sublinhado}__`;
+          console.log('Sublinhado adicionado:', sublinhado);
+        }
         break;
       case '4':
         const cabecalho = prompt('Digite o cabeçalho:');
-        if (cabecalho) this.message += `\n\n## ${cabecalho}\n`;
+        if (cabecalho) {
+          this.message += `\n\n## ${cabecalho}\n`;
+          console.log('Cabeçalho adicionado:', cabecalho);
+        }
+        break;
+      case '5':
+        const destaque = prompt('Digite o texto para destacar:');
+        if (destaque) {
+          this.message += `\n\n✨ ${destaque} ✨\n`;
+          console.log('Destaque adicionado:', destaque);
+        }
         break;
     }
   }
@@ -473,61 +591,129 @@ export class EscreverComunicadoPage {
       '1. Lista com marcadores (•)',
       '2. Lista numerada (1, 2, 3...)',
       '3. Lista de tarefas (☐)',
-      '4. Horário/Cronograma'
+      '4. Cronograma escolar',
+      '5. Lista de materiais'
     ];
     
     const escolha = prompt(`Tipo de lista:\n${opcoes.join('\n')}\n\nDigite o número:`);
     
     switch(escolha) {
       case '1':
-        const itens = prompt('Digite os itens (separados por vírgula):');
+        const itens = prompt('Digite os itens (separados por vírgula):\nExemplo: Item 1, Item 2, Item 3');
         if (itens) {
-          const lista = itens.split(',').map(item => `• ${item.trim()}`).join('\n');
+          const lista = itens.split(',').map((item: string) => `• ${item.trim()}`).join('\n');
           this.message += `\n\n${lista}\n`;
+          console.log('Lista com marcadores criada');
         }
         break;
       case '2':
-        const numerados = prompt('Digite os itens (separados por vírgula):');
+        const numerados = prompt('Digite os itens (separados por vírgula):\nExemplo: Primeiro item, Segundo item, Terceiro item');
         if (numerados) {
-          const lista = numerados.split(',').map((item, i) => `${i + 1}. ${item.trim()}`).join('\n');
+          const lista = numerados.split(',').map((item: string, i: number) => `${i + 1}. ${item.trim()}`).join('\n');
           this.message += `\n\n${lista}\n`;
+          console.log('Lista numerada criada');
         }
         break;
       case '3':
-        const tarefas = prompt('Digite as tarefas (separadas por vírgula):');
+        const tarefas = prompt('Digite as tarefas (separadas por vírgula):\nExemplo: Trazer autorização, Confirmar presença, Enviar documento');
         if (tarefas) {
-          const lista = tarefas.split(',').map(item => `☐ ${item.trim()}`).join('\n');
-          this.message += `\n\n${lista}\n`;
+          const lista = tarefas.split(',').map((item: string) => `☐ ${item.trim()}`).join('\n');
+          this.message += `\n\n**TAREFAS:**\n${lista}\n`;
+          console.log('Lista de tarefas criada');
         }
         break;
       case '4':
         this.criarCronograma();
         break;
+      case '5':
+        this.criarListaMateriais();
+        break;
     }
   }
   
   criarCronograma() {
-    const cronograma = `\n\n🕰️ CRONOGRAMA:\n` +
-      `08:00 - Chegada e acolhimento\n` +
-      `09:00 - Café da manhã\n` +
-      `10:00 - Atividades pedagógicas\n` +
-      `11:30 - Almoço\n` +
-      `13:00 - Descanso\n` +
-      `15:00 - Lanche da tarde\n` +
-      `16:00 - Atividades livres\n` +
-      `17:00 - Saída\n`;
+    const modelos = [
+      '1. Cronograma diário padrão',
+      '2. Cronograma de evento',
+      '3. Cronograma personalizado'
+    ];
     
-    const usar = confirm('Usar modelo de cronograma padrão?\n\n' + cronograma + '\nClique OK para usar ou Cancelar para criar personalizado.');
+    const escolha = prompt(`Tipo de cronograma:\n${modelos.join('\n')}\n\nDigite o número:`);
     
-    if (usar) {
-      this.message += cronograma;
-    } else {
-      const personalizado = prompt('Digite o cronograma personalizado\n(use formato: HH:MM - Atividade, separado por vírgula):');
-      if (personalizado) {
-        const horarios = personalizado.split(',').map(h => `${h.trim()}`).join('\n');
-        this.message += `\n\n🕰️ CRONOGRAMA:\n${horarios}\n`;
-      }
+    switch(escolha) {
+      case '1':
+        const cronogramaDiario = `\n\n🕰️ **CRONOGRAMA DIÁRIO:**\n` +
+          `07:30 - Chegada e acolhimento\n` +
+          `08:30 - Café da manhã\n` +
+          `09:30 - Atividades pedagógicas\n` +
+          `11:00 - Recreio\n` +
+          `11:30 - Almoço\n` +
+          `13:00 - Descanso\n` +
+          `15:00 - Lanche da tarde\n` +
+          `15:30 - Atividades livres\n` +
+          `17:00 - Saída\n`;
+        this.message += cronogramaDiario;
+        break;
+      case '2':
+        const cronogramaEvento = `\n\n🎉 **CRONOGRAMA DO EVENTO:**\n` +
+          `14:00 - Chegada dos convidados\n` +
+          `14:30 - Apresentação das crianças\n` +
+          `15:00 - Lanche coletivo\n` +
+          `15:30 - Atividades recreativas\n` +
+          `16:30 - Entrega de lembranças\n` +
+          `17:00 - Encerramento\n`;
+        this.message += cronogramaEvento;
+        break;
+      case '3':
+        const personalizado = prompt('Digite o cronograma personalizado:\n(Formato: HH:MM - Atividade, separado por vírgula)\n\nExemplo: 08:00 - Início, 10:00 - Intervalo, 12:00 - Almoço');
+        if (personalizado) {
+          const horarios = personalizado.split(',').map((h: string) => h.trim()).join('\n');
+          this.message += `\n\n🕰️ **CRONOGRAMA:**\n${horarios}\n`;
+        }
+        break;
     }
+    console.log('Cronograma adicionado');
+  }
+  
+  criarListaMateriais() {
+    const tiposMaterial = [
+      '1. Material escolar básico',
+      '2. Material para atividade específica',
+      '3. Lista personalizada'
+    ];
+    
+    const escolha = prompt(`Tipo de lista de materiais:\n${tiposMaterial.join('\n')}\n\nDigite o número:`);
+    
+    switch(escolha) {
+      case '1':
+        const materiaisBasicos = `\n\n🎨 **LISTA DE MATERIAIS:**\n` +
+          `• Lápis de cor (12 cores)\n` +
+          `• Giz de cera\n` +
+          `• Cola bastão\n` +
+          `• Tesoura sem ponta\n` +
+          `• Papel sulfite\n` +
+          `• Caderno de desenho\n`;
+        this.message += materiaisBasicos;
+        break;
+      case '2':
+        const atividade = prompt('Digite o nome da atividade:');
+        if (atividade) {
+          this.message += `\n\n🎨 **MATERIAIS PARA: ${atividade.toUpperCase()}**\n` +
+            `• [Material 1]\n` +
+            `• [Material 2]\n` +
+            `• [Material 3]\n\n` +
+            `*Substitua os itens entre colchetes pelos materiais necessários*\n`;
+        }
+        break;
+      case '3':
+        const materiais = prompt('Digite os materiais (separados por vírgula):\nExemplo: Papel, Cola, Tinta, Pincel');
+        if (materiais) {
+          const lista = materiais.split(',').map((item: string) => `• ${item.trim()}`).join('\n');
+          this.message += `\n\n🎨 **LISTA DE MATERIAIS:**\n${lista}\n`;
+        }
+        break;
+    }
+    console.log('Lista de materiais adicionada');
   }
 
   mostrarIcones() {
@@ -569,7 +755,18 @@ export class EscreverComunicadoPage {
   }
 
   descartarComunicado() {
-    const confirmar = confirm('Tem certeza que deseja descartar este comunicado?');
+    const temConteudo = this.to || this.subject || this.message || this.cc || this.bcc;
+    
+    if (!temConteudo) {
+      alert('Não há conteúdo para descartar.');
+      return;
+    }
+    
+    const confirmar = confirm(
+      'Tem certeza que deseja descartar este comunicado?\n\n' +
+      'Todo o conteúdo será perdido e não poderá ser recuperado.'
+    );
+    
     if (confirmar) {
       this.to = '';
       this.cc = '';
@@ -579,7 +776,9 @@ export class EscreverComunicadoPage {
       this.selectedIcon = '📝';
       this.showCcBcc = false;
       this.showIconPicker = false;
+      
       console.log('Comunicado descartado');
+      alert('🗑️ Comunicado descartado com sucesso!');
     }
   }
 
