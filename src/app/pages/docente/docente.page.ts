@@ -40,7 +40,7 @@ export class DocentePage implements OnInit {
 
   carregarDados() {
     this.nome = localStorage.getItem('userName') || 'Não informado';
-    const loginCompleto = localStorage.getItem('userEmail') || 'Não informado';
+    const loginCompleto = localStorage.getItem('userId') || 'Não informado';
     // Extrai apenas o ID
     //arrumar isso aqui depois com as informaçoes que vierem do login
     this.id = loginCompleto.includes(':')
