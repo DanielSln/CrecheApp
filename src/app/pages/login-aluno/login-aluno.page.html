@@ -54,7 +54,13 @@
             placeholder="Nº Matrícula"
             [(ngModel)]="matricula"
           />
-
+          <ion-item lines="none">
+            <ion-checkbox
+              [(ngModel)]="rememberMe"
+              name="rememberMe"
+            ></ion-checkbox>
+            <ion-label>Lembrar-me</ion-label>
+          </ion-item>
           <button
             type="button"
             class="btn-submit"

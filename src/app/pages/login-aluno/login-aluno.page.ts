@@ -7,7 +7,10 @@ import {
   IonHeader,
   IonTitle,
   IonToolbar,
-  AlertController
+  AlertController,
+  IonItem,
+  IonCheckbox,
+  IonLabel,
 } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 
@@ -23,7 +26,10 @@ import { Router } from '@angular/router';
     IonToolbar,
     CommonModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    IonItem,
+    IonCheckbox,
+    IonLabel,
   ]
 })
 export class LoginAlunoPage implements OnInit {
@@ -31,6 +37,7 @@ export class LoginAlunoPage implements OnInit {
   cpf: string = '';
   matricula: string = '';
   isLoading: boolean = false;
+  rememberMe: boolean = false;
 
   constructor(
     private router: Router,
@@ -38,7 +45,19 @@ export class LoginAlunoPage implements OnInit {
     private alertController: AlertController
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    const savedNome = localStorage.getItem('rememberedNomeAluno');
+    const savedCpf = localStorage.getItem('rememberedCpfAluno');
+    const savedMatricula = localStorage.getItem('rememberedMatriculaAluno');
+    const savedRemember = localStorage.getItem('rememberMeAluno');
+
+    if (savedRemember === 'true' && savedCpf && savedMatricula) {
+      this.nome = savedNome || '';
+      this.cpf = savedCpf;
+      this.matricula = savedMatricula;
+      this.rememberMe = true;
+    }
+  }
 
   irParaLoginAluno() {
     this.router.navigateByUrl('/login-aluno');
@@ -67,6 +86,19 @@ export class LoginAlunoPage implements OnInit {
           localStorage.setItem('userName', response.user.nome);
           localStorage.setItem('userEmail', 'Matrícula: ' + response.user.matricula);
           localStorage.setItem('userToken', response.token || '');
+
+          if (this.rememberMe) {
+            localStorage.setItem('rememberedNomeAluno', this.nome);
+            localStorage.setItem('rememberedCpfAluno', this.cpf);
+            localStorage.setItem('rememberedMatriculaAluno', this.matricula);
+            localStorage.setItem('rememberMeAluno', 'true');
+          } else {
+            localStorage.removeItem('rememberedNomeAluno');
+            localStorage.removeItem('rememberedCpfAluno');
+            localStorage.removeItem('rememberedMatriculaAluno');
+            localStorage.removeItem('rememberMeAluno');
+          }
+
           await this.mostrarAlerta('Sucesso', 'Login realizado com sucesso!');
           this.router.navigateByUrl('/termos');
         } else {
