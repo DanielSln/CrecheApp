@@ -7,17 +7,14 @@
     </ion-buttons>
 
     <ion-buttons slot="end">
-      <ion-button fill="clear" class="action-btn" (click)="anexarArquivo()">
-        <ion-icon name="attach-outline"></ion-icon>
-      </ion-button>
-      <ion-button fill="clear" class="action-btn" (click)="inserirLink()">
-        <ion-icon name="link-outline"></ion-icon>
-      </ion-button>
       <ion-button fill="clear" class="action-btn" (click)="inserirEmoji()">
         <ion-icon name="happy-outline"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" class="action-btn" (click)="inserirImagem()">
-        <ion-icon name="image-outline"></ion-icon>
+      <ion-button fill="clear" class="action-btn" (click)="agendarEnvio()">
+        <ion-icon name="time-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" class="action-btn" (click)="definirPrioridade()">
+        <ion-icon name="flag-outline"></ion-icon>
       </ion-button>
       <ion-button fill="clear" class="action-btn" (click)="mostrarOpcoes()">
         <ion-icon name="ellipsis-vertical"></ion-icon>
@@ -142,17 +139,17 @@
 
     <!-- Barra de ferramentas de formatação -->
     <div class="formatting-toolbar">
-      <ion-button fill="clear" size="small" class="format-btn" (click)="formatarTexto()">
+      <ion-button fill="clear" size="small" class="format-btn" (click)="aplicarNegrito()">
         <ion-icon name="text-outline"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" size="small" class="format-btn" (click)="anexarArquivo()">
-        <ion-icon name="attach-outline"></ion-icon>
+      <ion-button fill="clear" size="small" class="format-btn" (click)="criarLista()">
+        <ion-icon name="list-outline"></ion-icon>
       </ion-button>
       <ion-button fill="clear" size="small" class="format-btn" (click)="inserirLink()">
         <ion-icon name="link-outline"></ion-icon>
       </ion-button>
-      <ion-button fill="clear" size="small" class="format-btn" (click)="inserirImagem()">
-        <ion-icon name="image-outline"></ion-icon>
+      <ion-button fill="clear" size="small" class="format-btn" (click)="inserirEmoji()">
+        <ion-icon name="happy-outline"></ion-icon>
       </ion-button>
     </div>
 
