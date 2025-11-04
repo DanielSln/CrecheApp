@@ -825,6 +825,31 @@ export class EscreverComunicadoPage {
         {
           text: 'Enviar',
           handler: async () => {
+            // Criar o novo comunicado
+            const agora = new Date();
+            const dataFormatada = `${agora.getDate().toString().padStart(2, '0')}/${(agora.getMonth() + 1).toString().padStart(2, '0')}`;
+            
+            const novoComunicado = {
+              id: Date.now(),
+              title: this.subject,
+              preview: this.message.length > 50 ? this.message.substring(0, 50) + '...' : this.message,
+              content: this.message,
+              date: dataFormatada,
+              type: this.selectedIcon === '🚨' ? 'urgent' : this.selectedIcon === '⚠️' ? 'info' : 'default',
+              emoji: this.selectedIcon,
+              from: this.from,
+              to: this.to
+            };
+            
+            console.log('Novo comunicado criado:', novoComunicado);
+            
+            // Salvar no localStorage
+            const comunicadosExistentes = JSON.parse(localStorage.getItem('comunicados_enviados') || '[]');
+            comunicadosExistentes.unshift(novoComunicado); // Adiciona no início
+            localStorage.setItem('comunicados_enviados', JSON.stringify(comunicadosExistentes));
+            
+            console.log('Comunicados salvos no localStorage:', comunicadosExistentes);
+            
             const toast = await this.toastController.create({
               message: 'Comunicado enviado com sucesso!',
               duration: 2000,
@@ -832,7 +857,11 @@ export class EscreverComunicadoPage {
               color: 'success'
             });
             await toast.present();
-            this.router.navigateByUrl('/menu-docente');
+            
+            // Navegar para comunicados-docente para ver o resultado
+            setTimeout(() => {
+              this.router.navigateByUrl('/comunicados-docente');
+            }, 500);
           }
         }
       ]

@@ -114,7 +114,45 @@ export class ComunicadosDocentePage implements OnInit {
 
   ngOnInit() {
     console.log('ComunicadosDocentePage ngOnInit chamado');
+    this.carregarComunicados();
     console.log('Total de comunicados:', this.comunicados.length);
+  }
+  
+  ionViewWillEnter() {
+    console.log('ionViewWillEnter - recarregando comunicados');
+    this.carregarComunicados();
+  }
+  
+  carregarComunicados() {
+    // Carregar comunicados enviados do localStorage
+    const comunicadosEnviados = JSON.parse(localStorage.getItem('comunicados_enviados') || '[]');
+    console.log('Comunicados do localStorage:', comunicadosEnviados);
+    
+    // Comunicados estáticos (exemplos)
+    const comunicadosEstaticos = [
+      {
+        id: 'static_1',
+        title: 'Reunião de Pais',
+        preview: 'Reunião na sexta-feira, dia 20/12, às 19h...',
+        content: 'Informamos que haverá reunião de pais na próxima sexta-feira, dia 20/12, às 19h no auditório da creche.',
+        date: '15/12',
+        type: 'urgent',
+        emoji: '🚨',
+      },
+      {
+        id: 'static_2',
+        title: 'Horário de Funcionamento',
+        preview: 'Horário reduzido durante as festas natalinas...',
+        content: 'Durante o período de festas natalinas, a creche funcionará em horário reduzido.',
+        date: '12/12',
+        type: 'default',
+        emoji: '📝',
+      }
+    ];
+    
+    // Combinar: novos comunicados primeiro, depois os estáticos
+    this.comunicados = [...comunicadosEnviados, ...comunicadosEstaticos];
+    console.log('Total de comunicados após carregar:', this.comunicados.length);
   }
 
   irParaEscrever() {
