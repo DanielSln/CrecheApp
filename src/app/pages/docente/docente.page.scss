@@ -26,7 +26,7 @@ ion-content {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  
+
   h1 {
     text-align: center;
     font-family: "Mango AC", sans-serif;
@@ -177,4 +177,12 @@ ion-menu-button {
 ion-back-button {
   --color: #000;
   font-size: 22px;
+}
+
+a {
+  font-size: 16px;
+  text-align: center;
+  margin-top: 10px;
+  color: #3c2500;
+  
 }
