@@ -1,13 +1,59 @@
-<ion-header [translucent]="true">
+<ion-header translucent>
   <ion-toolbar>
-    <ion-title>escrever-comunicado</ion-title>
+    <ion-buttons slot="start">
+      <ion-button fill="clear" color="medium" (click)="voltar()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>Escrever Comunicado</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button color="primary" (click)="enviarComunicado()">
+        Enviar
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">escrever-comunicado</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="escrever-content" fullscreen>
+  <div class="compose-container">
+    <ion-item lines="none">
+      <ion-label position="stacked">Para</ion-label>
+      <ion-input
+        [(ngModel)]="destinatario"
+        placeholder="Ex: Pais da Turma A"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-label position="stacked">Assunto</ion-label>
+      <ion-input
+        [(ngModel)]="assunto"
+        placeholder="Ex: Aviso importante sobre reunião"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-label position="stacked">Mensagem</ion-label>
+      <ion-textarea
+        autoGrow="true"
+        rows="10"
+        placeholder="Digite sua mensagem..."
+        [(ngModel)]="mensagem"
+      ></ion-textarea>
+    </ion-item>
+
+    <div class="actions">
+      <ion-button color="primary" (click)="enviarComunicado()">
+        <ion-icon slot="start" name="send-outline"></ion-icon>
+        Enviar
+      </ion-button>
+
+      <ion-button fill="outline" color="medium" (click)="limparCampos()">
+        <ion-icon slot="start" name="trash-outline"></ion-icon>
+        Limpar
+      </ion-button>
+    </div>
+  </div>
 </ion-content>

@@ -1,0 +1,59 @@
+.escrever-content {
+  --background: #f9f9f9;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 20px;
+}
+
+.compose-container {
+  background: #fff;
+  width: 95%;
+  max-width: 700px;
+  margin: 0 auto;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+ion-item {
+  --background: transparent;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --highlight-color-focused: #d17a00;
+}
+
+ion-label {
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+ion-input,
+ion-textarea {
+  --padding-start: 8px;
+  --padding-end: 8px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+  font-size: 15px;
+  color: #333;
+}
+
+ion-textarea {
+  min-height: 160px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+ion-button {
+  border-radius: 10px;
+}
