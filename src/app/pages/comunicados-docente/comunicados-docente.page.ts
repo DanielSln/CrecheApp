@@ -34,7 +34,7 @@ import { pencil } from 'ionicons/icons';
 })
 export class ComunicadosDocentePage implements OnInit {
   pencil = pencil;
-  
+
   comunicados = [
     {
       id: 0,
@@ -117,6 +117,10 @@ export class ComunicadosDocentePage implements OnInit {
     console.log('Total de comunicados:', this.comunicados.length);
   }
 
+  irParaEscrever() {
+    this.router.navigateByUrl('/escrever-comunicado');
+  }
+
   openComunicado(index: number) {
     const comunicado = this.comunicados[index];
     console.log('Abrindo comunicado:', comunicado.title);
@@ -124,7 +128,6 @@ export class ComunicadosDocentePage implements OnInit {
   }
 
   goToMenu() {
-    // ao acessar a área docente, retornar ao menu do docente
     this.router.navigateByUrl('/menu-docente');
   }
 }
