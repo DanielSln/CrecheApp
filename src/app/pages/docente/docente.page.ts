@@ -40,13 +40,7 @@ export class DocentePage implements OnInit {
 
   carregarDados() {
     this.nome = localStorage.getItem('userName') || 'Não informado';
-    const loginCompleto = localStorage.getItem('userId') || 'Não informado';
-    // Extrai apenas o ID
-    //arrumar isso aqui depois com as informaçoes que vierem do login
-    this.id = loginCompleto.includes(':')
-      ? loginCompleto.split(':')[1].trim()
-      : loginCompleto;
-    // Adicione outras informações conforme necessário
+    this.id = localStorage.getItem('userIdentificador') || 'Não informado';
   }
 
   goToMenu() {

@@ -78,7 +78,8 @@ export class LoginProfessorPage implements OnInit {
           if (response.success && response.user) {
             localStorage.setItem('userType', 'docente');
             localStorage.setItem('userName', response.user.nome);
-            localStorage.setItem('userEmail', 'Cargo: Docente');
+            localStorage.setItem('userEmail', 'ID: ' + (response.user.id || this.id));
+            localStorage.setItem('userIdentificador', this.id);
             localStorage.setItem('userToken', response.token || '');
 
             if (this.rememberMe) {
