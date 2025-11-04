@@ -7,9 +7,6 @@
     </ion-buttons>
 
     <ion-buttons slot="end">
-      <ion-button fill="clear" class="action-btn" (click)="inserirEmoji()">
-        <ion-icon name="happy-outline"></ion-icon>
-      </ion-button>
       <ion-button fill="clear" class="action-btn" (click)="agendarEnvio()">
         <ion-icon name="time-outline"></ion-icon>
       </ion-button>
@@ -56,38 +53,7 @@
       </div>
     </div>
 
-    <!-- Campos CC e BCC (opcionais) -->
-    <div class="compose-field cc-bcc-field" *ngIf="showCcBcc">
-      <div class="field-row">
-        <span class="field-label">Cc</span>
-        <div class="field-content">
-          <ion-input
-            [(ngModel)]="cc"
-            placeholder=""
-            class="recipient-input"
-            fill="outline"
-          ></ion-input>
-        </div>
-      </div>
-      <div class="field-row">
-        <span class="field-label">Cco</span>
-        <div class="field-content">
-          <ion-input
-            [(ngModel)]="bcc"
-            placeholder=""
-            class="recipient-input"
-            fill="outline"
-          ></ion-input>
-        </div>
-      </div>
-    </div>
 
-    <!-- Botão para mostrar CC/BCC -->
-    <div class="cc-bcc-toggle" *ngIf="!showCcBcc">
-      <ion-button fill="clear" size="small" (click)="toggleCcBcc()">
-        Cc/Cco
-      </ion-button>
-    </div>
 
     <!-- Campo Subject -->
     <div class="compose-field subject-field">

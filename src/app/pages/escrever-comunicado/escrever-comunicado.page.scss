@@ -14,7 +14,7 @@
 
 .close-btn, .action-btn {
   --color: black;
-  --ripple-color: rgba(255, 255, 255, 0.2);
+  --ripple-color: rgba(0, 0, 0, 0.2);
   --color-activated: rgba(0, 0, 0, 0.8);
   
   ion-icon {
@@ -162,9 +162,9 @@
 }
 
 .format-btn {
-  --color: #c4680b;
-  --ripple-color: rgba(196, 104, 11, 0.2);
-  --color-activated: #a35207;
+  --color: black;
+  --ripple-color: rgba(0, 0, 0, 0.2);
+  --color-activated: rgba(0, 0, 0, 0.8);
   --padding-start: 8px;
   --padding-end: 8px;
   height: 32px;
@@ -174,7 +174,7 @@
   }
   
   &:hover {
-    --background: rgba(196, 104, 11, 0.1);
+    --background: rgba(0, 0, 0, 0.1);
   }
 }
 

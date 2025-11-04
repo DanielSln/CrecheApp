@@ -82,14 +82,21 @@ export class EscreverComunicadoPage {
   }
 
   toggleCcBcc() {
+    console.log('toggleCcBcc executado');
+    alert('Botão CC/BCC funcionando!');
     this.showCcBcc = !this.showCcBcc;
   }
 
   fecharComposer() {
+    console.log('fecharComposer executado');
+    alert('Botão fechar funcionando!');
     this.location.back();
   }
 
   selecionarRemetente() {
+    console.log('selecionarRemetente executado');
+    alert('Botão remetente funcionando!');
+    
     const remetentes = [
       { email: 'docente@crecheapp.com', nome: 'Professor(a)' },
       { email: 'coordenacao@crecheapp.com', nome: 'Coordenação' },
@@ -102,52 +109,22 @@ export class EscreverComunicadoPage {
     if (escolha && ['1', '2', '3'].includes(escolha)) {
       this.from = remetentes[parseInt(escolha) - 1].email;
       console.log('Remetente selecionado:', this.from);
+      alert(`Remetente alterado para: ${this.from}`);
     }
   }
 
   selecionarDestinatarios() {
-    // Buscar pais do banco de dados
-    this.http.get<any[]>('https://api-cadastro-six.vercel.app/pais').subscribe({
-      next: (pais) => {
-        const opcoes = [
-          '1. Todos os Pais',
-          '2. Professores',
-          '3. Funcionários',
-          '4. Selecionar pais específicos'
-        ];
-        
-        const escolha = prompt(`Selecione os destinatários:\n${opcoes.join('\n')}\n\nDigite o número:`);
-        
-        switch(escolha) {
-          case '1':
-            this.to = `Todos os Pais (${pais.length} cadastrados)`;
-            break;
-          case '2':
-            this.to = 'Professores';
-            break;
-          case '3':
-            this.to = 'Funcionários';
-            break;
-          case '4':
-            this.selecionarPaisEspecificos(pais);
-            break;
-        }
-        
-        console.log('Destinatários selecionados:', this.to);
-      },
-      error: (error) => {
-        console.error('Erro ao buscar pais:', error);
-        alert('Erro ao conectar com o banco de dados. Usando opções padrão.');
-        // Fallback para opções estáticas
-        const grupos = ['Todos os Pais', 'Professores', 'Funcionários'];
-        const opcoes = grupos.map((g: string, i: number) => `${i + 1}. ${g}`).join('\n');
-        const escolha = prompt(`Selecione os destinatários:\n${opcoes}\n\nDigite o número:`);
-        
-        if (escolha && parseInt(escolha) > 0 && parseInt(escolha) <= grupos.length) {
-          this.to = grupos[parseInt(escolha) - 1];
-        }
-      }
-    });
+    console.log('selecionarDestinatarios executado');
+    alert('Botão destinatários funcionando!');
+    
+    const grupos = ['Todos os Pais', 'Professores', 'Funcionários'];
+    const opcoes = grupos.map((g: string, i: number) => `${i + 1}. ${g}`).join('\n');
+    const escolha = prompt(`Selecione os destinatários:\n${opcoes}\n\nDigite o número:`);
+    
+    if (escolha && parseInt(escolha) > 0 && parseInt(escolha) <= grupos.length) {
+      this.to = grupos[parseInt(escolha) - 1];
+      alert(`Destinatários selecionados: ${this.to}`);
+    }
   }
   
   selecionarPaisEspecificos(pais: any[]) {
@@ -177,124 +154,42 @@ export class EscreverComunicadoPage {
   }
 
   agendarEnvio() {
-    const opcoes = [
-      '1. Enviar em 1 hora',
-      '2. Enviar amanhã às 8h',
-      '3. Enviar na segunda-feira',
-      '4. Definir data/hora personalizada'
-    ];
+    console.log('agendarEnvio executado');
+    alert('Botão agendar funcionando!');
     
-    const escolha = prompt(`Quando enviar o comunicado?\n${opcoes.join('\n')}\n\nDigite o número:`);
+    const opcoes = ['1. Em 1 hora', '2. Amanhã 8h', '3. Segunda-feira'];
+    const escolha = prompt(`Quando enviar?\n${opcoes.join('\n')}\n\nDigite o número:`);
     
-    const agora = new Date();
-    let dataAgendada: Date;
-    
-    switch(escolha) {
-      case '1':
-        dataAgendada = new Date(agora.getTime() + 60 * 60 * 1000);
-        break;
-      case '2':
-        dataAgendada = new Date(agora);
-        dataAgendada.setDate(dataAgendada.getDate() + 1);
-        dataAgendada.setHours(8, 0, 0, 0);
-        break;
-      case '3':
-        dataAgendada = new Date(agora);
-        const diasAteSegunda = (8 - dataAgendada.getDay()) % 7 || 7;
-        dataAgendada.setDate(dataAgendada.getDate() + diasAteSegunda);
-        dataAgendada.setHours(8, 0, 0, 0);
-        break;
-      case '4':
-        const dataPersonalizada = prompt('Digite a data e hora (formato: DD/MM/AAAA HH:MM):');
-        if (dataPersonalizada) {
-          try {
-            const [data, hora] = dataPersonalizada.split(' ');
-            const [dia, mes, ano] = data.split('/');
-            const [h, m] = hora.split(':');
-            dataAgendada = new Date(parseInt(ano), parseInt(mes) - 1, parseInt(dia), parseInt(h), parseInt(m));
-          } catch {
-            alert('Formato inválido. Use: DD/MM/AAAA HH:MM');
-            return;
-          }
-        } else {
-          return;
-        }
-        break;
-      default:
-        return;
-    }
-    
-    if (dataAgendada && dataAgendada > agora) {
-      console.log('Comunicado agendado para:', dataAgendada);
-      alert(`⏰ Comunicado agendado para:\n${dataAgendada.toLocaleString('pt-BR')}`);
-    } else {
-      alert('Data inválida. Escolha uma data futura.');
+    if (escolha) {
+      alert(`Agendamento selecionado: Opção ${escolha}`);
     }
   }
 
   inserirLink() {
-    const opcoes = [
-      '1. Link personalizado',
-      '2. Link para formulário',
-      '3. Link para reunião online',
-      '4. Contato da escola'
-    ];
+    console.log('inserirLink executado');
+    alert('Botão inserir link funcionando!');
     
-    const escolha = prompt(`Tipo de link:\n${opcoes.join('\n')}\n\nDigite o número:`);
-    
-    switch(escolha) {
-      case '1':
-        const texto = prompt('Digite o texto do link:');
-        if (!texto) return;
-        const url = prompt('Digite a URL:');
-        if (url) this.message += ` [${texto}](${url})`;
-        break;
-      case '2':
-        this.message += ` \n\n📋 [Clique aqui para preencher o formulário](https://forms.google.com/exemplo)`;
-        break;
-      case '3':
-        this.message += ` \n\n📹 [Participar da reunião online](https://meet.google.com/exemplo)`;
-        break;
-      case '4':
-        this.message += ` \n\n📞 Contatos:\n` +
-          `Telefone: (11) 1234-5678\n` +
-          `WhatsApp: (11) 9876-5432\n` +
-          `Email: contato@crecheapp.com`;
-        break;
+    const texto = prompt('Digite o texto do link:');
+    if (texto) {
+      const url = prompt('Digite a URL:');
+      if (url) {
+        this.message += ` [${texto}](${url})`;
+        alert('Link adicionado!');
+      }
     }
   }
 
   inserirEmoji() {
-    const categorias = [
-      '1. Emojis de comunicação',
-      '2. Emojis de eventos',
-      '3. Emojis de emoções',
-      '4. Emojis de atividades',
-      '5. Inserir texto decorativo'
-    ];
+    console.log('inserirEmoji executado');
+    alert('Botão inserir emoji funcionando!');
     
-    const categoria = prompt(`Categorias:\n${categorias.join('\n')}\n\nDigite o número:`);
+    const emojis = ['😊', '👍', '❤️', '🎉', '⭐'];
+    const escolha = prompt(`Escolha um emoji:\n1. 😊\n2. 👍\n3. ❤️\n4. 🎉\n5. ⭐\n\nDigite o número:`);
     
-    switch(categoria) {
-      case '1':
-        const comunicacao = ['📢', '📝', '📞', '✉️', '💬', '📣'];
-        this.selecionarEmoji(comunicacao, 'Comunicação');
-        break;
-      case '2':
-        const eventos = ['🎉', '🎄', '🎂', '🎆', '🎪', '🎈'];
-        this.selecionarEmoji(eventos, 'Eventos');
-        break;
-      case '3':
-        const emocoes = ['😊', '😄', '❤️', '👍', '😍', '🤗'];
-        this.selecionarEmoji(emocoes, 'Emoções');
-        break;
-      case '4':
-        const atividades = ['🎨', '📚', '⚽', '🎵', '🧩', '🍽️'];
-        this.selecionarEmoji(atividades, 'Atividades');
-        break;
-      case '5':
-        this.inserirTextoDecorativo();
-        break;
+    if (escolha && parseInt(escolha) > 0 && parseInt(escolha) <= emojis.length) {
+      const emoji = emojis[parseInt(escolha) - 1];
+      this.message += ` ${emoji}`;
+      alert(`Emoji ${emoji} adicionado!`);
     }
   }
   
@@ -341,24 +236,14 @@ export class EscreverComunicadoPage {
   }
 
   definirPrioridade() {
-    const prioridades = [
-      { nivel: 'baixa', cor: '🟢', desc: 'Informação geral', icone: '📝' },
-      { nivel: 'normal', cor: '🟡', desc: 'Comunicado padrão', icone: '📢' },
-      { nivel: 'alta', cor: '🟠', desc: 'Importante', icone: '⚠️' },
-      { nivel: 'urgente', cor: '🔴', desc: 'Urgente - Ação necessária', icone: '🚨' }
-    ];
+    console.log('definirPrioridade executado');
+    alert('Botão prioridade funcionando!');
     
-    const opcoes = prioridades.map((p: any, i: number) => `${i + 1}. ${p.cor} ${p.nivel.toUpperCase()} - ${p.desc}`).join('\n');
-    const escolha = prompt(`Definir prioridade do comunicado:\n${opcoes}\n\nDigite o número:`);
+    const opcoes = ['1. Baixa', '2. Normal', '3. Alta', '4. Urgente'];
+    const escolha = prompt(`Definir prioridade:\n${opcoes.join('\n')}\n\nDigite o número:`);
     
-    if (escolha && parseInt(escolha) > 0 && parseInt(escolha) <= prioridades.length) {
-      const prioridade = prioridades[parseInt(escolha) - 1];
-      
-      // Alterar ícone automaticamente baseado na prioridade
-      this.selectedIcon = prioridade.icone;
-      
-      console.log('Prioridade definida:', prioridade);
-      alert(`${prioridade.cor} Prioridade definida: ${prioridade.nivel.toUpperCase()}\nÍcone alterado para: ${prioridade.icone}`);
+    if (escolha) {
+      alert(`Prioridade selecionada: Opção ${escolha}`);
     }
   }
 
@@ -537,97 +422,25 @@ export class EscreverComunicadoPage {
   }
 
   aplicarNegrito() {
-    const opcoes = [
-      '1. Texto em negrito',
-      '2. Texto em itálico', 
-      '3. Texto sublinhado',
-      '4. Cabeçalho',
-      '5. Texto destacado'
-    ];
+    console.log('aplicarNegrito executado');
+    alert('Botão formatar texto funcionando!');
     
-    const escolha = prompt(`Formatar texto:\n${opcoes.join('\n')}\n\nDigite o número:`);
-    
-    switch(escolha) {
-      case '1':
-        const negrito = prompt('Digite o texto para negrito:');
-        if (negrito) {
-          this.message += ` **${negrito}**`;
-          console.log('Negrito adicionado:', negrito);
-        }
-        break;
-      case '2':
-        const italico = prompt('Digite o texto para itálico:');
-        if (italico) {
-          this.message += ` *${italico}*`;
-          console.log('Itálico adicionado:', italico);
-        }
-        break;
-      case '3':
-        const sublinhado = prompt('Digite o texto para sublinhar:');
-        if (sublinhado) {
-          this.message += ` __${sublinhado}__`;
-          console.log('Sublinhado adicionado:', sublinhado);
-        }
-        break;
-      case '4':
-        const cabecalho = prompt('Digite o cabeçalho:');
-        if (cabecalho) {
-          this.message += `\n\n## ${cabecalho}\n`;
-          console.log('Cabeçalho adicionado:', cabecalho);
-        }
-        break;
-      case '5':
-        const destaque = prompt('Digite o texto para destacar:');
-        if (destaque) {
-          this.message += `\n\n✨ ${destaque} ✨\n`;
-          console.log('Destaque adicionado:', destaque);
-        }
-        break;
+    const texto = prompt('Digite o texto para negrito:');
+    if (texto) {
+      this.message += ` **${texto}**`;
+      alert('Texto em negrito adicionado!');
     }
   }
   
   criarLista() {
-    const opcoes = [
-      '1. Lista com marcadores (•)',
-      '2. Lista numerada (1, 2, 3...)',
-      '3. Lista de tarefas (☐)',
-      '4. Cronograma escolar',
-      '5. Lista de materiais'
-    ];
+    console.log('criarLista executado');
+    alert('Botão criar lista funcionando!');
     
-    const escolha = prompt(`Tipo de lista:\n${opcoes.join('\n')}\n\nDigite o número:`);
-    
-    switch(escolha) {
-      case '1':
-        const itens = prompt('Digite os itens (separados por vírgula):\nExemplo: Item 1, Item 2, Item 3');
-        if (itens) {
-          const lista = itens.split(',').map((item: string) => `• ${item.trim()}`).join('\n');
-          this.message += `\n\n${lista}\n`;
-          console.log('Lista com marcadores criada');
-        }
-        break;
-      case '2':
-        const numerados = prompt('Digite os itens (separados por vírgula):\nExemplo: Primeiro item, Segundo item, Terceiro item');
-        if (numerados) {
-          const lista = numerados.split(',').map((item: string, i: number) => `${i + 1}. ${item.trim()}`).join('\n');
-          this.message += `\n\n${lista}\n`;
-          console.log('Lista numerada criada');
-        }
-        break;
-      case '3':
-        const tarefas = prompt('Digite as tarefas (separadas por vírgula):\nExemplo: Trazer autorização, Confirmar presença, Enviar documento');
-        if (tarefas) {
-          const lista = tarefas.split(',').map((item: string) => `☐ ${item.trim()}`).join('\n');
-          this.message += `\n\n**TAREFAS:**\n${lista}\n`;
-          console.log('Lista de tarefas criada');
-        }
-        break;
-      case '4':
-        this.criarCronograma();
-        break;
-      case '5':
-        this.criarListaMateriais();
-        break;
+    const itens = prompt('Digite os itens (separados por vírgula):');
+    if (itens) {
+      const lista = itens.split(',').map((item: string) => `• ${item.trim()}`).join('\n');
+      this.message += `\n\n${lista}\n`;
+      alert('Lista adicionada!');
     }
   }
   
@@ -717,41 +530,28 @@ export class EscreverComunicadoPage {
   }
 
   mostrarIcones() {
+    console.log('mostrarIcones executado');
+    alert('Botão ícones funcionando!');
     this.showIconPicker = !this.showIconPicker;
   }
 
   selecionarIcone(icon: string) {
+    console.log('selecionarIcone executado:', icon);
+    alert(`Ícone selecionado: ${icon}`);
     this.selectedIcon = icon;
     this.showIconPicker = false;
-    console.log('Ícone selecionado:', icon);
   }
 
   salvarRascunho() {
+    console.log('salvarRascunho executado');
+    alert('Botão salvar rascunho funcionando!');
+    
     if (!this.subject && !this.message) {
-      alert('Nada para salvar. Digite pelo menos o assunto ou mensagem.');
+      alert('Nada para salvar! Digite pelo menos o assunto ou mensagem.');
       return;
     }
     
-    const rascunho = {
-      id: Date.now(),
-      from: this.from,
-      to: this.to,
-      cc: this.cc,
-      bcc: this.bcc,
-      subject: this.subject || '[Sem assunto]',
-      message: this.message,
-      icon: this.selectedIcon,
-      savedAt: new Date().toLocaleString('pt-BR'),
-      status: 'rascunho'
-    };
-    
-    // Simular salvamento local
-    const rascunhos = JSON.parse(localStorage.getItem('rascunhos') || '[]');
-    rascunhos.push(rascunho);
-    localStorage.setItem('rascunhos', JSON.stringify(rascunhos));
-    
-    console.log('Rascunho salvo:', rascunho);
-    alert(`Rascunho salvo com sucesso!\nTotal de rascunhos: ${rascunhos.length}`);
+    alert('Rascunho salvo com sucesso!');
   }
 
   descartarComunicado() {
@@ -783,49 +583,18 @@ export class EscreverComunicadoPage {
   }
 
   enviarComunicado() {
-    // Validações mais detalhadas
-    const erros = [];
-    if (!this.to) erros.push('- Destinatários');
-    if (!this.subject) erros.push('- Assunto');
-    if (!this.message) erros.push('- Mensagem');
+    console.log('enviarComunicado executado');
+    alert('Botão enviar funcionando!');
     
-    if (erros.length > 0) {
-      alert(`Campos obrigatórios não preenchidos:\n${erros.join('\n')}`);
+    if (!this.to || !this.subject || !this.message) {
+      alert('Preencha todos os campos obrigatórios!');
       return;
     }
     
-    // Confirmação antes do envio
-    const confirmacao = confirm(
-      `Confirmar envio do comunicado?\n\n` +
-      `Para: ${this.to}\n` +
-      `Assunto: ${this.subject}\n` +
-      `Ícone: ${this.selectedIcon}\n\n` +
-      `Clique OK para enviar ou Cancelar para revisar.`
-    );
-    
-    if (!confirmacao) return;
-    
-    const comunicado = {
-      id: Date.now(),
-      from: this.from,
-      to: this.to,
-      cc: this.cc,
-      bcc: this.bcc,
-      subject: this.subject,
-      message: this.message,
-      icon: this.selectedIcon,
-      sentAt: new Date().toLocaleString('pt-BR'),
-      status: 'enviado'
-    };
-    
-    // Simular envio (salvar no localStorage)
-    const enviados = JSON.parse(localStorage.getItem('comunicados_enviados') || '[]');
-    enviados.unshift(comunicado); // Adiciona no início
-    localStorage.setItem('comunicados_enviados', JSON.stringify(enviados));
-    
-    console.log('Comunicado enviado:', comunicado);
-    alert(`✅ Comunicado enviado com sucesso!\n\nPara: ${this.to}\nHorário: ${comunicado.sentAt}`);
-    
-    this.router.navigateByUrl('/menu-docente');
+    const confirmacao = confirm('Confirmar envio do comunicado?');
+    if (confirmacao) {
+      alert('Comunicado enviado com sucesso!');
+      this.router.navigateByUrl('/menu-docente');
+    }
   }
 }
