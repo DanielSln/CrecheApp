@@ -17,8 +17,14 @@
     <h1>Crachá</h1>
 
     <div class="carteira-card">
-      <div class="foto-container">
-        <img src="assets/img/avatar.jpg" alt="Foto do aluno" />
+      <div class="foto-section">
+        <div class="foto-container" (click)="selectImage()">
+          <img [src]="profileImage" alt="Foto do professor" />
+        </div>
+        <ion-button fill="clear" class="change-photo-btn" (click)="selectImage()">
+          <ion-icon name="camera"></ion-icon>
+          Trocar foto
+        </ion-button>
       </div>
 
       <div class="info_filho">

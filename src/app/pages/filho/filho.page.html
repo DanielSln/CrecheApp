@@ -17,8 +17,18 @@
     <h1>Carteirinha Estudantil</h1>
     
     <div class="carteira-card">
-      <div class="foto-container">
-        <img src="assets/img/avatar.jpg" alt="Foto do aluno">
+      <div class="foto-section">
+        <div class="foto-wrapper">
+          <ion-button fill="clear" class="change-photo-btn" (click)="selectImage()">
+            <div class="button-content">
+              <ion-icon name="camera"></ion-icon>
+              <span>📸</span>
+            </div>
+          </ion-button>
+          <div class="foto-container" (click)="selectImage()">
+            <img [src]="profileImage" alt="Foto do aluno">
+          </div>
+        </div>
       </div>
 
       <div class="info_filho">

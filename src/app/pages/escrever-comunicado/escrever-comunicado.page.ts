@@ -5,11 +5,9 @@ import {
   IonToolbar,
   IonButtons,
   IonButton,
-  IonBackButton,
   IonIcon,
   IonInput,
   IonTextarea,
-  IonTitle,
   AlertController,
   ToastController
 } from '@ionic/angular/standalone';
@@ -45,11 +43,9 @@ import { HttpClient, provideHttpClient } from '@angular/common/http';
     IonToolbar,
     IonButtons,
     IonButton,
-    IonBackButton,
     IonIcon,
     IonInput,
     IonTextarea,
-    IonTitle,
     CommonModule,
     FormsModule,
   ],

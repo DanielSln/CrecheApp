@@ -8,8 +8,13 @@ import {
   IonToolbar,
   IonMenuButton,
   IonButtons,
+  IonButton,
+  IonIcon,
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { camera } from 'ionicons/icons';
 import { Router } from '@angular/router';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 @Component({
   selector: 'app-filho',
@@ -25,9 +30,29 @@ import { Router } from '@angular/router';
     FormsModule,
     IonMenuButton,
     IonButtons,
+    IonButton,
+    IonIcon,
   ],
 })
 export class FilhoPage implements OnInit {
+  profileImage: string = 'assets/img/avatar.jpg';
+
+  async selectImage() {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: true,
+        resultType: CameraResultType.DataUrl,
+        source: CameraSource.Photos
+      });
+      
+      if (image.dataUrl) {
+        this.profileImage = image.dataUrl;
+      }
+    } catch (error) {
+      console.error('Error selecting image:', error);
+    }
+  }
   escola: string = 'SENAC';
   nome: string = '';
   matricula: string = '';
