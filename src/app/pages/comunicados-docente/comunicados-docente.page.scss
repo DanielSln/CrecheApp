@@ -137,9 +137,7 @@ ion-content {
 
 /* floating action button (caneta) */
 .caneta {
-  position: fixed;
-  right: 18px;
-  bottom: 20px;
+  position: static;
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -153,6 +151,16 @@ ion-content {
 
 .caneta ion-icon { color: #fff; font-size: 20px; }
 .caneta:hover { transform: translateY(-4px); }
+
+/* Botões flutuantes lado a lado */
+.fab-container {
+  position: fixed;
+  right: 18px;
+  bottom: 20px;
+  display: flex;
+  gap: 12px;
+  z-index: 100;
+}
 
 /* Responsividade */
 @media (max-width: 768px) {

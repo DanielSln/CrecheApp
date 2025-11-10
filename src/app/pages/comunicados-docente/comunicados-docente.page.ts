@@ -132,7 +132,37 @@ export class ComunicadosDocentePage implements OnInit {
   }
 
   irParaEscrever() {
+    console.log('irParaEscrever chamado');
+    // Limpar qualquer rascunho carregado anterior para começar novo
+    sessionStorage.removeItem('rascunhoCarregado');
+    console.log('Navegando para /escrever-comunicado');
     this.router.navigateByUrl('/escrever-comunicado');
+  }
+
+  verRascunhos() {
+    console.log('verRascunhos chamado');
+    const rascunhos = JSON.parse(localStorage.getItem('rascunhos') || '[]');
+    console.log('Rascunhos encontrados:', rascunhos);
+    
+    if (rascunhos.length === 0) {
+      alert('Nenhum rascunho salvo.\n\nPara criar um rascunho:\n1. Clique em "Novo Comunicado"\n2. Preencha os campos\n3. Clique em "Salvar rascunho"');
+      return;
+    }
+    
+    const lista = rascunhos
+      .map((r: any, i: number) => `${i + 1}. ${r.subject || '[Sem assunto]'} (${r.savedAt})`)
+      .join('\n');
+    
+    const escolha = prompt(`Rascunhos salvos (${rascunhos.length}):\n${lista}\n\nDigite o número para carregar ou 0 para cancelar:`);
+    
+    console.log('Escolha do usuário:', escolha);
+    
+    if (escolha && parseInt(escolha) > 0 && parseInt(escolha) <= rascunhos.length) {
+      const rascunho = rascunhos[parseInt(escolha) - 1];
+      console.log('Rascunho selecionado:', rascunho);
+      sessionStorage.setItem('rascunhoCarregado', JSON.stringify(rascunho));
+      this.router.navigateByUrl('/escrever-comunicado');
+    }
   }
 
   openComunicado(index: number) {

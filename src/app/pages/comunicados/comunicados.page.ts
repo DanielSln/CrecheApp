@@ -34,7 +34,19 @@ export class ComunicadosPage implements OnInit {
 
   ngOnInit() {
     console.log('ComunicadosPage ngOnInit chamado');
-    console.log('Total de comunicados:', this.comunicados.length);
+    this.carregarComunicados();
+    console.log('Total de comunicados (públicos) carregados:', this.comunicados.length);
+  }
+
+  ionViewWillEnter() {
+    this.carregarComunicados();
+  }
+
+  carregarComunicados() {
+    const todos = JSON.parse(localStorage.getItem('comunicados_enviados') || '[]');
+    // Mostrar apenas comunicados marcados como públicos (ou sem a flag que assumimos públicos)
+    this.comunicados = todos.filter((c: any) => c.public === undefined || c.public === true);
+    console.log('Comunicados públicos carregados:', this.comunicados.length);
   }
 
   openComunicado(index: number) {

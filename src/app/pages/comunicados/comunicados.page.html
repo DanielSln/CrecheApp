@@ -8,98 +8,24 @@
 
 <ion-content>
   <div class="page-content">
-    <div class="comunicado-card" (click)="openComunicado(0)">
-      <div class="comunicado-avatar urgent">🚨</div>
-      <div class="comunicado-content">
-        <div class="comunicado-header">
-          <h3>Reunião de Pais</h3>
+    <ng-container *ngIf="comunicados && comunicados.length > 0; else vazio">
+      <div class="comunicado-card" *ngFor="let c of comunicados; let i = index" (click)="openComunicado(i)">
+        <div class="comunicado-avatar" [ngClass]="{'urgent': c.type === 'urgent', 'info': c.type === 'info', 'default': c.type === 'default'}">{{ c.emoji || '📝' }}</div>
+        <div class="comunicado-content">
+          <div class="comunicado-header">
+            <h3>{{ c.title }}</h3>
+          </div>
+          <p>{{ c.preview || (c.content | slice:0:100) }}</p>
         </div>
-        <p>Reunião na sexta-feira, dia 20/12, às 19h...</p>
-      </div>
-      <div class="comunicado-meta">
-        <span class="comunicado-badge urgent">URGENTE</span>
-        <span class="comunicado-date">15/12</span>
-      </div>
-    </div>
-
-    <div class="comunicado-card" (click)="openComunicado(1)">
-      <div class="comunicado-avatar default">📝</div>
-      <div class="comunicado-content">
-        <div class="comunicado-header">
-          <h3>Horário de Funcionamento</h3>
+        <div class="comunicado-meta">
+          <span *ngIf="c.type === 'urgent'" class="comunicado-badge urgent">URGENTE</span>
+          <span *ngIf="c.type === 'info'" class="comunicado-badge info">INFO</span>
+          <span class="comunicado-date">{{ c.date }}</span>
         </div>
-        <p>Horário reduzido durante as festas natalinas...</p>
       </div>
-      <div class="comunicado-meta">
-        <span class="comunicado-date">12/12</span>
-      </div>
-    </div>
-
-    <div class="comunicado-card" (click)="openComunicado(2)">
-      <div class="comunicado-avatar info">🎄</div>
-      <div class="comunicado-content">
-        <div class="comunicado-header">
-          <h3>Festa de Natal</h3>
-        </div>
-        <p>Festa no dia 22/12 às 14h. Venham fantasiados!</p>
-      </div>
-      <div class="comunicado-meta">
-        <span class="comunicado-badge info">INFO</span>
-        <span class="comunicado-date">10/12</span>
-      </div>
-    </div>
-
-    <div class="comunicado-card" (click)="openComunicado(3)">
-      <div class="comunicado-avatar default">🍽️</div>
-      <div class="comunicado-content">
-        <div class="comunicado-header">
-          <h3>Cardápio da Semana</h3>
-        </div>
-        <p>Pratos especiais de Natal. Confira no mural...</p>
-      </div>
-      <div class="comunicado-meta">
-        <span class="comunicado-date">08/12</span>
-      </div>
-    </div>
-
-    <div class="comunicado-card" (click)="openComunicado(4)">
-      <div class="comunicado-avatar default">📚</div>
-      <div class="comunicado-content">
-        <div class="comunicado-header">
-          <h3>Material Escolar 2025</h3>
-        </div>
-        <p>Lista de materiais disponível na secretaria...</p>
-      </div>
-      <div class="comunicado-meta">
-        <span class="comunicado-date">05/12</span>
-      </div>
-    </div>
-
-    <div class="comunicado-card" (click)="openComunicado(5)">
-      <div class="comunicado-avatar default">🏅</div>
-      <div class="comunicado-content">
-        <div class="comunicado-header">
-          <h3>Gincana de Fim de Ano</h3>
-        </div>
-        <p>Atividades recreativas para todas as turmas...</p>
-      </div>
-      <div class="comunicado-meta">
-        <span class="comunicado-date">03/12</span>
-      </div>
-    </div>
-
-    <div class="comunicado-card" (click)="openComunicado(6)">
-      <div class="comunicado-avatar info">🎆</div>
-      <div class="comunicado-content">
-        <div class="comunicado-header">
-          <h3>Formatura ABC</h3>
-        </div>
-        <p>Cerimônia de formatura das turmas do ABC...</p>
-      </div>
-      <div class="comunicado-meta">
-        <span class="comunicado-badge info">INFO</span>
-        <span class="comunicado-date">01/12</span>
-      </div>
-    </div>
+    </ng-container>
+    <ng-template #vazio>
+      <div class="empty-state">Nenhum comunicado disponível no momento.</div>
+    </ng-template>
   </div>
 </ion-content>

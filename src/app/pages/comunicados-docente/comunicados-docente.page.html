@@ -33,9 +33,16 @@
         <span class="comunicado-date">{{ comunicado.date }}</span>
       </div>
     </div>
-    
-    <ion-button class="caneta" fill="clear" (click)="irParaEscrever()">
-      <ion-icon [icon]="pencil"></ion-icon>
-    </ion-button>
+
+    <!-- Botões de ação no final da lista -->
+    <div class="button-group">
+      <ion-button expand="block" class="action-btn" (click)="irParaEscrever()">
+        <ion-icon [icon]="pencil" slot="start"></ion-icon>
+        Novo Comunicado
+      </ion-button>
+      <ion-button expand="block" class="action-btn secondary" (click)="abrirRascunhos()">
+        📝 Ver Rascunhos
+      </ion-button>
+    </div>
   </div>
 </ion-content>

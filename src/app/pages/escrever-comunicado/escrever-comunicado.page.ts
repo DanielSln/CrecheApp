@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   IonContent,
   IonHeader,
@@ -50,7 +50,7 @@ import { HttpClient, provideHttpClient } from '@angular/common/http';
     FormsModule,
   ],
 })
-export class EscreverComunicadoPage {
+export class EscreverComunicadoPage implements OnInit, OnDestroy {
   from: string = 'docente@crecheapp.com';
   to: string = '';
   cc: string = '';
@@ -83,6 +83,34 @@ export class EscreverComunicadoPage {
       'flag-outline': flagOutline,
       'list-outline': listOutline
     });
+  }
+
+  private beforeUnloadHandler = () => {
+    this.saveCurrentDraftToTemp();
+  }
+
+  ngOnInit(): void {
+    // Carregar rascunho selecionado de sessionStorage se houver
+    try {
+      const rascunhoCarregado = sessionStorage.getItem('rascunhoCarregado');
+      if (rascunhoCarregado) {
+        const rascunho = JSON.parse(rascunhoCarregado);
+        if (rascunho && rascunho.to) {
+          this.carregarRascunho(rascunho);
+          sessionStorage.removeItem('rascunhoCarregado');
+        }
+      }
+    } catch (err) {
+      console.error('Erro ao carregar rascunho de sessionStorage:', err);
+      sessionStorage.removeItem('rascunhoCarregado');
+    }
+    
+    this.loadCurrentDraftIfAny();
+    window.addEventListener('beforeunload', this.beforeUnloadHandler);
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('beforeunload', this.beforeUnloadHandler);
   }
 
   toggleCcBcc() {
@@ -130,16 +158,15 @@ export class EscreverComunicadoPage {
   }
 
   async selecionarDestinatarios() {
-    
     const grupos = ['Todos os Pais', 'Professores', 'Funcionários'];
-    
+
     const alert = await this.alertController.create({
       header: 'Selecionar Destinatários',
-      inputs: grupos.map((g, i) => ({
+      inputs: grupos.map((g) => ({
         name: 'destinatario',
         type: 'radio',
         label: g,
-        value: i,
+        value: g,
         checked: this.to === g
       })),
       buttons: [
@@ -151,13 +178,13 @@ export class EscreverComunicadoPage {
           text: 'OK',
           handler: (data: any) => {
             if (data !== undefined) {
-              this.to = grupos[data];
+              this.to = data;
             }
           }
         }
       ]
     });
-    
+
     await alert.present();
   }
   
@@ -729,10 +756,10 @@ export class EscreverComunicadoPage {
   }
 
   async salvarRascunho() {
-    
-    if (!this.subject && !this.message) {
+    // Não salva rascunho vazio
+    if (!this.subject && !this.message && !this.to) {
       const toast = await this.toastController.create({
-        message: 'Nada para salvar! Digite pelo menos o assunto ou mensagem.',
+        message: 'Nada para salvar! Digite pelo menos destinatário, assunto ou mensagem.',
         duration: 3000,
         position: 'bottom',
         color: 'warning'
@@ -740,14 +767,96 @@ export class EscreverComunicadoPage {
       await toast.present();
       return;
     }
-    
-    const toast = await this.toastController.create({
-      message: 'Rascunho salvo com sucesso!',
-      duration: 2000,
-      position: 'bottom',
-      color: 'success'
-    });
-    await toast.present();
+
+    // Monta objeto de rascunho
+    const agora = new Date();
+    const savedAt = this.formatDateTime(agora);
+    const rascunho = {
+      id: Date.now(),
+      from: this.from,
+      to: this.to,
+      cc: this.cc,
+      bcc: this.bcc,
+      subject: this.subject && this.subject.trim() !== '' ? this.subject : '[Sem assunto]',
+      message: this.message,
+      icon: this.selectedIcon,
+      savedAt
+    };
+
+    // Grava no localStorage
+    try {
+      const rascunhos = JSON.parse(localStorage.getItem('rascunhos') || '[]');
+      rascunhos.unshift(rascunho);
+      localStorage.setItem('rascunhos', JSON.stringify(rascunhos));
+
+      const toast = await this.toastController.create({
+        message: 'Rascunho salvo com sucesso!',
+        duration: 2000,
+        position: 'bottom',
+        color: 'success'
+      });
+      await toast.present();
+      // limpar rascunho temporário após salvar permanentemente
+      try { localStorage.removeItem('current_draft'); } catch(e) { /* ignore */ }
+    } catch (err) {
+      console.error('Erro ao salvar rascunho:', err);
+      const toast = await this.toastController.create({
+        message: 'Erro ao salvar rascunho.',
+        duration: 3000,
+        position: 'bottom',
+        color: 'danger'
+      });
+      await toast.present();
+    }
+  }
+
+  // Helper para formatar data/hora simples
+  private formatDateTime(d: Date) {
+    const dd = d.getDate().toString().padStart(2, '0');
+    const mm = (d.getMonth() + 1).toString().padStart(2, '0');
+    const yyyy = d.getFullYear();
+    const hh = d.getHours().toString().padStart(2, '0');
+    const min = d.getMinutes().toString().padStart(2, '0');
+    return `${dd}/${mm}/${yyyy} ${hh}:${min}`;
+  }
+
+  // salva rascunho temporário (autosave)
+  private saveCurrentDraftToTemp() {
+    try {
+      const temp = {
+        from: this.from,
+        to: this.to,
+        cc: this.cc,
+        bcc: this.bcc,
+        subject: this.subject,
+        message: this.message,
+        icon: this.selectedIcon,
+        savedAt: this.formatDateTime(new Date())
+      };
+      localStorage.setItem('current_draft', JSON.stringify(temp));
+    } catch (err) {
+      console.error('Erro ao salvar rascunho temporário', err);
+    }
+  }
+
+  // carrega rascunho temporário se existir
+  private loadCurrentDraftIfAny() {
+    try {
+      const raw = localStorage.getItem('current_draft');
+      if (!raw) return;
+      const temp = JSON.parse(raw);
+      const carregar = confirm(`Há um rascunho não salvo (salvo em ${temp.savedAt}). Deseja carregar?`);
+      if (!carregar) return;
+      this.from = temp.from || this.from;
+      this.to = temp.to || this.to;
+      this.cc = temp.cc || this.cc;
+      this.bcc = temp.bcc || this.bcc;
+      this.subject = temp.subject || this.subject;
+      this.message = temp.message || this.message;
+      this.selectedIcon = temp.icon || this.selectedIcon;
+    } catch (err) {
+      console.error('Erro ao carregar rascunho temporário', err);
+    }
   }
 
   async descartarComunicado() {
@@ -789,6 +898,7 @@ export class EscreverComunicadoPage {
               color: 'success'
             });
             await toast.present();
+            try { localStorage.removeItem('current_draft'); } catch(e) { /* ignore */ }
           }
         }
       ]
@@ -834,13 +944,15 @@ export class EscreverComunicadoPage {
               type: this.selectedIcon === '🚨' ? 'urgent' : this.selectedIcon === '⚠️' ? 'info' : 'default',
               emoji: this.selectedIcon,
               from: this.from,
-              to: this.to
+              to: this.to,
+              public: true // Adiciona campo 'public' ao comunicado
             };
             
             console.log('Novo comunicado criado:', novoComunicado);
             
             // Salvar no localStorage
             const comunicadosExistentes = JSON.parse(localStorage.getItem('comunicados_enviados') || '[]');
+            // marcar como público para que apareça para todos os usuários
             comunicadosExistentes.unshift(novoComunicado); // Adiciona no início
             localStorage.setItem('comunicados_enviados', JSON.stringify(comunicadosExistentes));
             
@@ -853,6 +965,9 @@ export class EscreverComunicadoPage {
               color: 'success'
             });
             await toast.present();
+            
+            // limpar rascunho temporário após envio
+            try { localStorage.removeItem('current_draft'); } catch(e) { /* ignore */ }
             
             // Navegar para comunicados-docente para ver o resultado
             setTimeout(() => {
