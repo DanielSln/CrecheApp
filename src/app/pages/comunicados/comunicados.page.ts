@@ -8,6 +8,7 @@ import {
   IonToolbar,
   IonButtons,
   IonMenuButton,
+  IonTitle
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -21,6 +22,7 @@ import {
     IonToolbar,
     IonButtons,
     IonMenuButton,
+    IonTitle,
     CommonModule,
     FormsModule,
   ],
@@ -49,11 +51,10 @@ export class ComunicadosPage implements OnInit {
     console.log('Comunicados públicos carregados:', this.comunicados.length);
   }
 
-  openComunicado(index: number) {
-    const comunicado = this.comunicados[index];
-    console.log('Abrindo comunicado:', comunicado.title);
-    console.log('ID do comunicado:', comunicado.id);
-    this.router.navigate(['/comunicados/detalhes', comunicado.id]);
+  openComunicado(comunicadoId: number) {
+    console.log('Abrindo comunicado com ID:', comunicadoId);
+    // Navega para a página de detalhes passando o ID
+    this.router.navigate(['/comunicado-detalhe', comunicadoId]);
   }
 
   goToMenu() {

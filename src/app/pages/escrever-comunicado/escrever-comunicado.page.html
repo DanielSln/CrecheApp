@@ -53,7 +53,38 @@
       </div>
     </div>
 
+    <!-- Campos CC/BCC (condicional) -->
+    <div *ngIf="showCcBcc" class="compose-field cc-bcc-field">
+      <div class="field-row">
+        <span class="field-label">Cc:</span>
+        <div class="field-content">
+          <ion-input
+            [(ngModel)]="cc"
+            placeholder="Cópia"
+            class="recipient-input"
+            fill="outline"
+          ></ion-input>
+        </div>
+      </div>
+      <div class="field-row">
+        <span class="field-label">Bcc:</span>
+        <div class="field-content">
+          <ion-input
+            [(ngModel)]="bcc"
+            placeholder="Cópia oculta"
+            class="recipient-input"
+            fill="outline"
+          ></ion-input>
+        </div>
+      </div>
+    </div>
 
+    <!-- Toggle CC/BCC -->
+    <div class="cc-bcc-toggle">
+      <ion-button fill="clear" size="small" (click)="toggleCcBcc()">
+        {{ showCcBcc ? 'Ocultar Cc/Bcc' : 'Adicionar Cc/Bcc' }}
+      </ion-button>
+    </div>
 
     <!-- Campo Subject -->
     <div class="compose-field subject-field">

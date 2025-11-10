@@ -1,8 +1,9 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="">
+    <ion-buttons slot="start">
       <ion-menu-button class="menu-button-externo"></ion-menu-button>
     </ion-buttons>
+    <ion-title>Meus Comunicados</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -10,29 +11,39 @@
   <div class="page-content">
     <div class="title">Histórico de Recados Enviados: <span class="counter">({{ comunicados.length }})</span></div>
     
-    <div 
-      class="comunicado-card" 
-      *ngFor="let comunicado of comunicados; let i = index" 
-      (click)="openComunicado(i)"
-    >
-      <div class="comunicado-avatar" [ngClass]="comunicado.type">{{ comunicado.emoji }}</div>
-      <div class="comunicado-content">
-        <div class="comunicado-header">
-          <h3>{{ comunicado.title }}</h3>
+    <ng-container *ngIf="comunicados && comunicados.length > 0; else vazio">
+      <div 
+        class="comunicado-card" 
+        *ngFor="let comunicado of comunicados; let i = index" 
+        (click)="openComunicado(comunicado.id)"
+      >
+        <div class="comunicado-avatar" [ngClass]="comunicado.type || 'default'">{{ comunicado.emoji || '📝' }}</div>
+        <div class="comunicado-content">
+          <div class="comunicado-header">
+            <h3>{{ comunicado.title || 'Sem título' }}</h3>
+          </div>
+          <p>{{ comunicado.preview || (comunicado.content | slice:0:100) }}</p>
         </div>
-        <p>{{ comunicado.preview }}</p>
+        <div class="comunicado-meta">
+          <span 
+            class="comunicado-badge" 
+            [ngClass]="comunicado.type" 
+            *ngIf="comunicado.type === 'urgent' || comunicado.type === 'info'"
+          >
+            {{ comunicado.type === 'urgent' ? 'URGENTE' : 'INFO' }}
+          </span>
+          <span class="comunicado-date">{{ comunicado.date || 'Data não informada' }}</span>
+        </div>
       </div>
-      <div class="comunicado-meta">
-        <span 
-          class="comunicado-badge" 
-          [ngClass]="comunicado.type" 
-          *ngIf="comunicado.type === 'urgent' || comunicado.type === 'info'"
-        >
-          {{ comunicado.type === 'urgent' ? 'URGENTE' : 'INFO' }}
-        </span>
-        <span class="comunicado-date">{{ comunicado.date }}</span>
+    </ng-container>
+
+    <ng-template #vazio>
+      <div class="empty-state">
+        <div class="empty-icon">📝</div>
+        <h3>Nenhum comunicado enviado</h3>
+        <p>Você ainda não enviou nenhum comunicado.</p>
       </div>
-    </div>
+    </ng-template>
 
     <!-- Botões de ação no final da lista -->
     <div class="button-group">
@@ -40,7 +51,7 @@
         <ion-icon [icon]="pencil" slot="start"></ion-icon>
         Novo Comunicado
       </ion-button>
-      <ion-button expand="block" class="action-btn secondary" (click)="abrirRascunhos()">
+      <ion-button expand="block" class="action-btn secondary" (click)="verRascunhos()">
         📝 Ver Rascunhos
       </ion-button>
     </div>

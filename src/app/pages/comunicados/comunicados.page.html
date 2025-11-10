@@ -1,15 +1,18 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="">
+    <ion-buttons slot="start">
       <ion-menu-button class="menu-button-externo"></ion-menu-button>
     </ion-buttons>
+    <ion-title>Comunicados</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <div class="page-content">
+    <h1>Comunicados</h1>
+    
     <ng-container *ngIf="comunicados && comunicados.length > 0; else vazio">
-      <div class="comunicado-card" *ngFor="let c of comunicados; let i = index" (click)="openComunicado(i)">
+      <div class="comunicado-card" *ngFor="let c of comunicados; let i = index" (click)="openComunicado(c.id)">
         <div class="comunicado-avatar" [ngClass]="{'urgent': c.type === 'urgent', 'info': c.type === 'info', 'default': c.type === 'default'}">{{ c.emoji || '📝' }}</div>
         <div class="comunicado-content">
           <div class="comunicado-header">
@@ -24,8 +27,13 @@
         </div>
       </div>
     </ng-container>
+    
     <ng-template #vazio>
-      <div class="empty-state">Nenhum comunicado disponível no momento.</div>
+      <div class="empty-state">
+        <div class="empty-icon">📝</div>
+        <h3>Nenhum comunicado</h3>
+        <p>Nenhum comunicado disponível no momento.</p>
+      </div>
     </ng-template>
   </div>
 </ion-content>
