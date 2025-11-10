@@ -1,3 +1,172 @@
+/* Comunicados Docente - estilo profissional e responsivo */
+
+/* Variáveis locais (facilita manutenção) */
+:root {
+  --primary: #c4680b;
+  --primary-600: #b35a0a;
+  --bg: #f6d0a7;
+  --card-bg: #ffffff;
+  --muted: #8696a0;
+  --text: #111b21;
+  --success: #34C759;
+}
+
+ion-toolbar {
+  --background: var(--primary);
+}
+
+ion-content {
+  --background: var(--bg);
+}
+
+.page { 
+  padding: 0 16px 32px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 0 8px;
+}
+
+.title {
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.counter {
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.page-content {
+  padding: 0;
+}
+
+/* Lista de comunicados - card clean */
+.comunicado-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  margin: 8px 0;
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(17,27,33,0.04);
+  border: 1px solid rgba(0,0,0,0.04);
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+.comunicado-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(17,27,33,0.08);
+  background: #fbfbfb;
+}
+
+.comunicado-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.comunicado-avatar.urgent { background: #fff2f2; color: #ff3b30; }
+.comunicado-avatar.info { background: #eaf6ff; color: #007aff; }
+.comunicado-avatar.default { background: #f2fbf2; color: #0a8a22; }
+
+.comunicado-content { flex: 1; min-width: 0; }
+
+.comunicado-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.comunicado-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.comunicado-badge {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+}
+.comunicado-badge.urgent { background: #ff3b30; }
+.comunicado-badge.info { background: #007aff; }
+
+.comunicado-title {
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.comunicado-preview {
+  color: rgba(17,27,33,0.75);
+  font-size: 13px;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.comunicado-date {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* floating action button (caneta) */
+.caneta {
+  position: fixed;
+  right: 18px;
+  bottom: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  --ripple-color: transparent;
+  --background: var(--success);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+.caneta ion-icon { color: #fff; font-size: 20px; }
+.caneta:hover { transform: translateY(-4px); }
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .comunicado-card { padding: 10px; gap: 10px; }
+  .comunicado-avatar { width: 44px; height: 44px; }
+  .page { padding: 0 12px 24px; }
+}
+
+@media (max-width: 480px) {
+  .carteira-card { height: auto; }
+  .comunicado-card { flex-direction: row; gap: 10px; }
+  .comunicado-header { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .caneta { right: 12px; bottom: 16px; width: 50px; height: 50px; }
+}
 ion-toolbar {
   --background: #c4680b
   ;

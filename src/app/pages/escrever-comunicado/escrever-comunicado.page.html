@@ -57,12 +57,17 @@
 
     <!-- Campo Subject -->
     <div class="compose-field subject-field">
-      <ion-input
-        [(ngModel)]="subject"
-        placeholder="Assunto:"
-        class="subject-input"
-        fill="outline"
-      ></ion-input>
+      <div class="field-row">
+        <span class="field-label">Assunto:</span>
+        <div class="field-content">
+          <ion-input
+            [(ngModel)]="subject"
+            placeholder="Assunto"
+            class="subject-input"
+            fill="outline"
+          ></ion-input>
+        </div>
+      </div>
     </div>
 
     <!-- Campo Ícone -->
