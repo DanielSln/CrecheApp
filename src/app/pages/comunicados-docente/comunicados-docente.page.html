@@ -15,7 +15,7 @@
       <div 
         class="comunicado-card" 
         *ngFor="let comunicado of comunicados; let i = index" 
-        (click)="openComunicado(comunicado.id)"
+        (click)="openComunicado(comunicado)"
       >
         <div class="comunicado-avatar" [ngClass]="comunicado.type || 'default'">{{ comunicado.emoji || '📝' }}</div>
         <div class="comunicado-content">
@@ -54,6 +54,72 @@
       <ion-button expand="block" class="action-btn secondary" (click)="verRascunhos()">
         📝 Ver Rascunhos
       </ion-button>
+    </div>
+  </div>
+
+  <!-- Overlay/Modal de detalhes do comunicado -->
+  <div class="comunicado-overlay" *ngIf="comunicadoSelecionado" (click)="fecharDetalhes()">
+    <div class="comunicado-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">Detalhes do Comunicado</h2>
+        <button class="close-btn" (click)="fecharDetalhes()">×</button>
+      </div>
+      
+      <div class="modal-content">
+        <!-- Cabeçalho -->
+        <div class="comunicado-header-modal">
+          <div class="comunicado-avatar-modal" [ngClass]="comunicadoSelecionado.type || 'default'">
+            {{ comunicadoSelecionado.emoji || '📝' }}
+          </div>
+          <div class="comunicado-info-modal">
+            <h3 class="comunicado-titulo-modal">{{ comunicadoSelecionado.title || 'Sem título' }}</h3>
+            <div class="comunicado-meta-modal">
+              <span class="comunicado-data-modal">{{ comunicadoSelecionado.date || 'Data não informada' }}</span>
+              <span 
+                class="comunicado-badge-modal" 
+                [ngClass]="comunicadoSelecionado.type" 
+                *ngIf="comunicadoSelecionado.type === 'urgent' || comunicadoSelecionado.type === 'info'"
+              >
+                {{ comunicadoSelecionado.type === 'urgent' ? 'URGENTE' : 'INFO' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informações -->
+        <div class="info-section-modal">
+          <div class="info-item-modal">
+            <span class="info-label-modal">De:</span>
+            <span class="info-value-modal">{{ comunicadoSelecionado.from || 'docente@crecheapp.com' }}</span>
+          </div>
+          <div class="info-item-modal">
+            <span class="info-label-modal">Para:</span>
+            <span class="info-value-modal">{{ comunicadoSelecionado.to || 'Destinatários não especificados' }}</span>
+          </div>
+          <div class="info-item-modal" *ngIf="comunicadoSelecionado.cc">
+            <span class="info-label-modal">Cc:</span>
+            <span class="info-value-modal">{{ comunicadoSelecionado.cc }}</span>
+          </div>
+          <div class="info-item-modal" *ngIf="comunicadoSelecionado.bcc">
+            <span class="info-label-modal">Bcc:</span>
+            <span class="info-value-modal">{{ comunicadoSelecionado.bcc }}</span>
+          </div>
+        </div>
+
+        <!-- Mensagem -->
+        <div class="mensagem-section-modal">
+          <h4 class="mensagem-title-modal">Mensagem:</h4>
+          <div class="mensagem-content-modal">
+            <p class="mensagem-texto-modal">{{ comunicadoSelecionado.content }}</p>
+          </div>
+        </div>
+
+        <!-- Ações -->
+        <div class="actions-modal">
+          <button class="btn-modal btn-primary" (click)="editarComunicado()">Editar</button>
+          <button class="btn-modal btn-secondary" (click)="fecharDetalhes()">Fechar</button>
+        </div>
+      </div>
     </div>
   </div>
 </ion-content>

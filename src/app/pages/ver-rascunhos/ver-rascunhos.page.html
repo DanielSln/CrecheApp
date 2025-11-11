@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/comunicados-docente"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Meus Rascunhos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-content">
+    <div class="title">Rascunhos Salvos: <span class="counter">({{ rascunhos.length }})</span></div>
+    
+    <ng-container *ngIf="rascunhos && rascunhos.length > 0; else vazio">
+      <div 
+        class="rascunho-card" 
+        *ngFor="let rascunho of rascunhos; let i = index" 
+        (click)="carregarRascunho(rascunho)"
+      >
+        <div class="rascunho-avatar">📝</div>
+        <div class="rascunho-content">
+          <div class="rascunho-header">
+            <h3>{{ rascunho.subject || 'Sem assunto' }}</h3>
+            <button class="delete-btn" (click)="excluirRascunho(rascunho, $event)">×</button>
+          </div>
+          <p>{{ rascunho.message | slice:0:100 }}{{ rascunho.message && rascunho.message.length > 100 ? '...' : '' }}</p>
+          <div class="rascunho-info">
+            <span class="rascunho-date">Salvo em: {{ rascunho.savedAt || 'Data não informada' }}</span>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #vazio>
+      <div class="empty-state">
+        <div class="empty-icon">📝</div>
+        <h3>Nenhum rascunho salvo</h3>
+        <p>Você ainda não salvou nenhum rascunho.</p>
+        <ion-button expand="block" class="action-btn" (click)="criarNovoRascunho()" style="margin-top: 20px;">
+          <ion-icon name="create" slot="start"></ion-icon>
+          Criar Novo Rascunho
+        </ion-button>
+      </div>
+    </ng-template>
+  </div>
+</ion-content>

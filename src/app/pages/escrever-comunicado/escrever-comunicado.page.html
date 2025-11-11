@@ -1,19 +1,15 @@
 <ion-header>
   <ion-toolbar class="compose-toolbar">
     <ion-buttons slot="start">
-      <ion-button fill="clear" class="close-btn" (click)="fecharComposer()">
-        <ion-icon name="close-outline"></ion-icon>
+      <ion-button class="close-btn" (click)="cancelar()">
+        <ion-icon name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
-
+    
+    <ion-title class="compose-title">Novo Comunicado</ion-title>
+    
     <ion-buttons slot="end">
-      <ion-button fill="clear" class="action-btn" (click)="agendarEnvio()">
-        <ion-icon name="time-outline"></ion-icon>
-      </ion-button>
-      <ion-button fill="clear" class="action-btn" (click)="definirPrioridade()">
-        <ion-icon name="flag-outline"></ion-icon>
-      </ion-button>
-      <ion-button fill="clear" class="action-btn" (click)="mostrarOpcoes()">
+      <ion-button class="action-btn" (click)="mostrarOpcoes()">
         <ion-icon name="ellipsis-vertical"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -22,156 +18,153 @@
 
 <ion-content class="compose-content">
   <div class="compose-container">
-    <!-- Campo From -->
+    
+    <!-- Campo De -->
     <div class="compose-field">
       <div class="field-row">
-        <span class="field-label">De</span>
+        <div class="field-label">De:</div>
         <div class="field-content">
-          <span class="from-email">{{ from }}</span>
-          <ion-button fill="clear" size="small" class="dropdown-btn" (click)="selecionarRemetente()">
-            <ion-icon name="chevron-down-outline"></ion-icon>
-          </ion-button>
+          <div class="from-email">docente@crecheapp.com</div>
         </div>
       </div>
     </div>
 
-    <!-- Campo To -->
+    <!-- Campo Para -->
     <div class="compose-field">
       <div class="field-row">
-        <span class="field-label">Para:</span>
+        <div class="field-label">Para:</div>
         <div class="field-content">
           <ion-input
-            [(ngModel)]="to"
+            class="recipient-input"
             placeholder="Destinatários"
-            class="recipient-input"
-            fill="outline"
-          ></ion-input>
-          <ion-button fill="clear" size="small" class="dropdown-btn" (click)="selecionarDestinatarios()">
-            <ion-icon name="chevron-down-outline"></ion-icon>
-          </ion-button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Campos CC/BCC (condicional) -->
-    <div *ngIf="showCcBcc" class="compose-field cc-bcc-field">
-      <div class="field-row">
-        <span class="field-label">Cc:</span>
-        <div class="field-content">
-          <ion-input
-            [(ngModel)]="cc"
-            placeholder="Cópia"
-            class="recipient-input"
-            fill="outline"
-          ></ion-input>
-        </div>
-      </div>
-      <div class="field-row">
-        <span class="field-label">Bcc:</span>
-        <div class="field-content">
-          <ion-input
-            [(ngModel)]="bcc"
-            placeholder="Cópia oculta"
-            class="recipient-input"
-            fill="outline"
+            [(ngModel)]="comunicado.to"
           ></ion-input>
         </div>
       </div>
     </div>
 
-    <!-- Toggle CC/BCC -->
-    <div class="cc-bcc-toggle">
-      <ion-button fill="clear" size="small" (click)="toggleCcBcc()">
-        {{ showCcBcc ? 'Ocultar Cc/Bcc' : 'Adicionar Cc/Bcc' }}
-      </ion-button>
+    <!-- Campo Cc/Bcc -->
+    <div class="compose-field" *ngIf="showCc || showBcc">
+      <div class="cc-bcc-field">
+        <div class="field-row" *ngIf="showCc">
+          <div class="field-label">Cc:</div>
+          <div class="field-content">
+            <ion-input
+              class="recipient-input"
+              placeholder="Com cópia"
+              [(ngModel)]="comunicado.cc"
+            ></ion-input>
+          </div>
+        </div>
+        <div class="field-row" *ngIf="showBcc">
+          <div class="field-label">Bcc:</div>
+          <div class="field-content">
+            <ion-input
+              class="recipient-input"
+              placeholder="Com cópia oculta"
+              [(ngModel)]="comunicado.bcc"
+            ></ion-input>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Campo Subject -->
-    <div class="compose-field subject-field">
+    <!-- Toggle Cc/Bcc -->
+    <div class="compose-field">
+      <div class="cc-bcc-toggle">
+        <ion-button fill="clear" (click)="toggleCc()">
+          {{ showCc ? 'Remover Cc' : 'Adicionar Cc' }}
+        </ion-button>
+        <ion-button fill="clear" (click)="toggleBcc()">
+          {{ showBcc ? 'Remover Bcc' : 'Adicionar Bcc' }}
+        </ion-button>
+      </div>
+    </div>
+
+    <!-- Campo Assunto -->
+    <div class="compose-field">
       <div class="field-row">
-        <span class="field-label">Assunto:</span>
+        <div class="field-label">Assunto:</div>
         <div class="field-content">
           <ion-input
-            [(ngModel)]="subject"
-            placeholder="Assunto"
             class="subject-input"
-            fill="outline"
+            placeholder="Assunto do comunicado"
+            [(ngModel)]="comunicado.subject"
           ></ion-input>
         </div>
       </div>
     </div>
 
     <!-- Campo Ícone -->
-    <div class="compose-field icon-field">
+    <div class="compose-field">
       <div class="field-row">
-        <span class="field-label">Ícone:</span>
+        <div class="field-label">Ícone:</div>
         <div class="field-content">
           <div class="icon-selector">
-            <div class="selected-icon" (click)="mostrarIcones()">
-              <span class="icon-display">{{ selectedIcon }}</span>
-              <ion-icon name="chevron-down-outline"></ion-icon>
+            <div class="selected-icon" (click)="toggleIconSelector()">
+              <span class="icon-display">{{ comunicado.icon }}</span>
+              <span class="icon-text">Selecionar ícone</span>
+            </div>
+            
+            <div class="icon-grid" *ngIf="showIconSelector">
+              <div 
+                *ngFor="let icon of availableIcons" 
+                class="icon-option"
+                [class.selected]="icon === comunicado.icon"
+                (click)="selectIcon(icon)"
+              >
+                {{ icon }}
+              </div>
             </div>
           </div>
         </div>
       </div>
-      
-      <!-- Lista de ícones -->
-      <div class="icon-grid" *ngIf="showIconPicker">
-        <div 
-          class="icon-option" 
-          *ngFor="let icon of availableIcons" 
-          (click)="selecionarIcone(icon)"
-          [class.selected]="selectedIcon === icon"
-        >
-          {{ icon }}
-        </div>
+    </div>
+
+    <!-- Campo Mensagem -->
+    <div class="compose-field">
+      <div class="compose-body">
+        <ion-textarea
+          class="message-textarea"
+          placeholder="Escreva sua mensagem aqui..."
+          [(ngModel)]="comunicado.message"
+          rows="8"
+          autoGrow="true"
+        ></ion-textarea>
       </div>
     </div>
 
-    <!-- Área de composição -->
-    <div class="compose-body">
-      <ion-textarea
-        [(ngModel)]="message"
-        placeholder="Escreva sua mensagem..."
-        autoGrow="true"
-        class="message-textarea"
-        rows="8"
-      ></ion-textarea>
-    </div>
-
-    <!-- Barra de ferramentas de formatação -->
-    <div class="formatting-toolbar">
-      <ion-button fill="clear" size="small" class="format-btn" (click)="aplicarNegrito()">
-        <ion-icon name="text-outline"></ion-icon>
-      </ion-button>
-      <ion-button fill="clear" size="small" class="format-btn" (click)="criarLista()">
-        <ion-icon name="list-outline"></ion-icon>
-      </ion-button>
-      <ion-button fill="clear" size="small" class="format-btn" (click)="inserirLink()">
-        <ion-icon name="link-outline"></ion-icon>
-      </ion-button>
-      <ion-button fill="clear" size="small" class="format-btn" (click)="inserirEmoji()">
-        <ion-icon name="happy-outline"></ion-icon>
-      </ion-button>
-    </div>
-
-    <!-- Botões de ação -->
+    <!-- Botões de Ação -->
     <div class="action-buttons">
-      <ion-button expand="block" class="send-btn" (click)="enviarComunicado()">
-        <ion-icon name="send-outline" slot="start"></ion-icon>
-        Enviar
+      <ion-button 
+        class="send-btn" 
+        expand="block" 
+        (click)="enviarComunicado()"
+      >
+        <ion-icon name="send" slot="start"></ion-icon>
+        Enviar Comunicado
       </ion-button>
-
+      
       <div class="secondary-actions">
-        <ion-button fill="clear" class="secondary-btn" (click)="salvarRascunho()">
-          <ion-icon name="save-outline"></ion-icon>
-          Salvar rascunho
+        <ion-button 
+          class="secondary-btn" 
+          fill="clear" 
+          (click)="salvarRascunho()"
+        >
+          <ion-icon name="document" slot="start"></ion-icon>
+          Salvar Rascunho
         </ion-button>
-        <ion-button fill="clear" class="secondary-btn" (click)="descartarComunicado()">
-          <ion-icon name="trash-outline"></ion-icon>
-          Descartar
+        
+        <ion-button 
+          class="secondary-btn" 
+          fill="clear" 
+          (click)="cancelar()"
+        >
+          <ion-icon name="close" slot="start"></ion-icon>
+          Cancelar
         </ion-button>
       </div>
     </div>
+
   </div>
 </ion-content>

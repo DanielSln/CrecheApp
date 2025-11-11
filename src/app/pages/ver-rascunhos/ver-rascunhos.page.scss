@@ -1,0 +1,282 @@
+/* ===== PÁGINA DE RASCUNHOS - SCSS PROFISSIONAL ===== */
+
+ion-toolbar {
+  --background: #c4680b;
+  background: linear-gradient(135deg, #c4680b 0%, #a35207 100%);
+}
+
+ion-title {
+  color: #ffffff;
+  font-weight: bold;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  text-align: center;
+}
+
+ion-content {
+  --background: #f6d0a7;
+  background: linear-gradient(135deg, #f6d0a7 0%, #f8b77c 100%);
+}
+
+.page-content {
+  padding: 20px;
+}
+
+.title {
+  color: #000000;
+  font-size: 24px;
+  font-weight: bold;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.counter {
+  color: #c4680b;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+/* ===== CARDS DE RASCUNHOS ===== */
+.rascunho-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 
+    0 8px 32px rgba(196, 104, 11, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: 2px solid #e0b589;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+      0 16px 48px rgba(196, 104, 11, 0.25),
+      0 4px 16px rgba(0, 0, 0, 0.1);
+    background: #fafafa;
+  }
+}
+
+.rascunho-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #c4680b 0%, #a35207 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(196, 104, 11, 0.3);
+}
+
+.rascunho-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.rascunho-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  gap: 12px;
+}
+
+.rascunho-card h3 {
+  color: #000000;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.delete-btn {
+  background: #ff3b30;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: #d70015;
+    transform: scale(1.1);
+  }
+}
+
+.rascunho-card p {
+  color: #2c3e50;
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0 0 8px 0;
+  font-family: system-ui, sans-serif;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  opacity: 0.9;
+}
+
+.rascunho-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rascunho-date {
+  color: #666666;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: system-ui, sans-serif;
+}
+
+/* ===== ESTADO VAZIO ===== */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666666;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(196, 104, 11, 0.1);
+  border: 2px solid #e0b589;
+  margin: 20px 0;
+}
+
+.empty-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  color: #c4680b;
+  opacity: 0.7;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+}
+
+.empty-state h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: #000000;
+  font-weight: 600;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+.empty-state p {
+  font-size: 16px;
+  color: #666666;
+  line-height: 1.4;
+  font-family: system-ui, sans-serif;
+  opacity: 0.9;
+}
+
+/* ===== BOTÕES ===== */
+ion-button.action-btn {
+  --background: #c4680b;
+  --background-hover: #a35207;
+  --color: white;
+  
+  background: linear-gradient(135deg, #c4680b 0%, #a35207 100%);
+  color: white;
+  border-radius: 15px;
+  height: 55px;
+  font-weight: 600;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  box-shadow: 0 4px 16px rgba(196, 104, 11, 0.3);
+}
+
+/* ===== ESTILOS PARA OS ALERTS ===== */
+.alert-button-cancel {
+  color: #666666 !important;
+  background: #f8f9fa !important;
+  border: 1px solid #dee2e6 !important;
+}
+
+.alert-button-delete {
+  color: white !important;
+  background: #ff3b30 !important;
+  border: 1px solid #d70015 !important;
+}
+
+.alert-success {
+  --backdrop-opacity: 0.8;
+  
+  .alert-head {
+    background: linear-gradient(135deg, #34C759 0%, #28a745 100%);
+    color: white;
+  }
+  
+  .alert-message {
+    color: #2c3e50;
+  }
+}
+
+.alert-error {
+  --backdrop-opacity: 0.8;
+  
+  .alert-head {
+    background: linear-gradient(135deg, #FF3B30 0%, #d70015 100%);
+    color: white;
+  }
+  
+  .alert-message {
+    color: #2c3e50;
+  }
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 480px) {
+  .page-content {
+    padding: 12px;
+  }
+  
+  .title {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .rascunho-card {
+    padding: 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .rascunho-avatar {
+    align-self: center;
+  }
+  
+  .rascunho-content {
+    width: 100%;
+  }
+  
+  .rascunho-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  
+  .delete-btn {
+    align-self: flex-end;
+  }
+  
+  .empty-state {
+    padding: 40px 20px;
+  }
+  
+  .empty-icon {
+    font-size: 48px;
+  }
+}

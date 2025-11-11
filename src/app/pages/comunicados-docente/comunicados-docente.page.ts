@@ -10,7 +10,8 @@ import {
   IonMenuButton,
   IonButton,
   IonIcon,
-  IonTitle
+  IonTitle,
+  AlertController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { pencil } from 'ionicons/icons';
@@ -36,8 +37,12 @@ import { pencil } from 'ionicons/icons';
 export class ComunicadosDocentePage implements OnInit {
   pencil = pencil;
   comunicados: any[] = [];
+  comunicadoSelecionado: any = null;
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private alertController: AlertController
+  ) {
     addIcons({ pencil });
     console.log('ComunicadosDocentePage constructor chamado');
   }
@@ -80,34 +85,8 @@ export class ComunicadosDocentePage implements OnInit {
   }
 
   verRascunhos() {
-    console.log('verRascunhos chamado');
-    try {
-      const rascunhos = JSON.parse(localStorage.getItem('rascunhos') || '[]');
-      console.log('Rascunhos encontrados:', rascunhos);
-      
-      if (rascunhos.length === 0) {
-        alert('Nenhum rascunho salvo.\n\nPara criar um rascunho:\n1. Clique em "Novo Comunicado"\n2. Preencha os campos\n3. Clique em "Salvar rascunho"');
-        return;
-      }
-      
-      const lista = rascunhos
-        .map((r: any, i: number) => `${i + 1}. ${r.subject || '[Sem assunto]'} (${r.savedAt})`)
-        .join('\n');
-      
-      const escolha = prompt(`Rascunhos salvos (${rascunhos.length}):\n${lista}\n\nDigite o número para carregar ou 0 para cancelar:`);
-      
-      console.log('Escolha do usuário:', escolha);
-      
-      if (escolha && parseInt(escolha) > 0 && parseInt(escolha) <= rascunhos.length) {
-        const rascunho = rascunhos[parseInt(escolha) - 1];
-        console.log('Rascunho selecionado:', rascunho);
-        sessionStorage.setItem('rascunhoCarregado', JSON.stringify(rascunho));
-        this.router.navigateByUrl('/escrever-comunicado');
-      }
-    } catch (error) {
-      console.error('Erro ao carregar rascunhos:', error);
-      alert('Erro ao carregar rascunhos. Tente novamente.');
-    }
+    console.log('verRascunhos chamado - navegando para página de rascunhos');
+    this.router.navigateByUrl('/ver-rascunhos');
   }
 
   abrirRascunhos() {
@@ -115,20 +94,22 @@ export class ComunicadosDocentePage implements OnInit {
     this.verRascunhos();
   }
 
-  openComunicado(comunicadoId: number) {
-    console.log('Abrindo comunicado com ID:', comunicadoId);
-    const comunicado = this.comunicados.find(c => c.id === comunicadoId);
-    
-    if (comunicado) {
-      console.log('Comunicado encontrado:', comunicado.title);
-      console.log('Comunicado completo:', comunicado);
-      
-      // Navegar para página de detalhes passando o ID
-      this.router.navigate(['/comunicado-detalhe', comunicadoId]);
-    } else {
-      console.error('Comunicado não encontrado com ID:', comunicadoId);
-      alert('Comunicado não encontrado.');
-    }
+  // NOVA FUNÇÃO: Abrir modal de detalhes do comunicado
+  openComunicado(comunicado: any) {
+    console.log('Abrindo detalhes do comunicado:', comunicado.title);
+    this.comunicadoSelecionado = comunicado;
+  }
+
+  // Fechar modal de detalhes
+  fecharDetalhes() {
+    this.comunicadoSelecionado = null;
+  }
+
+  // Editar comunicado (funcionalidade futura)
+  editarComunicado() {
+    console.log('Editando comunicado:', this.comunicadoSelecionado.id);
+    alert('Funcionalidade de edição em desenvolvimento!');
+    this.fecharDetalhes();
   }
 
   goToMenu() {
