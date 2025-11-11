@@ -3,37 +3,123 @@
     <ion-buttons slot="start">
       <ion-menu-button class="menu-button-externo"></ion-menu-button>
     </ion-buttons>
-    <ion-title>Comunicados</ion-title>
+    <ion-title>Meus Comunicados</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <div class="page-content">
-    <h1>Comunicados</h1>
+    <div class="title">Histórico de Recados Enviados: <span class="counter">({{ comunicados.length }})</span></div>
     
     <ng-container *ngIf="comunicados && comunicados.length > 0; else vazio">
-      <div class="comunicado-card" *ngFor="let c of comunicados; let i = index" (click)="openComunicado(c.id)">
-        <div class="comunicado-avatar" [ngClass]="{'urgent': c.type === 'urgent', 'info': c.type === 'info', 'default': c.type === 'default'}">{{ c.emoji || '📝' }}</div>
+      <div 
+        class="comunicado-card" 
+        *ngFor="let comunicado of comunicados; let i = index" 
+        (click)="openComunicado(comunicado)"
+      >
+        <div class="comunicado-avatar" [ngClass]="comunicado.type || 'default'">{{ comunicado.emoji || '📝' }}</div>
         <div class="comunicado-content">
           <div class="comunicado-header">
-            <h3>{{ c.title }}</h3>
+            <h3>{{ comunicado.title || 'Sem título' }}</h3>
           </div>
-          <p>{{ c.preview || (c.content | slice:0:100) }}</p>
+          <p>{{ comunicado.preview || (comunicado.content | slice:0:100) }}</p>
         </div>
         <div class="comunicado-meta">
-          <span *ngIf="c.type === 'urgent'" class="comunicado-badge urgent">URGENTE</span>
-          <span *ngIf="c.type === 'info'" class="comunicado-badge info">INFO</span>
-          <span class="comunicado-date">{{ c.date }}</span>
+          <span 
+            class="comunicado-badge" 
+            [ngClass]="comunicado.type" 
+            *ngIf="comunicado.type === 'urgent' || comunicado.type === 'info'"
+          >
+            {{ comunicado.type === 'urgent' ? 'URGENTE' : 'INFO' }}
+          </span>
+          <span class="comunicado-date">{{ comunicado.date || 'Data não informada' }}</span>
         </div>
       </div>
     </ng-container>
-    
+
     <ng-template #vazio>
       <div class="empty-state">
         <div class="empty-icon">📝</div>
-        <h3>Nenhum comunicado</h3>
-        <p>Nenhum comunicado disponível no momento.</p>
+        <h3>Nenhum comunicado enviado</h3>
+        <p>Você ainda não enviou nenhum comunicado.</p>
       </div>
     </ng-template>
+
+    <!-- Botões de ação no final da lista -->
+    <div class="button-group">
+      <ion-button expand="block" class="action-btn" (click)="irParaEscrever()">
+        <ion-icon [icon]="pencil" slot="start"></ion-icon>
+        Novo Comunicado
+      </ion-button>
+      <ion-button expand="block" class="action-btn secondary" (click)="verRascunhos()">
+        📝 Ver Rascunhos
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- Overlay/Modal de detalhes do comunicado -->
+  <div class="comunicado-overlay" *ngIf="comunicadoSelecionado" (click)="fecharDetalhes()">
+    <div class="comunicado-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">Detalhes do Comunicado</h2>
+        <button class="close-btn" (click)="fecharDetalhes()">×</button>
+      </div>
+      
+      <div class="modal-content">
+        <!-- Cabeçalho -->
+        <div class="comunicado-header-modal">
+          <div class="comunicado-avatar-modal" [ngClass]="comunicadoSelecionado.type || 'default'">
+            {{ comunicadoSelecionado.emoji || '📝' }}
+          </div>
+          <div class="comunicado-info-modal">
+            <h3 class="comunicado-titulo-modal">{{ comunicadoSelecionado.title || 'Sem título' }}</h3>
+            <div class="comunicado-meta-modal">
+              <span class="comunicado-data-modal">{{ comunicadoSelecionado.date || 'Data não informada' }}</span>
+              <span 
+                class="comunicado-badge-modal" 
+                [ngClass]="comunicadoSelecionado.type" 
+                *ngIf="comunicadoSelecionado.type === 'urgent' || comunicadoSelecionado.type === 'info'"
+              >
+                {{ comunicadoSelecionado.type === 'urgent' ? 'URGENTE' : 'INFO' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informações -->
+        <div class="info-section-modal">
+          <div class="info-item-modal">
+            <span class="info-label-modal">De:</span>
+            <span class="info-value-modal">{{ comunicadoSelecionado.from || 'docente@crecheapp.com' }}</span>
+          </div>
+          <div class="info-item-modal">
+            <span class="info-label-modal">Para:</span>
+            <span class="info-value-modal">{{ comunicadoSelecionado.to || 'Destinatários não especificados' }}</span>
+          </div>
+          <div class="info-item-modal" *ngIf="comunicadoSelecionado.cc">
+            <span class="info-label-modal">Cc:</span>
+            <span class="info-value-modal">{{ comunicadoSelecionado.cc }}</span>
+          </div>
+          <div class="info-item-modal" *ngIf="comunicadoSelecionado.bcc">
+            <span class="info-label-modal">Bcc:</span>
+            <span class="info-value-modal">{{ comunicadoSelecionado.bcc }}</span>
+          </div>
+        </div>
+
+        <!-- Mensagem -->
+        <div class="mensagem-section-modal">
+          <h4 class="mensagem-title-modal">Mensagem:</h4>
+          <div class="mensagem-content-modal">
+            <p class="mensagem-texto-modal">{{ comunicadoSelecionado.content }}</p>
+          </div>
+        </div>
+
+        <!-- Ações -->
+        <div class="actions-modal">
+          <button class="btn-modal btn-primary" (click)="editarComunicado()">Editar</button>
+          <button class="btn-modal btn-secondary" (click)="fecharDetalhes()">Fechar</button>
+        </div>
+      </div>
+    </div>
   </div>
 </ion-content>

@@ -8,13 +8,18 @@ import {
   IonToolbar,
   IonButtons,
   IonMenuButton,
-  IonTitle
+  IonButton,
+  IonIcon,
+  IonTitle,
+  AlertController
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { pencil } from 'ionicons/icons';
 
 @Component({
-  selector: 'app-comunicados',
-  templateUrl: './comunicados.page.html',
-  styleUrls: ['./comunicados.page.scss'],
+  selector: 'app-comunicados-docente',
+  templateUrl: './comunicados-docente.page.html',
+  styleUrls: ['./comunicados-docente.page.scss'],
   standalone: true,
   imports: [
     IonContent,
@@ -22,42 +27,92 @@ import {
     IonToolbar,
     IonButtons,
     IonMenuButton,
+    IonButton,
+    IonIcon,
     IonTitle,
     CommonModule,
     FormsModule,
   ],
 })
-export class ComunicadosPage implements OnInit {
+export class ComunicadosDocentePage implements OnInit {
+  pencil = pencil;
   comunicados: any[] = [];
+  comunicadoSelecionado: any = null;
 
-  constructor(private router: Router) {
-    console.log('ComunicadosPage constructor chamado');
+  constructor(
+    private router: Router,
+    private alertController: AlertController
+  ) {
+    addIcons({ pencil });
+    console.log('ComunicadosDocentePage constructor chamado');
   }
 
   ngOnInit() {
-    console.log('ComunicadosPage ngOnInit chamado');
+    console.log('ComunicadosDocentePage ngOnInit chamado');
     this.carregarComunicados();
-    console.log('Total de comunicados (públicos) carregados:', this.comunicados.length);
+    console.log('Total de comunicados:', this.comunicados.length);
   }
-
+  
   ionViewWillEnter() {
+    console.log('ionViewWillEnter - recarregando comunicados');
     this.carregarComunicados();
   }
-
+  
   carregarComunicados() {
-    const todos = JSON.parse(localStorage.getItem('comunicados_enviados') || '[]');
-    // Mostrar apenas comunicados marcados como públicos (ou sem a flag que assumimos públicos)
-    this.comunicados = todos.filter((c: any) => c.public === undefined || c.public === true);
-    console.log('Comunicados públicos carregados:', this.comunicados.length);
+    try {
+      // Carregar comunicados enviados do localStorage
+      const comunicadosEnviados = JSON.parse(localStorage.getItem('comunicados_enviados') || '[]');
+      console.log('Comunicados do localStorage:', comunicadosEnviados);
+      
+      // Ordenar por ID (mais recentes primeiro) e garantir que têm estrutura básica
+      this.comunicados = comunicadosEnviados
+        .filter((comunicado: any) => comunicado && comunicado.title)
+        .sort((a: any, b: any) => (b.id || 0) - (a.id || 0));
+      
+      console.log('Total de comunicados após carregar:', this.comunicados.length);
+    } catch (error) {
+      console.error('Erro ao carregar comunicados:', error);
+      this.comunicados = [];
+    }
   }
 
-  openComunicado(comunicadoId: number) {
-    console.log('Abrindo comunicado com ID:', comunicadoId);
-    // Navega para a página de detalhes passando o ID
-    this.router.navigate(['/comunicado-detalhe', comunicadoId]);
+  irParaEscrever() {
+    console.log('irParaEscrever chamado');
+    // Limpar qualquer rascunho carregado anterior para começar novo
+    sessionStorage.removeItem('rascunhoCarregado');
+    console.log('Navegando para /escrever-comunicado');
+    this.router.navigateByUrl('/escrever-comunicado');
+  }
+
+  verRascunhos() {
+    console.log('verRascunhos chamado - navegando para página de rascunhos');
+    this.router.navigateByUrl('/ver-rascunhos');
+  }
+
+  abrirRascunhos() {
+    // Alias para verRascunhos para manter compatibilidade com o template
+    this.verRascunhos();
+  }
+
+  // NOVA FUNÇÃO: Abrir modal de detalhes do comunicado
+  openComunicado(comunicado: any) {
+    console.log('Abrindo detalhes do comunicado:', comunicado.title);
+    this.comunicadoSelecionado = comunicado;
+  }
+
+  // Fechar modal de detalhes
+  fecharDetalhes() {
+    this.comunicadoSelecionado = null;
+  }
+
+  // Editar comunicado (funcionalidade futura)
+  editarComunicado() {
+    console.log('Editando comunicado:', this.comunicadoSelecionado.id);
+    alert('Funcionalidade de edição em desenvolvimento!');
+    this.fecharDetalhes();
   }
 
   goToMenu() {
-    this.router.navigateByUrl('/menu');
+    this.router.navigateByUrl('/menu-docente');
   }
 }
