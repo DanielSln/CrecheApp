@@ -123,7 +123,8 @@ export const routes: Routes = [
   {
     path: 'escrever-comunicado',
     loadComponent: () => import('./pages/escrever-comunicado/escrever-comunicado.page').then( m => m.EscreverComunicadoPage)
-  },  {
+  },
+  {
     path: 'ver-rascunhos',
     loadComponent: () => import('./pages/ver-rascunhos/ver-rascunhos.page').then( m => m.VerRascunhosPage)
   },

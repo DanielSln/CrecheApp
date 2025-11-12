@@ -17,9 +17,9 @@ import { addIcons } from 'ionicons';
 import { pencil } from 'ionicons/icons';
 
 @Component({
-  selector: 'app-comunicados-docente',
-  templateUrl: './comunicados-docente.page.html',
-  styleUrls: ['./comunicados-docente.page.scss'],
+  selector: 'app-comunicados',
+  templateUrl: './comunicados.page.html',
+  styleUrls: ['./comunicados.page.scss'],
   standalone: true,
   imports: [
     IonContent,
@@ -34,7 +34,7 @@ import { pencil } from 'ionicons/icons';
     FormsModule,
   ],
 })
-export class ComunicadosDocentePage implements OnInit {
+export class ComunicadosPage implements OnInit {
   pencil = pencil;
   comunicados: any[] = [];
   comunicadoSelecionado: any = null;
@@ -44,11 +44,11 @@ export class ComunicadosDocentePage implements OnInit {
     private alertController: AlertController
   ) {
     addIcons({ pencil });
-    console.log('ComunicadosDocentePage constructor chamado');
+    console.log('ComunicadosPage constructor chamado');
   }
 
   ngOnInit() {
-    console.log('ComunicadosDocentePage ngOnInit chamado');
+    console.log('ComunicadosPage ngOnInit chamado');
     this.carregarComunicados();
     console.log('Total de comunicados:', this.comunicados.length);
   }

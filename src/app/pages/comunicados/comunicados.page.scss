@@ -1,7 +1,18 @@
 /* Comunicados Docente - estilo com paleta docente */
 
 /* Variáveis da paleta de cores */
-
+:root {
+  --primary: #c4680b;
+  --primary-dark: #a35207;
+  --background: #f6d0a7;
+  --card-bg: #ffffff;
+  --text-primary: #000000;
+  --text-secondary: #2c3e50;
+  --text-muted: #666666;
+  --border: #e0b589;
+  --danger: #FF3B30;
+  --info: #007AFF;
+}
 
 /* Header */
 ion-toolbar {
@@ -77,7 +88,7 @@ ion-menu-button {
   font-size: 20px;
   flex-shrink: 0;
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  color: rgb(0, 0, 0);
+  color: white;
 }
 
 .comunicado-avatar.urgent {
@@ -218,6 +229,244 @@ ion-menu-button {
   font-family: system-ui, sans-serif;
 }
 
+/* Modal de detalhes */
+.comunicado-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.comunicado-modal {
+  background: #ffffff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.3);
+  border: 2px solid #c4680b;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 25px;
+  border-bottom: 2px solid #e0b589;
+  background: linear-gradient(135deg, #c4680b 0%, #a35207 100%);
+  border-radius: 20px 20px 0 0;
+}
+
+.modal-title {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: bold;
+  font-family: "Mango AC", sans-serif;
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 28px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.modal-content {
+  padding: 25px;
+}
+
+.comunicado-header-modal {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e0b589;
+}
+
+.comunicado-avatar-modal {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  background: linear-gradient(135deg, #c4680b 0%, #a35207 100%);
+  color: white;
+  flex-shrink: 0;
+}
+
+.comunicado-avatar-modal.urgent {
+  background: linear-gradient(135deg, #FF3B30 0%, #d70015 100%);
+}
+
+.comunicado-avatar-modal.info {
+  background: linear-gradient(135deg, #007AFF 0%, #0056cc 100%);
+}
+
+.comunicado-avatar-modal.default {
+  background: linear-gradient(135deg, #34C759 0%, #28a745 100%);
+}
+
+.comunicado-info-modal {
+  flex: 1;
+}
+
+.comunicado-titulo-modal {
+  color: #000000;
+  font-size: 22px;
+  font-weight: bold;
+  font-family: "Mango AC", sans-serif;
+  margin: 0 0 10px 0;
+}
+
+.comunicado-meta-modal {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.comunicado-data-modal {
+  color: #666666;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: system-ui, sans-serif;
+}
+
+.comunicado-badge-modal {
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  font-family: "Mango AC", sans-serif;
+}
+
+.comunicado-badge-modal.urgent {
+  background: #FF3B30;
+}
+
+.comunicado-badge-modal.info {
+  background: #007AFF;
+}
+
+.info-section-modal {
+  margin-bottom: 25px;
+}
+
+.info-item-modal {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border-left: 4px solid #c4680b;
+}
+
+.info-label-modal {
+  color: #000000;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: "Mango AC", sans-serif;
+  min-width: 50px;
+}
+
+.info-value-modal {
+  color: #2c3e50;
+  font-size: 14px;
+  font-family: system-ui, sans-serif;
+  flex: 1;
+}
+
+.mensagem-section-modal {
+  margin-bottom: 25px;
+}
+
+.mensagem-title-modal {
+  color: #000000;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: "Mango AC", sans-serif;
+  margin: 0 0 15px 0;
+}
+
+.mensagem-content-modal {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e9ecef;
+}
+
+.mensagem-texto-modal {
+  color: #2c3e50;
+  font-size: 15px;
+  line-height: 1.6;
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.actions-modal {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.btn-modal {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: "Mango AC", sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: #c4680b;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #a35207;
+}
+
+.btn-secondary {
+  background: #2c3e50;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #1a2a3a;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
   .page-content {
@@ -241,6 +490,32 @@ ion-menu-button {
   
   .title {
     font-size: 22px;
+  }
+  
+  .comunicado-overlay {
+    padding: 15px;
+  }
+  
+  .modal-header {
+    padding: 15px 20px;
+  }
+  
+  .modal-content {
+    padding: 20px;
+  }
+  
+  .comunicado-header-modal {
+    gap: 15px;
+  }
+  
+  .comunicado-avatar-modal {
+    width: 60px;
+    height: 60px;
+    font-size: 20px;
+  }
+  
+  .comunicado-titulo-modal {
+    font-size: 18px;
   }
 }
 
@@ -308,5 +583,50 @@ ion-menu-button {
   
   .empty-icon {
     font-size: 48px;
+  }
+  
+  .comunicado-overlay {
+    padding: 10px;
+  }
+  
+  .modal-header {
+    padding: 12px 15px;
+  }
+  
+  .modal-content {
+    padding: 15px;
+  }
+  
+  .comunicado-header-modal {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  
+  .comunicado-avatar-modal {
+    width: 50px;
+    height: 50px;
+    font-size: 18px;
+  }
+  
+  .comunicado-titulo-modal {
+    font-size: 16px;
+  }
+  
+  .info-item-modal {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .info-label-modal {
+    min-width: auto;
+  }
+  
+  .actions-modal {
+    flex-direction: column;
+  }
+  
+  .btn-modal {
+    width: 100%;
   }
 }
