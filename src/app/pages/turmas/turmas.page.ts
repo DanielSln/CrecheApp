@@ -9,6 +9,7 @@ import {
   IonMenuButton,
   IonButton,
   IonIcon,
+  IonTitle,
 } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
@@ -29,6 +30,7 @@ import { chevronBack } from 'ionicons/icons';
     IonButtons,
     IonButton,
     IonIcon,
+    IonTitle,
   ],
 })
 export class TurmasPage implements OnInit {

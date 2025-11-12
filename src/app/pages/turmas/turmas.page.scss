@@ -1,278 +1,586 @@
+/* ===== TURMAS - DESIGN PROFISSIONAL & MINIMALISTA ===== */
+
+/** 
+ * PALETA DE CORES DO MENU
+ * Primária: #c4680b (Laranja principal)
+ * Background: #f6d0a7 (Bege claro)
+ * Cards: #ffffff (Branco)
+ * Texto: #000000 (Preto)
+ */
+
+/* ===== COMPONENTES IONIC ===== */
 ion-toolbar {
-	--background: #c4680b;
+  --background: #c4680b;
+}
+
+ion-title {
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  text-align: center;
 }
 
 ion-content {
-	--background: #f6d0a7;
+  --background: #f6d0a7;
 }
 
-Ion-Menu-Button {
-	color: #000000;
-}
-
-Ion-Back-Button {
-	color: #000000;
+ion-menu-button {
+  --color: white;
 }
 
 .custom-back-btn {
-	--color: #000000;
-	--padding-start: 4px;
-	--padding-end: 4px;
-	margin: 0;
-	height: 32px;
+  --color: white;
+  --padding-start: 4px;
+  --padding-end: 4px;
+  margin: 0;
+  height: 32px;
+  
+  ion-icon {
+    font-size: 20px;
+  }
 }
 
-.custom-back-btn ion-icon {
-	font-size: 24px;
-}
-
+/* ===== LAYOUT PRINCIPAL ===== */
 .container {
-	padding: 16px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.search {
-	display: flex;
-	justify-content: center;
-	gap: 8px;
-	margin-bottom: 16px;
+/* ===== SEÇÃO DE PESQUISA ===== */
+.search-section {
+  margin-bottom: 24px;
 }
 
-.search input {
-	width: 70%;
-    background-color: #ffffff;
-	padding: 10px 12px;
-	border-radius: 20px;
-	border: 2px solid #000000;
-	color: #000000;
+.search-input-wrapper {
+  position: relative;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
+.search-input {
+  width: 100%;
+  padding: 12px 16px 12px 44px;
+  border: 2px solid #000000;
+  border-radius: 20px;
+  font-size: 14px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #ffffff;
+  transition: all 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: #c4680b;
+    box-shadow: 0 0 0 3px rgba(196, 104, 11, 0.2);
+  }
+  
+  &::placeholder {
+    color: #666666;
+  }
+}
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #000000;
+  font-size: 18px;
+  z-index: 2;
+}
+
+/* ===== GRADE DE TURMAS ===== */
 .grid {
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
 .card {
-	background: #8d8f84;
-	border-radius: 14px;
-    border-style: groove;
-    border-color: #000000 ;
-	padding: 18px;
-	position: relative;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	min-height: 120px;
-	box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  border: 2px groove #000000;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
 }
 
-.students .card.student {
-	min-height: 160px;
-	border-radius: 16px;
-}
-
-.avatar-img {
-	width: 80px;
-	height: 80px;
-	border-radius: 12px;
-	object-fit: cover;
-	margin-bottom: 8px;
-	border-style: groove;
-	border-color: #000000 ;
-}
-
-.name {
-	font-weight: 700;
-	margin-bottom: 8px;
-}
-
-.falta {
-	position: absolute;
-	right: 8px;
-	bottom: 8px;
-	width: 22px;
-	height: 22px;
-	border-radius: 50%;
-	background: rgba(0,0,0,0.1);
-	border: 2px solid #fff;
-}
-
-.falta.on {
-	background: #0f9d58;
+.card-content {
+  padding: 24px;
+  text-align: center;
 }
 
 .avatar {
-	font-size: 36px;
-	margin-bottom: 8px;
+  font-size: 48px;
+  margin-bottom: 12px;
+  opacity: 0.8;
 }
 
-.id {
-	font-weight: 800;
-	font-size: 18px;
-	background: rgba(255, 255, 255, 0.9);
-	padding: 4px 8px;
-	border-radius: 8px;
-	color: #000000;
+.turma-id {
+  font-weight: 800;
+  font-size: 18px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #000000;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  margin-bottom: 4px;
 }
 
-.id p {
-    color: #000000;
+.turma-label {
+  font-size: 14px;
+  color: #000000;
+  font-weight: 600;
+  font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
-.badge {
-	position: absolute;
-	right: 8px;
-	bottom: 8px;
-	background: rgba(255,255,255,0.9);
-	padding: 4px 6px;
-	border-radius: 50%;
-	color: #666;
+/* ===== ESTADO VAZIO ===== */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #000000;
 }
 
-.badge.active {
-	background: #0f9d58;
-	color: #fff;
+.empty-icon {
+  font-size: 64px;
+  color: #c4680b;
+  margin-bottom: 16px;
+  opacity: 0.7;
 }
 
-h2 {
-	color: #000000;
-	justify-content: center;
-	display: flex;
+.empty-state h3 {
+  font-size: 20px;
+  color: #000000;
+  margin-bottom: 8px;
+  font-weight: 600;
 }
 
+.empty-state p {
+  font-size: 16px;
+  color: #000000;
+}
+
+/* ===== CABEÇALHO DA TURMA ===== */
 .turma-header {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 12px;
-	margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  padding: 0 8px;
+}
+
+.turma-info {
+  flex: 1;
+}
+
+.turma-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #000000;
+  margin: 0 0 4px 0;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.students-count {
+  font-size: 14px;
+  color: #000000;
+  font-weight: 600;
+  font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
 .edit-btn {
-	background: #c4680b;
-	color: #fff;
-	border: none;
-	padding: 8px 16px;
-	border-radius: 8px;
-	font-size: 14px;
-	font-weight: 600;
-	cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #c4680b;
+  color: #ffffff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: #a55609;
+    transform: translateY(-1px);
+  }
+  
+  ion-icon {
+    font-size: 16px;
+  }
 }
 
-.edit-btn:hover {
-	background: #a55609;
+/* ===== GRADE DE ALUNOS ===== */
+.students-grid {
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 
+.student-card {
+  display: flex;
+  align-items: center;
+  padding: 18px;
+  gap: 12px;
+  background: #8d8f84;
+  border: 2px groove #000000;
+  border-radius: 16px;
+  min-height: 160px;
+}
+
+.student-avatar {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatar-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 2px groove #000000;
+}
+
+
+.student-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.student-name {
+  font-weight: 700;
+  color: #000000;
+  font-size: 16px;
+  margin-bottom: 4px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.student-id {
+  font-size: 14px;
+  color: #000000;
+  font-weight: 600;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+  
+  ion-icon {
+    font-size: 18px;
+  }
+
+
+/* ===== MODAIS ===== */
 .modal-overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: rgba(0, 0, 0, 0.5);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
 }
 
 .modal-content {
-	background: #f6d0a7;
-	padding: 24px;
-	border-radius: 16px;
-	width: 90%;
-	max-width: 400px;
-	max-height: 85vh;
-	overflow-y: auto;
-	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  background: #f6d0a7;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border: 2px solid #000000;
 }
 
-.modal-content h3 {
-	margin: 0 0 16px 0;
-	color: #000;
-	font-size: 20px;
-	text-align: center;
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 24px 0 24px;
+  margin-bottom: 20px;
+  
+  h3 {
+    margin: 0;
+    color: #000000;
+    font-size: 20px;
+    font-weight: 600;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    text-align: center;
+  }
 }
 
-.modal-content input {
-	width: 100%;
-	padding: 12px;
-	border: 2px solid #c4680b;
-	border-radius: 8px;
-	font-size: 16px;
-	margin-bottom: 16px;
-	box-sizing: border-box;
+.close-btn {
+  background: none;
+  border: none;
+  color: #000000;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(196, 104, 11, 0.2);
+  }
+  
+  ion-icon {
+    font-size: 20px;
+  }
 }
 
-.modal-buttons {
-	display: flex;
-	gap: 12px;
-	justify-content: flex-end;
+.modal-body {
+  padding: 0 24px 24px 24px;
 }
 
-.btn-cancelar, .btn-salvar {
-	padding: 10px 20px;
-	border: none;
-	border-radius: 8px;
-	font-size: 14px;
-	font-weight: 600;
-	cursor: pointer;
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding: 20px 24px 24px 24px;
+  border-top: 2px solid #000000;
 }
 
-.btn-cancelar {
-	background: #ccc;
-	color: #000;
+/* ===== FORMULÁRIOS ===== */
+.input-wrapper {
+  margin-bottom: 20px;
+  
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+    color: #000000;
+    font-size: 16px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
 }
 
-.btn-salvar {
-	background: #c4680b;
-	color: #fff;
+.modal-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #c4680b;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #ffffff;
+  transition: all 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: #000000;
+    box-shadow: 0 0 0 3px rgba(196, 104, 11, 0.2);
+  }
+  
+  &::placeholder {
+    color: #666666;
+  }
 }
 
-.btn-salvar:hover {
-	background: #a55609;
+/* ===== BOTÕES ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &.btn-primary {
+    background: #c4680b;
+    color: #ffffff;
+    
+    &:hover {
+      background: #a55609;
+      transform: translateY(-1px);
+    }
+  }
+  
+  &.btn-secondary {
+    background: #cccccc;
+    color: #000000;
+    
+    &:hover {
+      background: #aaaaaa;
+    }
+  }
 }
 
+/* ===== MODAL ALUNO ESPECÍFICO ===== */
 .modal-aluno {
-	max-width: 500px;
+  max-width: 500px;
+}
+
+.student-profile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  border: 2px solid #000000;
+}
+
+.profile-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 2px groove #000000;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-name {
+  font-weight: 700;
+  color: #000000;
+  font-size: 18px;
+  margin-bottom: 4px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.profile-id {
+  font-size: 14px;
+  color: #000000;
+  font-weight: 600;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .registro-item {
-	margin-bottom: 20px;
-	background: #f6d0a7;
-	padding: 16px;
-	border-radius: 12px;
-	border: 2px solid #c4680b;
+  margin-bottom: 20px;
+  background: #f6d0a7;
+  padding: 16px;
+  border-radius: 12px;
+  border: 2px solid #c4680b;
+  
+  label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 700;
+    color: #000000;
+    font-size: 16px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
 }
 
-.registro-item label {
-	display: block;
-	margin-bottom: 10px;
-	font-weight: 700;
-	color: #000;
-	font-size: 16px;
+.form-select {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #000000;
+  border-radius: 8px;
+  font-size: 16px;
+  background: #ffffff;
+  color: #000000;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  transition: all 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: #c4680b;
+    box-shadow: 0 0 0 3px rgba(196, 104, 11, 0.2);
+  }
 }
 
-.registro-item select {
-	width: 100%;
-	padding: 12px;
-	border: 2px solid #000;
-	border-radius: 8px;
-	font-size: 16px;
-	background: #fff;
-	box-sizing: border-box;
-	color: #000;
-	font-weight: 600;
-	cursor: pointer;
+/* ===== ANIMAÇÕES ===== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.registro-item select:focus {
-	outline: none;
-	border-color: #c4680b;
-	box-shadow: 0 0 0 3px rgba(196, 104, 11, 0.2);
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+  
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 12px;
+  }
+  
+  .turma-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 @media (max-width: 480px) {
-	.grid { grid-template-columns: repeat(2, 1fr); }
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .students-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-overlay {
+    padding: 16px;
+  }
+  
+  .modal-content {
+    border-radius: 16px;
+  }
+  
+  .modal-header,
+  .modal-body {
+    padding: 20px;
+  }
+  
+  .student-profile {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
 }

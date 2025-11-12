@@ -5,87 +5,159 @@
         <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-buttons slot="start" *ngIf="!selectedTurma"> <!-- Verificação para que só exista o botão de menu se nenhuma turma for selecionada -->
+    <ion-buttons slot="start" *ngIf="!selectedTurma">
       <ion-menu-button class="menu-button-externo"></ion-menu-button>
     </ion-buttons>
+    <ion-title>{{ selectedTurma ? 'Turma ' + selectedTurma.id : 'Turmas' }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <div class="container">
     <div *ngIf="!selectedTurma">
-      <div class="search">
-        <input placeholder="Pesquise a turma:" [(ngModel)]="query" />  
+      <!-- Search Section -->
+      <div class="search-section">
+        <div class="search-input-wrapper">
+          <ion-icon name="search-outline" class="search-icon"></ion-icon>
+          <input 
+            placeholder="Pesquisar turma..." 
+            [(ngModel)]="query" 
+            class="search-input"
+          />
+        </div>
       </div>
+
+      <!-- Turmas Grid -->
       <div class="grid">
         <div class="card" *ngFor="let t of filteredTurmas()" (click)="selectTurma(t)">
-          <div class="avatar">👤</div>
-          <div class="id">{{ t.id }}</div>
+          <div class="card-content">
+            <div class="avatar">👥</div>
+            <div class="turma-id">{{ t.id }}</div>
+            <div class="turma-label">Turma</div>
+          </div>
         </div>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="filteredTurmas().length === 0">
+        <ion-icon name="school-outline" class="empty-icon"></ion-icon>
+        <h3>Nenhuma turma encontrada</h3>
+        <p>Tente alterar os termos da pesquisa</p>
       </div>
     </div>
 
+    <!-- Turma Details -->
     <div *ngIf="selectedTurma">
+      <!-- Header -->
       <div class="turma-header">
-        <h2>Turma ({{ selectedTurma.id }})</h2>
-        <button class="edit-btn" (click)="editarNomeTurma()">✏️ Editar</button>
+        <div class="turma-info">
+          <h1 class="turma-title">Turma {{ selectedTurma.id }}</h1>
+          <div class="students-count">{{ studentsByTurma[selectedTurma.id]?.length || 0 }} alunos</div>
+        </div>
+        <button class="edit-btn" (click)="editarNomeTurma()">
+          <ion-icon name="create-outline"></ion-icon>
+          Editar
+        </button>
       </div>
 
-      <div class="search">
-        <input placeholder="Pesquisar aluno:" />
+      <!-- Students Search -->
+      <div class="search-section">
+        <div class="search-input-wrapper">
+          <ion-icon name="search-outline" class="search-icon"></ion-icon>
+          <input placeholder="Pesquisar aluno..." class="search-input" />
+        </div>
       </div>
 
-      <div class="grid students">
-        <div class="card student" *ngFor="let s of studentsByTurma[selectedTurma.id]" (click)="abrirRegistroAluno(s)">
-          <img [src]="s.avatar" class="avatar-img" />
-          <div class="name">{{ s.name }}</div>
-          <button class="falta" [class.on]="s.falta" (click)="toggleFalta(s, $event)"></button>
+      <!-- Students Grid -->
+      <div class="grid students-grid">
+        <div class="card student-card" *ngFor="let s of studentsByTurma[selectedTurma.id]" (click)="abrirRegistroAluno(s)">
+          <div class="student-avatar">
+            <img [src]="s.avatar" class="avatar-img" />
+            <div class="presence-indicator" [class.present]="!s.falta"></div>
+          </div>
+          <div class="student-info">
+            <div class="student-name">{{ s.name }}</div>
+            <div class="student-id">{{ s.id }}</div>
+          </div>
+          
+            
         </div>
       </div>
     </div>
 
+    <!-- Edit Turma Modal -->
     <div class="modal-overlay" *ngIf="showEditModal" (click)="fecharModal()">
       <div class="modal-content" (click)="$event.stopPropagation()">
-        <h3>Editar Nome da Turma</h3>
-        <input type="text" [(ngModel)]="novoNomeTurma" placeholder="Digite o novo nome" />
-        <div class="modal-buttons">
-          <button class="btn-cancelar" (click)="fecharModal()">Cancelar</button>
-          <button class="btn-salvar" (click)="salvarNomeTurma()">Salvar</button>
+        <div class="modal-header">
+          <h3>Editar Nome da Turma</h3>
+          <button class="close-btn" (click)="fecharModal()">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="input-wrapper">
+            <label>Nome da Turma</label>
+            <input type="text" [(ngModel)]="novoNomeTurma" placeholder="Digite o novo nome" class="modal-input" />
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" (click)="fecharModal()">Cancelar</button>
+          <button class="btn btn-primary" (click)="salvarNomeTurma()">Salvar Alterações</button>
         </div>
       </div>
     </div>
 
+    <!-- Student Details Modal -->
     <div class="modal-overlay" *ngIf="showAlunoModal" (click)="fecharAlunoModal()">
       <div class="modal-content modal-aluno" (click)="$event.stopPropagation()">
-        <h3>{{ alunoSelecionado?.name }}</h3>
-        <div class="registro-item">
-          <label>Alimentação:</label>
-          <select [(ngModel)]="alunoSelecionado.alimentacao">
-            <option value="Ótimo">Ótimo</option>
-            <option value="Bom">Bom</option>
-            <option value="Regular">Regular</option>
-            <option value="Ruim">Ruim</option>
-          </select>
+        <div class="modal-header">
+          <h3>{{ alunoSelecionado?.name }}</h3>
+          <button class="close-btn" (click)="fecharAlunoModal()">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
         </div>
-        <div class="registro-item">
-          <label>Comportamento:</label>
-          <select [(ngModel)]="alunoSelecionado.comportamento">
-            <option value="Ótimo">Ótimo</option>
-            <option value="Bom">Bom</option>
-            <option value="Regular">Regular</option>
-            <option value="Ruim">Ruim</option>
-          </select>
+        <div class="modal-body">
+          <div class="student-profile">
+            <img [src]="alunoSelecionado?.avatar" class="profile-avatar" />
+            <div class="profile-info">
+              <div class="profile-name">{{ alunoSelecionado?.name }}</div>
+              <div class="profile-id">{{ alunoSelecionado?.id }}</div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-group">
+              <label>Alimentação</label>
+              <select [(ngModel)]="alunoSelecionado.alimentacao" class="form-select">
+                <option value="Ótimo">Ótimo</option>
+                <option value="Bom">Bom</option>
+                <option value="Regular">Regular</option>
+                <option value="Ruim">Ruim</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Comportamento</label>
+              <select [(ngModel)]="alunoSelecionado.comportamento" class="form-select">
+                <option value="Ótimo">Ótimo</option>
+                <option value="Bom">Bom</option>
+                <option value="Regular">Regular</option>
+                <option value="Ruim">Ruim</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Presença</label>
+              <select [(ngModel)]="alunoSelecionado.presenca" class="form-select">
+                <option value="Presente">Presente</option>
+                <option value="Ausente">Ausente</option>
+              </select>
+            </div>
+          </div>
         </div>
-        <div class="registro-item">
-          <label>Presença:</label>
-          <select [(ngModel)]="alunoSelecionado.presenca">
-            <option value="Presente">Presente</option>
-            <option value="Ausente">Ausente</option>
-          </select>
-        </div>
-        <div class="modal-buttons">
-          <button class="btn-cancelar" (click)="fecharAlunoModal()">Cancelar</button>
-          <button class="btn-salvar" (click)="salvarRegistroAluno()">Salvar</button>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" (click)="fecharAlunoModal()">Cancelar</button>
+          <button class="btn btn-primary" (click)="salvarRegistroAluno()">Salvar Registro</button>
         </div>
       </div>
     </div>
