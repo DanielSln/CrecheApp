@@ -14,6 +14,7 @@ import {
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { chevronBack } from 'ionicons/icons';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-turmas',
@@ -39,6 +40,10 @@ export class TurmasPage implements OnInit {
   novoNomeTurma: string = '';
   showAlunoModal: boolean = false;
   alunoSelecionado: any = null;
+  showAddAlunoModal: boolean = false;
+  alunosDisponiveis: any[] = [];
+  showDeleteModal: boolean = false;
+  searchAluno: string = '';
 
   turmas = Array.from({ length: 12 }).map((_, i) => ({
     id: (i * 37 + 32).toString().padStart(4, '0'),
@@ -48,7 +53,9 @@ export class TurmasPage implements OnInit {
   selectedTurma: any = null;
   studentsByTurma: Record<string, any[]> = {};
 
-  constructor(private router: Router) {
+  private apiUrl = 'http://localhost:3000';
+
+  constructor(private router: Router, private http: HttpClient) {
     addIcons({ chevronBack });
   }
 
@@ -76,12 +83,20 @@ export class TurmasPage implements OnInit {
   selectTurma(t: any) {
     this.selectedTurma = t;
     if (!this.studentsByTurma[t.id]) {
-      this.studentsByTurma[t.id] = Array.from({ length: 6 }).map((_, i) => ({
-        id: `${t.id}-${i + 1}`,
-        name: 'Nome',
-        avatar: 'assets/img/avatar.jpg',
-        falta: false,
-      }));
+      this.http.get<any[]>(`${this.apiUrl}/alunos`).subscribe({
+        next: (alunos) => {
+          this.studentsByTurma[t.id] = alunos.map((aluno) => ({
+            id: aluno.id,
+            name: aluno.nome,
+            matricula: aluno.matricula,
+            avatar: 'assets/img/avatar.jpg',
+            falta: false,
+          }));
+        },
+        error: () => {
+          this.studentsByTurma[t.id] = [];
+        }
+      });
     }
   }
 
@@ -142,5 +157,74 @@ export class TurmasPage implements OnInit {
       this.salvarTurmasNoStorage();
     }
     this.fecharModal();
+  }
+
+  abrirModalExcluir() {
+    this.showDeleteModal = true;
+  }
+
+  fecharModalExcluir() {
+    this.showDeleteModal = false;
+  }
+
+  confirmarExcluirTurma() {
+    this.turmas = this.turmas.filter(t => t.id !== this.selectedTurma.id);
+    delete this.studentsByTurma[this.selectedTurma.id];
+    this.salvarTurmasNoStorage();
+    this.fecharModalExcluir();
+    this.backToList();
+  }
+
+  removerAluno(aluno: any) {
+    if (confirm(`Remover ${aluno.name} da turma?`)) {
+      this.studentsByTurma[this.selectedTurma.id] = this.studentsByTurma[this.selectedTurma.id].filter(s => s.id !== aluno.id);
+    }
+  }
+
+  abrirAdicionarAluno() {
+    console.log('Buscando alunos...');
+    this.http.get<any[]>(`${this.apiUrl}/alunos`).subscribe({
+      next: (alunos) => {
+        console.log('Alunos recebidos:', alunos);
+        const alunosNaTurma = this.studentsByTurma[this.selectedTurma.id] || [];
+        this.alunosDisponiveis = alunos.filter(a => !alunosNaTurma.find(s => s.id === a.id));
+        console.log('Alunos disponíveis:', this.alunosDisponiveis);
+        this.showAddAlunoModal = true;
+      },
+      error: (err) => {
+        console.error('Erro ao buscar alunos:', err);
+        this.alunosDisponiveis = [];
+        this.showAddAlunoModal = true;
+      }
+    });
+  }
+
+  fecharAddAlunoModal() {
+    this.showAddAlunoModal = false;
+    this.alunosDisponiveis = [];
+    this.searchAluno = '';
+  }
+
+  filteredAlunosDisponiveis() {
+    const q = this.searchAluno?.trim().toLowerCase();
+    if (!q) return this.alunosDisponiveis;
+    return this.alunosDisponiveis.filter(a => 
+      a.nome.toLowerCase().includes(q) || 
+      a.matricula.toLowerCase().includes(q)
+    );
+  }
+
+  adicionarAluno(aluno: any) {
+    if (!this.studentsByTurma[this.selectedTurma.id]) {
+      this.studentsByTurma[this.selectedTurma.id] = [];
+    }
+    this.studentsByTurma[this.selectedTurma.id].push({
+      id: aluno.id,
+      name: aluno.nome,
+      matricula: aluno.matricula,
+      avatar: 'assets/img/avatar.jpg',
+      falta: false,
+    });
+    this.fecharAddAlunoModal();
   }
 }

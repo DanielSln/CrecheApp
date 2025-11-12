@@ -54,10 +54,16 @@
           <h1 class="turma-title">Turma {{ selectedTurma.id }}</h1>
           <div class="students-count">{{ studentsByTurma[selectedTurma.id]?.length || 0 }} alunos</div>
         </div>
-        <button class="edit-btn" (click)="editarNomeTurma()">
-          <ion-icon name="create-outline"></ion-icon>
-          Editar
-        </button>
+        <div class="header-actions">
+          <button class="edit-btn" (click)="editarNomeTurma()">
+            <ion-icon name="create-outline"></ion-icon>
+            Editar
+          </button>
+          <button class="delete-btn" (click)="abrirModalExcluir()">
+            <ion-icon name="trash-outline"></ion-icon>
+            Excluir
+          </button>
+        </div>
       </div>
 
       <!-- Students Search -->
@@ -70,19 +76,28 @@
 
       <!-- Students Grid -->
       <div class="grid students-grid">
-        <div class="card student-card" *ngFor="let s of studentsByTurma[selectedTurma.id]" (click)="abrirRegistroAluno(s)">
-          <div class="student-avatar">
-            <img [src]="s.avatar" class="avatar-img" />
-            <div class="presence-indicator" [class.present]="!s.falta"></div>
+        <div class="card student-card" *ngFor="let s of studentsByTurma[selectedTurma.id]">
+          <div (click)="abrirRegistroAluno(s)" style="flex: 1; display: flex; align-items: center; gap: 12px;">
+            <div class="student-avatar">
+              <img [src]="s.avatar" class="avatar-img" />
+              <div class="presence-indicator" [class.present]="!s.falta"></div>
+            </div>
+            <div class="student-info">
+              <div class="student-name">{{ s.name }}</div>
+              <div class="student-id">{{ s.id }}</div>
+            </div>
           </div>
-          <div class="student-info">
-            <div class="student-name">{{ s.name }}</div>
-            <div class="student-id">{{ s.id }}</div>
-          </div>
-          
-            
+          <button class="remove-student-btn" (click)="removerAluno(s); $event.stopPropagation()">
+            <ion-icon name="close-circle-outline"></ion-icon>
+          </button>
         </div>
       </div>
+
+      <!-- Add Student Button -->
+      <button class="add-student-btn" (click)="abrirAdicionarAluno()">
+        <ion-icon name="add-circle-outline"></ion-icon>
+        Adicionar Aluno
+      </button>
     </div>
 
     <!-- Edit Turma Modal -->
@@ -103,6 +118,61 @@
         <div class="modal-actions">
           <button class="btn btn-secondary" (click)="fecharModal()">Cancelar</button>
           <button class="btn btn-primary" (click)="salvarNomeTurma()">Salvar Alterações</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" *ngIf="showDeleteModal" (click)="fecharModalExcluir()">
+      <div class="modal-content modal-delete" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Confirmar Exclusão</h3>
+          <button class="close-btn" (click)="fecharModalExcluir()">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="delete-message">Você realmente deseja apagar esta turma?</p>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" (click)="fecharModalExcluir()">Cancelar</button>
+          <button class="btn btn-danger" (click)="confirmarExcluirTurma()">Excluir</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Student Modal -->
+    <div class="modal-overlay" *ngIf="showAddAlunoModal" (click)="fecharAddAlunoModal()">
+      <div class="modal-content modal-add-aluno" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Adicionar Aluno</h3>
+          <button class="close-btn" (click)="fecharAddAlunoModal()">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="search-section">
+            <div class="search-input-wrapper">
+              <ion-icon name="search-outline" class="search-icon"></ion-icon>
+              <input 
+                placeholder="Buscar aluno por nome ou matrícula..." 
+                [(ngModel)]="searchAluno" 
+                class="search-input"
+              />
+            </div>
+          </div>
+          <div class="alunos-list">
+            <div class="aluno-item" *ngFor="let aluno of filteredAlunosDisponiveis()" (click)="adicionarAluno(aluno)">
+              <div class="aluno-info">
+                <div class="aluno-name">{{ aluno.nome }}</div>
+                <div class="aluno-matricula">Matrícula: {{ aluno.matricula }}</div>
+              </div>
+              <ion-icon name="add-circle-outline" class="add-icon"></ion-icon>
+            </div>
+            <div class="empty-state" *ngIf="filteredAlunosDisponiveis().length === 0">
+              <p>Nenhum aluno encontrado</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

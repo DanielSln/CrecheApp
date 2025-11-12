@@ -149,6 +149,12 @@ ion-menu-button {
   text-align: center;
   padding: 60px 20px;
   color: #000000;
+  
+  p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+  }
 }
 
 .empty-icon {
@@ -177,6 +183,11 @@ ion-menu-button {
   align-items: flex-start;
   margin-bottom: 24px;
   padding: 0 8px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
 }
 
 .turma-info {
@@ -222,6 +233,134 @@ ion-menu-button {
   }
 }
 
+.delete-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #e74c3c;
+  color: #ffffff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: #c0392b;
+    transform: translateY(-1px);
+  }
+  
+  ion-icon {
+    font-size: 16px;
+  }
+}
+
+.remove-student-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  
+  &:hover {
+    background: #c0392b;
+    transform: scale(1.1);
+  }
+  
+  ion-icon {
+    font-size: 20px;
+  }
+}
+
+.add-student-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 300px;
+  margin: 20px auto;
+  padding: 14px 24px;
+  background: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: #229954;
+    transform: translateY(-2px);
+  }
+  
+  ion-icon {
+    font-size: 24px;
+  }
+}
+
+.modal-add-aluno {
+  max-width: 500px;
+}
+
+.alunos-list {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-top: 16px;
+}
+
+.aluno-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: white;
+  border: 2px solid #000;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: #f0f0f0;
+    transform: translateX(4px);
+    border-color: #c4680b;
+  }
+}
+
+.aluno-info {
+  flex: 1;
+}
+
+.aluno-name {
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 4px;
+  font-size: 16px;
+}
+
+.aluno-matricula {
+  font-size: 14px;
+  color: #666;
+  font-weight: 600;
+}
+
+.add-icon {
+  font-size: 28px;
+  color: #27ae60;
+  flex-shrink: 0;
+}
+
 /* ===== GRADE DE ALUNOS ===== */
 .students-grid {
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -230,6 +369,7 @@ ion-menu-button {
 .student-card {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 18px;
   gap: 12px;
   background: #8d8f84;
@@ -426,6 +566,28 @@ ion-menu-button {
       background: #aaaaaa;
     }
   }
+  
+  &.btn-danger {
+    background: #e74c3c;
+    color: #ffffff;
+    
+    &:hover {
+      background: #c0392b;
+      transform: translateY(-1px);
+    }
+  }
+}
+
+.modal-delete {
+  max-width: 400px;
+}
+
+.delete-message {
+  font-size: 16px;
+  color: #000;
+  text-align: center;
+  margin: 0;
+  font-weight: 600;
 }
 
 /* ===== MODAL ALUNO ESPECÍFICO ===== */
