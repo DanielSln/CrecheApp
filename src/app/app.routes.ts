@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/comunicados-docente',
+    redirectTo: '/login-aluno',
     pathMatch: 'full',
   },
 
