@@ -31,14 +31,12 @@
 
     <!-- Campo Para -->
     <div class="compose-field">
-      <div class="field-row">
+      <div class="field-row" (click)="abrirDestinatarios()" style="cursor: pointer;">
         <div class="field-label">Para:</div>
         <div class="field-content">
-          <ion-input
-            class="recipient-input"
-            placeholder="Destinatários"
-            [(ngModel)]="comunicado.to"
-          ></ion-input>
+          <div class="recipient-display">
+            {{ comunicado.to || 'Selecione os destinatários' }}
+          </div>
         </div>
       </div>
     </div>
@@ -166,5 +164,56 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- Modal de Destinatários -->
+  <div class="modal-overlay" *ngIf="showDestinatariosModal" (click)="fecharDestinatarios()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Selecionar Destinatários</h3>
+        <button class="close-btn-modal" (click)="fecharDestinatarios()">×</button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="search-section">
+          <input type="text" class="search-input" placeholder="Buscar..." [(ngModel)]="searchQuery" />
+        </div>
+        
+        <div class="options-section">
+          <div class="option-item" (click)="selecionarOpcao('Geral')">
+            <span class="option-icon">🌍</span>
+            <span class="option-text">Geral (Todos)</span>
+          </div>
+          <div class="option-item" (click)="selecionarOpcao('Alunos')">
+            <span class="option-icon">🎓</span>
+            <span class="option-text">Alunos</span>
+          </div>
+          <div class="option-item" (click)="selecionarOpcao('Docentes')">
+            <span class="option-icon">👨‍🏫</span>
+            <span class="option-text">Docentes</span>
+          </div>
+        </div>
+        
+        <div class="list-section" *ngIf="tipoSelecionado === 'Alunos'">
+          <h4>Alunos Disponíveis</h4>
+          <div class="list-item" *ngFor="let aluno of filteredAlunos()" (click)="toggleDestinatario(aluno.nome)">
+            <input type="checkbox" [checked]="isSelected(aluno.nome)" />
+            <span>{{ aluno.nome }}</span>
+          </div>
+        </div>
+        
+        <div class="list-section" *ngIf="tipoSelecionado === 'Docentes'">
+          <h4>Docentes Disponíveis</h4>
+          <div class="list-item" *ngFor="let docente of filteredDocentes()" (click)="toggleDestinatario(docente.nome)">
+            <input type="checkbox" [checked]="isSelected(docente.nome)" />
+            <span>{{ docente.nome }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn-confirm" (click)="confirmarDestinatarios()">Confirmar</button>
+      </div>
+    </div>
   </div>
 </ion-content>

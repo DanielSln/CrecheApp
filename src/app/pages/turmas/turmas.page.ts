@@ -128,6 +128,19 @@ export class TurmasPage implements OnInit {
         aluno.alimentacao = this.alunoSelecionado.alimentacao;
         aluno.comportamento = this.alunoSelecionado.comportamento;
         aluno.presenca = this.alunoSelecionado.presenca;
+        
+        // Salvar relatório no localStorage
+        const relatorios = JSON.parse(localStorage.getItem('relatorios_alunos') || '{}');
+        if (!relatorios[aluno.id]) {
+          relatorios[aluno.id] = [];
+        }
+        relatorios[aluno.id].push({
+          data: new Date().toISOString(),
+          alimentacao: this.alunoSelecionado.alimentacao,
+          comportamento: this.alunoSelecionado.comportamento,
+          presenca: this.alunoSelecionado.presenca
+        });
+        localStorage.setItem('relatorios_alunos', JSON.stringify(relatorios));
       }
     }
     this.fecharAlunoModal();

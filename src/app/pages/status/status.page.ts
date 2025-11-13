@@ -38,6 +38,30 @@ import { restaurantOutline, happyOutline, peopleOutline } from 'ionicons/icons';
 })
 
 export class StatusPage implements OnInit {
+  status = [
+    {
+      titulo: 'Alimentação',
+      mensagem: 'Seu filho está indo bem!',
+      icone: 'restaurant-outline',
+      cor: 'danger',
+      valor: 0
+    },
+    {
+      titulo: 'Comportamento',
+      mensagem: 'Seu filho é um exemplo para todos!',
+      icone: 'happy-outline',
+      cor: 'success',
+      valor: 0
+    },
+    {
+      titulo: 'Presença',
+      mensagem: 'Seu filho está comparecendo frequentemente!',
+      icone: 'people-outline',
+      cor: 'primary',
+      valor: 0
+    }
+  ];
+
   constructor(private router: Router) {
     addIcons({
       'restaurant-outline': restaurantOutline,
@@ -45,33 +69,34 @@ export class StatusPage implements OnInit {
       'people-outline': peopleOutline
     });
   }
-  
-  status = [
-    {
-      titulo: 'Alimentação',
-      mensagem: 'Seu filho está indo bem!',
-      icone: 'restaurant-outline',
-      cor: 'danger',
-      valor: 75
-    },
-    {
-      titulo: 'Comportamento',
-      mensagem: 'Seu filho é um exemplo para todos!',
-      icone: 'happy-outline',
-      cor: 'success',
-      valor: 100
-    },
-    {
-      titulo: 'Presença',
-      mensagem: 'Seu filho está comparecendo frequentemente!',
-      icone: 'people-outline',
-      cor: 'primary',
-      valor: 88
-    }
-  ];
 
+  ngOnInit() {
+    this.calcularPorcentagens();
+  }
 
-  ngOnInit() {}
+  calcularPorcentagens() {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const relatorios = JSON.parse(localStorage.getItem('relatorios_alunos') || '{}');
+    const alunoRelatorios = relatorios[user.id] || [];
+
+    if (alunoRelatorios.length === 0) return;
+
+    const valores = { 'Ótimo': 100, 'Bom': 75, 'Regular': 50, 'Ruim': 25 };
+    
+    // Alimentação
+    const alimentacaoMedia = alunoRelatorios.reduce((acc: number, r: any) => 
+      acc + (valores[r.alimentacao as keyof typeof valores] || 0), 0) / alunoRelatorios.length;
+    this.status[0].valor = Math.round(alimentacaoMedia);
+
+    // Comportamento
+    const comportamentoMedia = alunoRelatorios.reduce((acc: number, r: any) => 
+      acc + (valores[r.comportamento as keyof typeof valores] || 0), 0) / alunoRelatorios.length;
+    this.status[1].valor = Math.round(comportamentoMedia);
+
+    // Presença
+    const presentes = alunoRelatorios.filter((r: any) => r.presenca === 'Presente').length;
+    this.status[2].valor = Math.round((presentes / alunoRelatorios.length) * 100);
+  }
   
   goToMenu() {
     this.router.navigateByUrl('/menu');

@@ -8,13 +8,9 @@ import {
   IonToolbar,
   IonButtons,
   IonMenuButton,
-  IonButton,
-  IonIcon,
-  IonTitle,
   AlertController
 } from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import { pencil } from 'ionicons/icons';
+
 
 @Component({
   selector: 'app-comunicados',
@@ -27,15 +23,11 @@ import { pencil } from 'ionicons/icons';
     IonToolbar,
     IonButtons,
     IonMenuButton,
-    IonButton,
-    IonIcon,
-    IonTitle,
     CommonModule,
     FormsModule,
   ],
 })
 export class ComunicadosPage implements OnInit {
-  pencil = pencil;
   comunicados: any[] = [];
   comunicadoSelecionado: any = null;
 
@@ -43,7 +35,6 @@ export class ComunicadosPage implements OnInit {
     private router: Router,
     private alertController: AlertController
   ) {
-    addIcons({ pencil });
     console.log('ComunicadosPage constructor chamado');
   }
 
@@ -105,11 +96,9 @@ export class ComunicadosPage implements OnInit {
     this.comunicadoSelecionado = null;
   }
 
-  // Editar comunicado (funcionalidade futura)
   editarComunicado() {
-    console.log('Editando comunicado:', this.comunicadoSelecionado.id);
-    alert('Funcionalidade de edição em desenvolvimento!');
-    this.fecharDetalhes();
+    sessionStorage.setItem('comunicadoEditar', JSON.stringify(this.comunicadoSelecionado));
+    this.router.navigateByUrl('/escrever-comunicado');
   }
 
   goToMenu() {

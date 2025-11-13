@@ -3,7 +3,6 @@
     <ion-buttons slot="start">
       <ion-menu-button class="menu-button-externo"></ion-menu-button>
     </ion-buttons>
-    <ion-title>Meus Comunicados</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -45,16 +44,7 @@
       </div>
     </ng-template>
 
-    <!-- Botões de ação no final da lista -->
-    <div class="button-group">
-      <ion-button expand="block" class="action-btn" (click)="irParaEscrever()">
-        <ion-icon [icon]="pencil" slot="start"></ion-icon>
-        Novo Comunicado
-      </ion-button>
-      <ion-button expand="block" class="action-btn secondary" (click)="verRascunhos()">
-        📝 Ver Rascunhos
-      </ion-button>
-    </div>
+
   </div>
 
   <!-- Overlay/Modal de detalhes do comunicado -->

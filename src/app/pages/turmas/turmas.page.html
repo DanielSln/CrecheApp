@@ -52,7 +52,7 @@
       <div class="turma-header">
         <div class="turma-info">
           <h1 class="turma-title">Turma {{ selectedTurma.id }}</h1>
-          <div class="students-count">{{ studentsByTurma[selectedTurma.id]?.length || 0 }} alunos</div>
+          <div class="students-count">{{ (studentsByTurma[selectedTurma.id] || []).length }} alunos</div>
         </div>
         <div class="header-actions">
           <button class="edit-btn" (click)="editarNomeTurma()">
