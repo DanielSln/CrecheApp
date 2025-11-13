@@ -68,7 +68,7 @@ export class LoginProfessorPage implements OnInit {
     this.isLoading = true;
 
     this.http
-      .post('https://api-cadastro-six.vercel.app/login/docente', {
+      .post('https://back-end-pokecreche-production.up.railway.app/login/docente', {
         identificador: this.id,
         senha: this.senha,
       })
@@ -77,6 +77,7 @@ export class LoginProfessorPage implements OnInit {
           this.isLoading = false;
           if (response.success && response.user) {
             localStorage.setItem('userType', 'docente');
+            localStorage.setItem('userId', response.user.id);
             localStorage.setItem('userName', response.user.nome);
             localStorage.setItem('userEmail', 'ID: ' + (response.user.id || this.id));
             localStorage.setItem('userIdentificador', this.id);

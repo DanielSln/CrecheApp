@@ -7,17 +7,14 @@ import {
   IonToolbar,
   IonButtons,
   IonMenuButton,
-  IonButton,
   IonIcon,
 } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
-
-type DayColor = 'green' | 'red' | 'none';
+import { HttpClient } from '@angular/common/http';
 
 interface DayEvent {
-  date: string; // 'YYYY-MM-DD'
+  date: string;
   title: string;
-  color: DayColor;
 }
 
 interface DayCell {
@@ -40,7 +37,6 @@ interface DayCell {
     IonToolbar,
     IonButtons,
     IonMenuButton,
-    IonButton,
     IonIcon,
   ],
 })
@@ -50,14 +46,12 @@ export class CalendarioPage implements OnInit {
   currentMonth = this.current.getMonth(); // 0-11
   weeks: DayCell[][] = [];
 
-  private storageKey = 'calendario_docente_events_v1';
+  private apiUrl = 'https://back-end-pokecreche-production.up.railway.app';
 
-  constructor(private router: Router) {
-    // construtor padrão: apenas injeta Router
-  }
+  constructor(private router: Router, private http: HttpClient) {}
 
   ngOnInit() {
-    this.buildCalendar(this.currentYear, this.currentMonth);
+    this.loadEvents();
   }
 
   goToMenu() {
@@ -93,19 +87,25 @@ export class CalendarioPage implements OnInit {
     }
   }
 
-  // read all events
-  private readAll(): DayEvent[] {
-    const raw = localStorage.getItem(this.storageKey);
-    if (!raw) return [];
-    try {
-      return JSON.parse(raw) as DayEvent[];
-    } catch {
-      return [];
-    }
+  private allEvents: DayEvent[] = [];
+
+  private loadEvents() {
+    this.http.get<any[]>(`${this.apiUrl}/eventos`).subscribe({
+      next: (eventos) => {
+        this.allEvents = eventos.map(e => ({
+          date: e.date.slice(0, 10),
+          title: e.title
+        }));
+        this.buildCalendar(this.currentYear, this.currentMonth);
+      },
+      error: () => {
+        this.allEvents = [];
+      }
+    });
   }
 
   private getEvent(dateIso: string): DayEvent | null {
-    const ev = this.readAll().find((e) => e.date === dateIso);
+    const ev = this.allEvents.find((e) => e.date === dateIso);
     return ev ?? null;
   }
 
@@ -130,10 +130,23 @@ export class CalendarioPage implements OnInit {
     this.buildCalendar(this.currentYear, this.currentMonth);
   }
 
-  // refresh events (call after docente modifies, or add polling/websocket)
   refresh() {
-    // simple feedback: rebuild calendar and (optionally) flash something
-    this.buildCalendar(this.currentYear, this.currentMonth);
+    this.loadEvents();
+  }
+
+  showEventModal = false;
+  selectedEvent: DayEvent | null = null;
+
+  openEventModal(day: DayCell) {
+    if (day.event && day.inMonth) {
+      this.selectedEvent = day.event;
+      this.showEventModal = true;
+    }
+  }
+
+  closeEventModal() {
+    this.showEventModal = false;
+    this.selectedEvent = null;
   }
 
   getMonthNameShort(monthIndex: number) {

@@ -40,25 +40,29 @@
       <div *ngFor="let week of weeks" class="week-row">
         <div *ngFor="let day of week"
              class="day-cell"
-             [class.out-month]="!day.inMonth">
+             [class.out-month]="!day.inMonth"
+             [class.has-event]="day.event"
+             (click)="openEventModal(day)">
           <div class="day-number" *ngIf="day.inMonth">{{ day.dayNumber }}</div>
-
-          <!-- event marker (from docente) -->
-          <div *ngIf="day.event" class="event-marker" [ngClass]="day.event.color">
-            ✖
-          </div>
 
           <div *ngIf="day.event" class="event-title">{{ day.event.title }}</div>
         </div>
       </div>
     </div>
 
-    <!-- refreshed button (replaced as requested) -->
-    <div class="refresh-wrap">
-      <ion-button class="refresh-btn" fill="solid" size="large" (click)="refresh()">
-        <ion-icon name="sync-outline" slot="start"></ion-icon>
-        Atualizar eventos
-      </ion-button>
+    <!-- Event Modal -->
+    <div class="modal-overlay" *ngIf="showEventModal" (click)="closeEventModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Evento do Dia</h3>
+          <button class="close-btn" (click)="closeEventModal()">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="event-text">{{ selectedEvent?.title }}</p>
+        </div>
+      </div>
     </div>
   </div>
 </ion-content>

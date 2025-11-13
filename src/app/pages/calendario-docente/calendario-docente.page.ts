@@ -9,13 +9,11 @@ import {
   IonMenuButton,
 } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
-
-type DayColor = 'green' | 'red' | 'none';
+import { HttpClient } from '@angular/common/http';
 
 interface DayEvent {
-  date: string; // 'YYYY-MM-DD'
+  date: string;
   title: string;
-  color: DayColor;
 }
 
 interface DayCell {
@@ -48,15 +46,30 @@ export class CalendarioDocentePage implements OnInit {
 
   editingDateIso: string | null = null;
   editTitle = '';
-  editColor: DayColor = 'none';
   panelOpen = false;
 
-  private storageKey = 'calendario_docente_events_v1';
+  private apiUrl = 'https://back-end-pokecreche-production.up.railway.app';
+  private allEvents: DayEvent[] = [];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private http: HttpClient) {}
 
   ngOnInit() {
-    this.buildCalendar(this.currentYear, this.currentMonth);
+    this.loadEvents();
+  }
+
+  private loadEvents() {
+    this.http.get<any[]>(`${this.apiUrl}/eventos`).subscribe({
+      next: (eventos) => {
+        this.allEvents = eventos.map(e => ({
+          date: e.date.slice(0, 10),
+          title: e.title
+        }));
+        this.buildCalendar(this.currentYear, this.currentMonth);
+      },
+      error: () => {
+        this.allEvents = [];
+      }
+    });
   }
 
   goToMenu() {
@@ -119,25 +132,31 @@ export class CalendarioDocentePage implements OnInit {
     const ev = this.getEvent(day.iso);
     if (ev) {
       this.editTitle = ev.title;
-      this.editColor = ev.color;
     } else {
       this.editTitle = '';
-      this.editColor = 'none';
     }
     this.panelOpen = true;
   }
 
   saveEdit() {
     if (!this.editingDateIso) return;
-    if (!this.editTitle && this.editColor === 'none') {
+    if (!this.editTitle.trim()) {
       this.removeEvent(this.editingDateIso);
     } else {
-      const ev: DayEvent = {
+      const payload = {
         date: this.editingDateIso,
-        title: this.editTitle,
-        color: this.editColor,
+        title: this.editTitle.trim(),
+        color: 'blue'
       };
-      this.saveEvent(ev);
+      this.http.post(`${this.apiUrl}/eventos`, payload).subscribe({
+        next: () => {
+          this.loadEvents();
+        },
+        error: (err) => {
+          console.error('Erro ao salvar evento:', err);
+          alert('Erro ao salvar evento');
+        }
+      });
     }
     this.refreshAndClose();
   }
@@ -161,39 +180,24 @@ export class CalendarioDocentePage implements OnInit {
     this.panelOpen = false;
     this.editingDateIso = null;
     this.editTitle = '';
-    this.editColor = 'none';
-  }
-
-  private readAll(): DayEvent[] {
-    const raw = localStorage.getItem(this.storageKey);
-    if (!raw) return [];
-    try {
-      return JSON.parse(raw) as DayEvent[];
-    } catch {
-      return [];
-    }
-  }
-
-  private writeAll(events: DayEvent[]) {
-    localStorage.setItem(this.storageKey, JSON.stringify(events));
   }
 
   getEvent(dateIso: string): DayEvent | null {
-    const ev = this.readAll().find((e) => e.date === dateIso);
+    const ev = this.allEvents.find((e) => e.date === dateIso);
     return ev ?? null;
   }
 
-  saveEvent(event: DayEvent) {
-    const events = this.readAll();
-    const idx = events.findIndex((e) => e.date === event.date);
-    if (idx >= 0) events[idx] = event;
-    else events.push(event);
-    this.writeAll(events);
-  }
+
 
   removeEvent(dateIso: string) {
-    const events = this.readAll().filter((e) => e.date !== dateIso);
-    this.writeAll(events);
+    this.http.delete(`${this.apiUrl}/eventos/${dateIso}`).subscribe({
+      next: () => {
+        this.loadEvents();
+      },
+      error: (err) => {
+        console.error('Erro ao remover evento:', err);
+      }
+    });
   }
 
   getMonthNameShort(monthIndex: number) {

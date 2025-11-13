@@ -51,6 +51,7 @@ import {
 })
 export class AppComponent {
   userType: 'aluno' | 'docente' = 'aluno';
+  menuOpen = false;
 
   get profile() {
     const name =
@@ -106,6 +107,7 @@ export class AppComponent {
   constructor(private router: Router) {
     this.addAllIcons();
     this.loadUserType();
+    this.setupMenuListener();
     // atualiza o item ativo com base na rota atual e infere tipo de usuário pela rota
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -179,5 +181,14 @@ export class AppComponent {
     const loginUrl =
       this.userType === 'docente' ? '/login-professor' : '/login-aluno';
     this.router.navigateByUrl(loginUrl);
+  }
+
+  setupMenuListener() {
+    document.addEventListener('ionMenuDidOpen', () => {
+      this.menuOpen = true;
+    });
+    document.addEventListener('ionMenuDidClose', () => {
+      this.menuOpen = false;
+    });
   }
 }

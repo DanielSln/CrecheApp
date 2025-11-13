@@ -75,7 +75,7 @@ export class EscreverComunicadoPage implements OnInit {
   }
 
   carregarAlunos() {
-    fetch('http://localhost:3000/alunos')
+    fetch('https://back-end-pokecreche-production.up.railway.app/alunos')
       .then(res => res.json())
       .then(data => this.alunos = data)
       .catch(() => this.alunos = []);
@@ -83,7 +83,7 @@ export class EscreverComunicadoPage implements OnInit {
 
   async carregarDocentes() {
     try {
-      const response = await fetch('http://localhost:3000/docentes');
+      const response = await fetch('https://back-end-pokecreche-production.up.railway.app/docentes');
       this.docentes = await response.json();
     } catch {
       this.docentes = [];
@@ -323,45 +323,43 @@ export class EscreverComunicadoPage implements OnInit {
     }
 
     try {
-      const comunicados = JSON.parse(localStorage.getItem('comunicados_enviados') || '[]');
+      const docenteId = localStorage.getItem('userId') || '1';
       
-      if (this.comunicado.id) {
-        const index = comunicados.findIndex((c: any) => c.id === this.comunicado.id);
-        if (index > -1) {
-          comunicados[index] = {
-            ...comunicados[index],
-            title: this.comunicado.subject,
-            subject: this.comunicado.subject,
-            message: this.comunicado.message,
-            content: this.comunicado.message,
-            to: this.comunicado.to,
-            cc: this.comunicado.cc,
-            bcc: this.comunicado.bcc,
-            icon: this.comunicado.icon,
-            emoji: this.comunicado.icon,
-            preview: this.comunicado.message.substring(0, 100) + (this.comunicado.message.length > 100 ? '...' : '')
-          };
-        }
-      } else {
-        const novoComunicado = {
-          id: Date.now(),
-          title: this.comunicado.subject,
-          content: this.comunicado.message,
-          ...this.comunicado,
-          from: 'docente@crecheapp.com',
-          date: new Date().toLocaleString('pt-BR'),
-          type: 'default',
-          preview: this.comunicado.message.substring(0, 100) + (this.comunicado.message.length > 100 ? '...' : ''),
-          emoji: this.comunicado.icon
-        };
-        comunicados.unshift(novoComunicado);
-      }
-
-      localStorage.setItem('comunicados_enviados', JSON.stringify(comunicados));
+      // Extrair IDs dos destinatários
+      let destinatariosIds: number[] = [];
+      let tipoDestinatario = 'geral';
       
       if (this.comunicado.to.includes('Geral')) {
-        localStorage.setItem('comunicados', JSON.stringify(comunicados));
+        tipoDestinatario = 'geral';
+      } else if (this.comunicado.to.includes('Alunos:')) {
+        tipoDestinatario = 'aluno';
+        const nomes = this.comunicado.to.replace('Alunos:', '').split(',').map((n: string) => n.trim());
+        destinatariosIds = this.alunos.filter(a => nomes.includes(a.nome)).map(a => a.id);
+      } else if (this.comunicado.to.includes('Docentes:')) {
+        tipoDestinatario = 'docente';
+        const nomes = this.comunicado.to.replace('Docentes:', '').split(',').map((n: string) => n.trim());
+        destinatariosIds = this.docentes.filter(d => nomes.includes(d.nome)).map(d => d.id);
       }
+
+      const response = await fetch('https://back-end-pokecreche-production.up.railway.app/comunicados', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          docente_id: docenteId,
+          title: this.comunicado.subject,
+          subject: this.comunicado.subject,
+          message: this.comunicado.message,
+          destinatarios: this.comunicado.to,
+          cc: this.comunicado.cc,
+          bcc: this.comunicado.bcc,
+          icon: this.comunicado.icon,
+          tipo: 'default',
+          tipo_destinatario: tipoDestinatario,
+          destinatarios_ids: destinatariosIds
+        })
+      });
+
+      if (!response.ok) throw new Error('Erro ao enviar');
       
       // Limpar formulário após envio
       this.comunicado = {

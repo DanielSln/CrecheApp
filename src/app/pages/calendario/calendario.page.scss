@@ -136,8 +136,9 @@ ion-content {
   border-radius: 8px;
   border: 2px solid transparent;
 }
-.day-cell:has(.event-marker) {
+.day-cell.has-event {
   border-color: #ff8c00;
+  cursor: pointer;
 }
 .day-cell:hover {
   background: rgba(0, 0, 0, 0.02);
@@ -296,6 +297,76 @@ ion-content {
 .weekday,
 .day-number {
   font-family: "Mango AC", sans-serif;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #f6d0a7;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border: 2px solid #000;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 2px solid #000;
+
+  h3 {
+    margin: 0;
+    color: #000;
+    font-size: 20px;
+    font-weight: 600;
+  }
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #000;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  ion-icon {
+    font-size: 24px;
+  }
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.event-text {
+  font-size: 18px;
+  color: #000;
+  font-weight: 600;
+  text-align: center;
+  margin: 0;
 }
 
 /* responsive tweaks */

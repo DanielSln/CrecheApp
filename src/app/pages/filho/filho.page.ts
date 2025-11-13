@@ -15,6 +15,7 @@ import { addIcons } from 'ionicons';
 import { camera } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-filho',
@@ -36,6 +37,7 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 })
 export class FilhoPage implements OnInit {
   profileImage: string = 'assets/img/avatar.jpg';
+  private apiUrl = 'https://back-end-pokecreche-production.up.railway.app';
 
   async selectImage() {
     try {
@@ -48,6 +50,10 @@ export class FilhoPage implements OnInit {
       
       if (image.dataUrl) {
         this.profileImage = image.dataUrl;
+        const userId = localStorage.getItem('userId');
+        if (userId) {
+          this.http.put(`${this.apiUrl}/alunos/${userId}/avatar`, { avatar: image.dataUrl }).subscribe();
+        }
       }
     } catch (error) {
       console.error('Error selecting image:', error);
@@ -57,7 +63,7 @@ export class FilhoPage implements OnInit {
   nome: string = '';
   matricula: string = '';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private http: HttpClient) {}
 
   ngOnInit() {
     this.carregarDados();
@@ -67,11 +73,21 @@ export class FilhoPage implements OnInit {
     this.nome = localStorage.getItem('userName') || 'Não informado';
     const matriculaCompleta =
       localStorage.getItem('userEmail') || 'Não informado';
-    // Extrai apenas o número da matrícula
     this.matricula = matriculaCompleta.includes(':')
       ? matriculaCompleta.split(':')[1].trim()
       : matriculaCompleta;
-    // Adicione outras informações conforme necessário
+    
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      this.http.get<any>(`${this.apiUrl}/alunos`).subscribe({
+        next: (alunos) => {
+          const aluno = alunos.find((a: any) => a.id == userId);
+          if (aluno?.avatar) {
+            this.profileImage = aluno.avatar;
+          }
+        }
+      });
+    }
   }
 
   goToMenu() {

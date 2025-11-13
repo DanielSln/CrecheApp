@@ -16,7 +16,10 @@
 
   <!-- Informações do aluno -->
   <div class="status-semanal">
-    <h2 class="titulo-status">Status Semanal</h2>
+    <div class="header-status">
+      <h2 class="titulo-status">Status Semanal</h2>
+      <div class="contador-registros">{{ registroAtual }} / {{ totalRegistros }}</div>
+    </div>
 
     <!-- Cards de status -->
     <ion-item *ngFor="let item of status" lines="none">

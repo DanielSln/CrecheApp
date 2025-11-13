@@ -50,21 +50,23 @@ export class ComunicadosPage implements OnInit {
   }
   
   carregarComunicados() {
-    try {
-      // Carregar comunicados enviados do localStorage
-      const comunicadosEnviados = JSON.parse(localStorage.getItem('comunicados_enviados') || '[]');
-      console.log('Comunicados do localStorage:', comunicadosEnviados);
-      
-      // Ordenar por ID (mais recentes primeiro) e garantir que têm estrutura básica
-      this.comunicados = comunicadosEnviados
-        .filter((comunicado: any) => comunicado && comunicado.title)
-        .sort((a: any, b: any) => (b.id || 0) - (a.id || 0));
-      
-      console.log('Total de comunicados após carregar:', this.comunicados.length);
-    } catch (error) {
-      console.error('Erro ao carregar comunicados:', error);
-      this.comunicados = [];
-    }
+    const userId = localStorage.getItem('userId');
+    const userType = 'aluno';
+    
+    fetch(`https://back-end-pokecreche-production.up.railway.app/comunicados?user_id=${userId}&user_type=${userType}`)
+      .then(res => res.json())
+      .then(data => {
+        this.comunicados = data.map((c: any) => ({
+          ...c,
+          preview: c.message?.substring(0, 100) + (c.message?.length > 100 ? '...' : ''),
+          emoji: c.icon,
+          content: c.message
+        }));
+      })
+      .catch(err => {
+        console.error('Erro ao carregar comunicados:', err);
+        this.comunicados = [];
+      });
   }
 
   irParaEscrever() {
