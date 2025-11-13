@@ -100,7 +100,12 @@ export class LoginAlunoPage implements OnInit {
           }
 
           await this.mostrarAlerta('Sucesso', 'Login realizado com sucesso!');
-          this.router.navigateByUrl('/termos');
+          const termosAceitos = localStorage.getItem('termosAceitos');
+          if (termosAceitos === 'true') {
+            this.router.navigateByUrl('/menu');
+          } else {
+            this.router.navigateByUrl('/termos');
+          }
         } else {
           await this.mostrarAlerta('Erro', response.message || 'Credenciais inválidas!');
         }
