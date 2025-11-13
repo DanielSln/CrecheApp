@@ -36,7 +36,7 @@ import { HttpClient } from '@angular/common/http';
   ],
 })
 export class DocentePage implements OnInit {
-  profileImage: string = 'assets/img/avatar.jpg';
+  profileImage: string = '';
   instituicao: string = 'SENAC';
   nome: string = '';
   id: string = '';
@@ -80,11 +80,14 @@ export class DocentePage implements OnInit {
       this.http.get<any>(`${this.apiUrl}/docentes`).subscribe({
         next: (docentes) => {
           const docente = docentes.find((d: any) => d.id == userId);
-          if (docente?.avatar) {
-            this.profileImage = docente.avatar;
-          }
+          this.profileImage = docente?.avatar || 'assets/img/avatar.jpg';
+        },
+        error: () => {
+          this.profileImage = 'assets/img/avatar.jpg';
         }
       });
+    } else {
+      this.profileImage = 'assets/img/avatar.jpg';
     }
   }
 

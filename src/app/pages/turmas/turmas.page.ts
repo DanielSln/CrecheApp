@@ -13,7 +13,7 @@ import {
 } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { chevronBack } from 'ionicons/icons';
+import { chevronBack, searchOutline, addCircleOutline, createOutline, trashOutline, closeOutline, schoolOutline } from 'ionicons/icons';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -57,7 +57,15 @@ export class TurmasPage implements OnInit {
   private apiUrl = 'https://back-end-pokecreche-production.up.railway.app';
 
   constructor(private router: Router, private http: HttpClient) {
-    addIcons({ chevronBack });
+    addIcons({ 
+      chevronBack, 
+      searchOutline, 
+      addCircleOutline, 
+      createOutline, 
+      trashOutline, 
+      closeOutline,
+      schoolOutline
+    });
   }
 
   ngOnInit() {

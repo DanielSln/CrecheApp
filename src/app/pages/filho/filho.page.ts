@@ -13,6 +13,8 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { camera } from 'ionicons/icons';
+
+addIcons({ camera });
 import { Router } from '@angular/router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { HttpClient } from '@angular/common/http';
@@ -36,7 +38,7 @@ import { HttpClient } from '@angular/common/http';
   ],
 })
 export class FilhoPage implements OnInit {
-  profileImage: string = 'assets/img/avatar.jpg';
+  profileImage: string = '';
   private apiUrl = 'https://back-end-pokecreche-production.up.railway.app';
 
   async selectImage() {
@@ -51,8 +53,14 @@ export class FilhoPage implements OnInit {
       if (image.dataUrl) {
         this.profileImage = image.dataUrl;
         const userId = localStorage.getItem('userId');
+        console.log('UserId:', userId);
         if (userId) {
-          this.http.put(`${this.apiUrl}/alunos/${userId}/avatar`, { avatar: image.dataUrl }).subscribe();
+          this.http.put(`${this.apiUrl}/alunos/${userId}/avatar`, { avatar: image.dataUrl }).subscribe({
+            next: (res) => console.log('Avatar atualizado:', res),
+            error: (err) => console.error('Erro ao atualizar avatar:', err)
+          });
+        } else {
+          console.error('UserId não encontrado no localStorage');
         }
       }
     } catch (error) {
@@ -63,7 +71,9 @@ export class FilhoPage implements OnInit {
   nome: string = '';
   matricula: string = '';
 
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(private router: Router, private http: HttpClient) {
+    addIcons({ camera });
+  }
 
   ngOnInit() {
     this.carregarDados();
@@ -82,11 +92,14 @@ export class FilhoPage implements OnInit {
       this.http.get<any>(`${this.apiUrl}/alunos`).subscribe({
         next: (alunos) => {
           const aluno = alunos.find((a: any) => a.id == userId);
-          if (aluno?.avatar) {
-            this.profileImage = aluno.avatar;
-          }
+          this.profileImage = aluno?.avatar || 'assets/img/avatar.jpg';
+        },
+        error: () => {
+          this.profileImage = 'assets/img/avatar.jpg';
         }
       });
+    } else {
+      this.profileImage = 'assets/img/avatar.jpg';
     }
   }
 
