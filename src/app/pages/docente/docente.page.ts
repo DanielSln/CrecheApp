@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { addIcons } from 'ionicons';
 import { camera } from 'ionicons/icons';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-docente',
@@ -35,12 +36,13 @@ import { camera } from 'ionicons/icons';
   ],
 })
 export class DocentePage implements OnInit {
-  profileImage: string = 'assets/img/avatar.jpg';
+  profileImage: string = '';
   instituicao: string = 'SENAC';
   nome: string = '';
   id: string = '';
+  private apiUrl = 'https://back-end-pokecreche-production.up.railway.app';
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private http: HttpClient) {
     addIcons({ camera });
   }
 
@@ -59,6 +61,10 @@ export class DocentePage implements OnInit {
       
       if (image.dataUrl) {
         this.profileImage = image.dataUrl;
+        const userId = localStorage.getItem('userId');
+        if (userId) {
+          this.http.put(`${this.apiUrl}/docentes/${userId}/avatar`, { avatar: image.dataUrl }).subscribe();
+        }
       }
     } catch (error) {
       console.error('Error selecting image:', error);
@@ -68,6 +74,21 @@ export class DocentePage implements OnInit {
   carregarDados() {
     this.nome = localStorage.getItem('userName') || 'Não informado';
     this.id = localStorage.getItem('userIdentificador') || 'Não informado';
+    
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      this.http.get<any>(`${this.apiUrl}/docentes`).subscribe({
+        next: (docentes) => {
+          const docente = docentes.find((d: any) => d.id == userId);
+          this.profileImage = docente?.avatar || 'assets/img/avatar.jpg';
+        },
+        error: () => {
+          this.profileImage = 'assets/img/avatar.jpg';
+        }
+      });
+    } else {
+      this.profileImage = 'assets/img/avatar.jpg';
+    }
   }
 
   navegarParaHome() {

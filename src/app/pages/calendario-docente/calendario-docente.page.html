@@ -41,10 +41,11 @@
         <div *ngFor="let day of week"
              class="day-cell"
              [class.out-month]="!day.inMonth"
+             [class.has-event]="day.event"
              (click)="openEdit(day)">
           <div class="day-number" *ngIf="day.inMonth">{{ day.dayNumber }}</div>
 
-          <div *ngIf="day.event" class="event-marker" [ngClass]="day.event.color">
+          <div *ngIf="day.event" class="event-marker">
             ✖
           </div>
 

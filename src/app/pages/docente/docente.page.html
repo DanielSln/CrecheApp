@@ -1,7 +1,7 @@
 <ion-header class="ion-header-title" [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="">
-      <ion-menu-button  class="menu-button-externo"></ion-menu-button>
+      <ion-menu-button class="menu-button-externo"></ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -9,23 +9,26 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      
-      <ion-title size="large"></ion-title>
+      <ion-title size="large">Crachá</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <div class="ion-padding">
     <h1>Crachá</h1>
-
+    
     <div class="carteira-card">
       <div class="foto-section">
-        <div class="foto-container" (click)="selectImage()">
-          <img [src]="profileImage" alt="Foto do professor" />
+        <div class="foto-wrapper">
+          <ion-button fill="clear" class="change-photo-btn" (click)="selectImage()">
+            <div class="button-content">
+              <ion-icon name="camera"></ion-icon>
+              <span>📸</span>
+            </div>
+          </ion-button>
+          <div class="foto-container" (click)="selectImage()">
+            <img [src]="profileImage" alt="Foto do professor">
+          </div>
         </div>
-        <ion-button fill="clear" class="change-photo-btn" (click)="selectImage()">
-          <ion-icon name="camera"></ion-icon>
-          Trocar foto
-        </ion-button>
       </div>
 
       <div class="info_filho">
@@ -44,4 +47,5 @@
       </div>
     </div>
   </div>
+
 </ion-content>

@@ -75,7 +75,7 @@ export class LoginAlunoPage implements OnInit {
 
     this.isLoading = true;
     
-    this.http.post('https://api-cadastro-six.vercel.app/login/aluno', {
+    this.http.post('https://back-end-pokecreche-production.up.railway.app/login/aluno', {
       matricula: this.matricula,
       cpf: this.cpf
     }).subscribe({
@@ -83,6 +83,7 @@ export class LoginAlunoPage implements OnInit {
         this.isLoading = false;
         if (response.success && response.user) {
           localStorage.setItem('userType', 'aluno');
+          localStorage.setItem('userId', response.user.id);
           localStorage.setItem('userName', response.user.nome);
           localStorage.setItem('userEmail', 'Matrícula: ' + response.user.matricula);
           localStorage.setItem('userToken', response.token || '');
@@ -100,7 +101,12 @@ export class LoginAlunoPage implements OnInit {
           }
 
           await this.mostrarAlerta('Sucesso', 'Login realizado com sucesso!');
-          this.router.navigateByUrl('/termos');
+          const termosAceitos = localStorage.getItem('termosAceitos');
+          if (termosAceitos === 'true') {
+            this.router.navigateByUrl('/menu');
+          } else {
+            this.router.navigateByUrl('/termos');
+          }
         } else {
           await this.mostrarAlerta('Erro', response.message || 'Credenciais inválidas!');
         }

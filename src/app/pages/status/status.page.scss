@@ -104,6 +104,30 @@ ion-item {
   }
 }
 
+.header-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.titulo-status {
+  text-align: center;
+  color: #000;
+  margin: 0;
+  flex: 1;
+}
+
+.contador-registros {
+  background: #c4680b;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
 h2 {
   text-align: center;
   color: #000;

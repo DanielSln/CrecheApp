@@ -29,6 +29,11 @@ export class TermosPage {
   constructor(private router: Router) {}
   ngOnInit() {}
   aceitarTermos() {
+    localStorage.setItem('termosAceitos', 'true');
     this.router.navigateByUrl('/menu');
+  }
+
+  recusarTermos() {
+    (navigator as any).app?.exitApp();
   }
 }

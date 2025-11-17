@@ -30,6 +30,11 @@ export class TermosPage {
   ngOnInit() {}
   
   aceitarTermos() {
+    localStorage.setItem('termosAceitosDocente', 'true');
     this.router.navigateByUrl('/menu-docente');
+  }
+
+  recusarTermos() {
+    (navigator as any).app?.exitApp();
   }
 }

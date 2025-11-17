@@ -100,7 +100,7 @@ ion-content {
   border-radius: 8px;
   border: 2px solid transparent;
 }
-.day-cell:has(.event-marker) {
+.day-cell.has-event {
   border-color: #ff8c00;
 }
 .day-cell.out-month {

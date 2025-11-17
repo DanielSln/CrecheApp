@@ -10,7 +10,6 @@ import {
   IonButtons, 
   IonButton, 
   IonIcon,
-  IonBackButton,
   IonInput,
   IonTextarea,
   AlertController,
@@ -32,7 +31,6 @@ import { close, ellipsisVertical, send, document, mailOpen, trash } from 'ionico
     IonButtons,
     IonButton,
     IonIcon,
-    IonBackButton,
     IonInput,
     IonTextarea,
     CommonModule,
@@ -43,8 +41,14 @@ export class EscreverComunicadoPage implements OnInit {
   showCc = false;
   showBcc = false;
   showIconSelector = false;
+  showDestinatariosModal = false;
+  tipoSelecionado = '';
+  searchQuery = '';
+  destinatariosSelecionados: string[] = [];
+  alunos: any[] = [];
+  docentes: any[] = [];
   
-  comunicado = {
+  comunicado: any = {
     to: '',
     cc: '',
     bcc: '',
@@ -65,6 +69,75 @@ export class EscreverComunicadoPage implements OnInit {
 
   ngOnInit() {
     this.carregarRascunho();
+    this.carregarComunicadoEditar();
+    this.carregarAlunos();
+    this.carregarDocentes();
+  }
+
+  carregarAlunos() {
+    fetch('https://back-end-pokecreche-production.up.railway.app/alunos')
+      .then(res => res.json())
+      .then(data => this.alunos = data)
+      .catch(() => this.alunos = []);
+  }
+
+  async carregarDocentes() {
+    try {
+      const response = await fetch('https://back-end-pokecreche-production.up.railway.app/docentes');
+      this.docentes = await response.json();
+    } catch {
+      this.docentes = [];
+    }
+  }
+
+  abrirDestinatarios() {
+    this.showDestinatariosModal = true;
+  }
+
+  fecharDestinatarios() {
+    this.showDestinatariosModal = false;
+    this.tipoSelecionado = '';
+    this.searchQuery = '';
+  }
+
+  selecionarOpcao(tipo: string) {
+    if (tipo === 'Geral') {
+      this.comunicado.to = 'Geral (Todos)';
+      this.fecharDestinatarios();
+    } else {
+      this.tipoSelecionado = tipo;
+      this.destinatariosSelecionados = [];
+    }
+  }
+
+  filteredAlunos() {
+    const q = this.searchQuery.toLowerCase();
+    return this.alunos.filter(a => a.nome.toLowerCase().includes(q));
+  }
+
+  filteredDocentes() {
+    const q = this.searchQuery.toLowerCase();
+    return this.docentes.filter(d => d.nome.toLowerCase().includes(q));
+  }
+
+  toggleDestinatario(nome: string) {
+    const index = this.destinatariosSelecionados.indexOf(nome);
+    if (index > -1) {
+      this.destinatariosSelecionados.splice(index, 1);
+    } else {
+      this.destinatariosSelecionados.push(nome);
+    }
+  }
+
+  isSelected(nome: string) {
+    return this.destinatariosSelecionados.includes(nome);
+  }
+
+  confirmarDestinatarios() {
+    if (this.destinatariosSelecionados.length > 0) {
+      this.comunicado.to = `${this.tipoSelecionado}: ${this.destinatariosSelecionados.join(', ')}`;
+    }
+    this.fecharDestinatarios();
   }
 
   carregarRascunho() {
@@ -76,6 +149,27 @@ export class EscreverComunicadoPage implements OnInit {
         sessionStorage.removeItem('rascunhoCarregado');
       } catch (error) {
         console.error('Erro ao carregar rascunho:', error);
+      }
+    }
+  }
+
+  carregarComunicadoEditar() {
+    const comunicadoEditar = sessionStorage.getItem('comunicadoEditar');
+    if (comunicadoEditar) {
+      try {
+        const comunicado = JSON.parse(comunicadoEditar);
+        this.comunicado = {
+          to: comunicado.to || '',
+          cc: comunicado.cc || '',
+          bcc: comunicado.bcc || '',
+          subject: comunicado.subject || comunicado.title || '',
+          message: comunicado.message || comunicado.content || '',
+          icon: comunicado.icon || comunicado.emoji || '📝'
+        };
+        this.comunicado.id = comunicado.id;
+        sessionStorage.removeItem('comunicadoEditar');
+      } catch (error) {
+        console.error('Erro ao carregar comunicado para editar:', error);
       }
     }
   }
@@ -229,20 +323,43 @@ export class EscreverComunicadoPage implements OnInit {
     }
 
     try {
-      const comunicados = JSON.parse(localStorage.getItem('comunicados_enviados') || '[]');
+      const docenteId = localStorage.getItem('userId') || '1';
       
-      const novoComunicado = {
-        id: Date.now(),
-        ...this.comunicado,
-        from: 'docente@crecheapp.com',
-        date: new Date().toLocaleString('pt-BR'),
-        type: 'default',
-        preview: this.comunicado.message.substring(0, 100) + (this.comunicado.message.length > 100 ? '...' : ''),
-        emoji: this.comunicado.icon
-      };
+      // Extrair IDs dos destinatários
+      let destinatariosIds: number[] = [];
+      let tipoDestinatario = 'geral';
+      
+      if (this.comunicado.to.includes('Geral')) {
+        tipoDestinatario = 'geral';
+      } else if (this.comunicado.to.includes('Alunos:')) {
+        tipoDestinatario = 'aluno';
+        const nomes = this.comunicado.to.replace('Alunos:', '').split(',').map((n: string) => n.trim());
+        destinatariosIds = this.alunos.filter(a => nomes.includes(a.nome)).map(a => a.id);
+      } else if (this.comunicado.to.includes('Docentes:')) {
+        tipoDestinatario = 'docente';
+        const nomes = this.comunicado.to.replace('Docentes:', '').split(',').map((n: string) => n.trim());
+        destinatariosIds = this.docentes.filter(d => nomes.includes(d.nome)).map(d => d.id);
+      }
 
-      comunicados.unshift(novoComunicado);
-      localStorage.setItem('comunicados_enviados', JSON.stringify(comunicados));
+      const response = await fetch('https://back-end-pokecreche-production.up.railway.app/comunicados', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          docente_id: docenteId,
+          title: this.comunicado.subject,
+          subject: this.comunicado.subject,
+          message: this.comunicado.message,
+          destinatarios: this.comunicado.to,
+          cc: this.comunicado.cc,
+          bcc: this.comunicado.bcc,
+          icon: this.comunicado.icon,
+          tipo: 'default',
+          tipo_destinatario: tipoDestinatario,
+          destinatarios_ids: destinatariosIds
+        })
+      });
+
+      if (!response.ok) throw new Error('Erro ao enviar');
       
       // Limpar formulário após envio
       this.comunicado = {
