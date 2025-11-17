@@ -101,7 +101,11 @@ ion-icon[name="ellipsis-vertical"] {
   color: black;
 }
 
-ion-icon[name="close"] {
+ion-button:has(.text-cancel) ion-icon {
+  color: red;
+}
+
+ion-icon[name="close-text"] {
   color: red;
 }
 .text-cancel {
