@@ -341,6 +341,25 @@ export class EscreverComunicadoPage implements OnInit {
         throw new Error(errorData.message || 'Erro ao enviar comunicado');
       }
       
+      const result = await response.json();
+      
+      // Salvar no histórico de comunicados enviados
+      const comunicadosEnviados = JSON.parse(localStorage.getItem('comunicados_enviados') || '[]');
+      const novoComunicado = {
+        id: result.id,
+        title: this.comunicado.subject,
+        subject: this.comunicado.subject,
+        message: this.comunicado.message,
+        destinatarios: this.comunicado.to,
+        cc: this.comunicado.cc,
+        bcc: this.comunicado.bcc,
+        icon: this.comunicado.icon,
+        created_at: new Date().toISOString(),
+        docente_id: docenteId
+      };
+      comunicadosEnviados.unshift(novoComunicado);
+      localStorage.setItem('comunicados_enviados', JSON.stringify(comunicadosEnviados));
+      
       // Limpar formulário após envio
       this.comunicado = {
         to: '',
@@ -355,6 +374,11 @@ export class EscreverComunicadoPage implements OnInit {
       this.showBcc = false;
       
       this.mostrarMensagem('Sucesso', 'Comunicado enviado com sucesso!');
+      
+      // Navegar de volta para comunicados após envio
+      setTimeout(() => {
+        this.router.navigateByUrl('/comunicados-docente');
+      }, 1500);
       
     } catch (error: any) {
       console.error('Erro ao enviar comunicado:', error);
