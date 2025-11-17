@@ -54,7 +54,8 @@ export class EscreverComunicadoPage implements OnInit {
     bcc: '',
     subject: '',
     message: '',
-    icon: '📝'
+    icon: '📝',
+    data: ''
   };
 
   availableIcons = ['📝', '📢', '⚠️', '🔔', '📚', '🎉', '🏫', '👶', '📅', '💡', '🔍', '✅'];
@@ -354,6 +355,7 @@ export class EscreverComunicadoPage implements OnInit {
         cc: this.comunicado.cc,
         bcc: this.comunicado.bcc,
         icon: this.comunicado.icon,
+        data: this.comunicado.data,
         created_at: new Date().toISOString(),
         docente_id: docenteId
       };
@@ -367,7 +369,8 @@ export class EscreverComunicadoPage implements OnInit {
         bcc: '',
         subject: '',
         message: '',
-        icon: '📝'
+        icon: '📝',
+        data: ''
       };
       
       this.showCc = false;
