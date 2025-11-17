@@ -14,11 +14,12 @@ ion-toolbar {
 }
 
 ion-title {
-  color: white;
+  color: rgb(0, 0, 0);
   font-size: 18px;
   font-weight: 600;
   font-family: 'Segoe UI', system-ui, sans-serif;
   text-align: center;
+  margin-right: 45px; /* Espaço para o botão de menu */
 }
 
 ion-content {
@@ -26,11 +27,11 @@ ion-content {
 }
 
 ion-menu-button {
-  --color: white;
+  color: black;
 }
 
 .custom-back-btn {
-  --color: white;
+  --color: rgb(0, 0, 0);
   --padding-start: 4px;
   --padding-end: 4px;
   margin: 0;
