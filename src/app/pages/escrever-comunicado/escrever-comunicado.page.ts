@@ -47,6 +47,7 @@ export class EscreverComunicadoPage implements OnInit {
   destinatariosSelecionados: string[] = [];
   alunos: any[] = [];
   docentes: any[] = [];
+  nomeDocente: string = '';
   
   comunicado: any = {
     to: '',
@@ -69,6 +70,7 @@ export class EscreverComunicadoPage implements OnInit {
   }
 
   ngOnInit() {
+    this.nomeDocente = localStorage.getItem('userName') || 'Docente';
     this.carregarRascunho();
     this.carregarComunicadoEditar();
     this.carregarAlunos();
@@ -332,8 +334,13 @@ export class EscreverComunicadoPage implements OnInit {
         body: JSON.stringify({
           docente_id: docenteId,
           title: this.comunicado.subject,
+          subject: this.comunicado.subject,
           message: this.comunicado.message,
-          destinatarios: this.comunicado.to || 'Geral'
+          destinatarios: this.comunicado.to || 'Geral',
+          cc: this.comunicado.cc,
+          bcc: this.comunicado.bcc,
+          icon: this.comunicado.icon,
+          data: this.comunicado.data
         })
       });
 
@@ -343,24 +350,6 @@ export class EscreverComunicadoPage implements OnInit {
       }
       
       const result = await response.json();
-      
-      // Salvar no histórico de comunicados enviados
-      const comunicadosEnviados = JSON.parse(localStorage.getItem('comunicados_enviados') || '[]');
-      const novoComunicado = {
-        id: result.id,
-        title: this.comunicado.subject,
-        subject: this.comunicado.subject,
-        message: this.comunicado.message,
-        destinatarios: this.comunicado.to,
-        cc: this.comunicado.cc,
-        bcc: this.comunicado.bcc,
-        icon: this.comunicado.icon,
-        data: this.comunicado.data,
-        created_at: new Date().toISOString(),
-        docente_id: docenteId
-      };
-      comunicadosEnviados.unshift(novoComunicado);
-      localStorage.setItem('comunicados_enviados', JSON.stringify(comunicadosEnviados));
       
       // Limpar formulário após envio
       this.comunicado = {
