@@ -361,15 +361,14 @@ export class EscreverComunicadoPage implements OnInit {
           cc: this.comunicado.cc,
           bcc: this.comunicado.bcc,
           icon: this.comunicado.icon,
-          tipo: 'default',
-          tipo_destinatario: tipoDestinatario,
-          destinatarios_ids: destinatariosIds,
-          visibilidade: visibilidade,
-          tipo_visibilidade: tipoVisibilidade
+          tipo: 'default'
         })
       });
 
-      if (!response.ok) throw new Error('Erro ao enviar');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'Erro desconhecido' }));
+        throw new Error(errorData.message || 'Erro ao enviar comunicado');
+      }
       
       // Limpar formulário após envio
       this.comunicado = {
@@ -386,9 +385,9 @@ export class EscreverComunicadoPage implements OnInit {
       
       this.mostrarMensagem('Sucesso', 'Comunicado enviado com sucesso!');
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao enviar comunicado:', error);
-      this.mostrarMensagem('Erro', 'Não foi possível enviar o comunicado.');
+      this.mostrarMensagem('Erro', error.message || 'Não foi possível enviar o comunicado.');
     }
   }
 
