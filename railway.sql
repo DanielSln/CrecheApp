@@ -1,168 +1,40 @@
--- PokeCreche Database Schema
--- Execute este script no MySQL Workbench
-drop database PokeCreche;
-CREATE DATABASE IF NOT EXISTS PokeCreche;
-USE PokeCreche;
+-- Copiar estrutura e dados
+CREATE TABLE railway.alunos LIKE PokeCreche.alunos;
+INSERT INTO railway.alunos SELECT * FROM PokeCreche.alunos;
 
--- Tabela de Alunos
-CREATE TABLE IF NOT EXISTS alunos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(255) NOT NULL,
-    matricula VARCHAR(50) UNIQUE NOT NULL,
-    cpf VARCHAR(14) UNIQUE NOT NULL,
-    data_nascimento DATE,
-    avatar VARCHAR(500),
-    turma_id INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+CREATE TABLE railway.docentes LIKE PokeCreche.docentes;
+INSERT INTO railway.docentes SELECT * FROM PokeCreche.docentes;
 
--- Tabela de Docentes
-CREATE TABLE IF NOT EXISTS docentes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(255) NOT NULL,
-    identificador VARCHAR(50) UNIQUE NOT NULL,
-    senha VARCHAR(255) NOT NULL,
-    email VARCHAR(255),
-    avatar VARCHAR(500),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+CREATE TABLE railway.turmas LIKE PokeCreche.turmas;
+INSERT INTO railway.turmas SELECT * FROM PokeCreche.turmas;
 
--- Tabela de Turmas
-CREATE TABLE IF NOT EXISTS turmas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    ano INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+CREATE TABLE railway.turma_alunos LIKE PokeCreche.turma_alunos;
+INSERT INTO railway.turma_alunos SELECT * FROM PokeCreche.turma_alunos;
 
--- Tabela de Alunos por Turma (relacionamento N:N)
-CREATE TABLE IF NOT EXISTS turma_alunos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    turma_id INT NOT NULL,
-    aluno_id INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (turma_id) REFERENCES turmas(id) ON DELETE CASCADE,
-    FOREIGN KEY (aluno_id) REFERENCES alunos(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_turma_aluno (turma_id, aluno_id)
-);
+CREATE TABLE railway.calendario_events LIKE PokeCreche.calendario_events;
+INSERT INTO railway.calendario_events SELECT * FROM PokeCreche.calendario_events;
 
--- Tabela de Eventos do Calendário
-CREATE TABLE IF NOT EXISTS calendario_events (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    teacher_id INT NULL,
-    date DATE NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    color ENUM('red', 'blue', 'green', 'yellow', 'purple', 'orange') DEFAULT 'blue',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (teacher_id) REFERENCES docentes(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_teacher_date (teacher_id, date)
-);
+CREATE TABLE railway.comunicados LIKE PokeCreche.comunicados;
+INSERT INTO railway.comunicados SELECT * FROM PokeCreche.comunicados;
 
--- Tabela de Comunicados
-CREATE TABLE IF NOT EXISTS comunicados (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    docente_id INT NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    subject VARCHAR(255) NOT NULL,
-    message TEXT NOT NULL,
-    destinatarios TEXT NOT NULL,
-    cc TEXT,
-    bcc TEXT,
-    icon VARCHAR(10) DEFAULT '📝',
-    tipo ENUM('default', 'urgent', 'info') DEFAULT 'default',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (docente_id) REFERENCES docentes(id) ON DELETE CASCADE
-);
+CREATE TABLE railway.comunicado_destinatarios LIKE PokeCreche.comunicado_destinatarios;
+INSERT INTO railway.comunicado_destinatarios SELECT * FROM PokeCreche.comunicado_destinatarios;
 
--- Tabela de Destinatários de Comunicados
-CREATE TABLE IF NOT EXISTS comunicado_destinatarios (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    comunicado_id INT NOT NULL,
-    tipo ENUM('aluno', 'docente', 'geral') NOT NULL,
-    destinatario_id INT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (comunicado_id) REFERENCES comunicados(id) ON DELETE CASCADE
-);
+CREATE TABLE railway.rascunhos LIKE PokeCreche.rascunhos;
+INSERT INTO railway.rascunhos SELECT * FROM PokeCreche.rascunhos;
 
--- Tabela de Rascunhos
-CREATE TABLE IF NOT EXISTS rascunhos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    docente_id INT NOT NULL,
-    title VARCHAR(255),
-    subject VARCHAR(255),
-    message TEXT,
-    destinatarios TEXT,
-    cc TEXT,
-    bcc TEXT,
-    icon VARCHAR(10) DEFAULT '📝',
-    saved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (docente_id) REFERENCES docentes(id) ON DELETE CASCADE
-);
+CREATE TABLE railway.registros_alunos LIKE PokeCreche.registros_alunos;
+INSERT INTO railway.registros_alunos SELECT * FROM PokeCreche.registros_alunos;
 
--- Tabela de Registros Diários dos Alunos
-CREATE TABLE IF NOT EXISTS registros_alunos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    aluno_id INT NOT NULL,
-    turma_id INT NOT NULL,
-    data DATE NOT NULL,
-    alimentacao ENUM('Ótimo', 'Bom', 'Regular', 'Ruim'),
-    comportamento ENUM('Ótimo', 'Bom', 'Regular', 'Ruim'),
-    presenca ENUM('Presente', 'Ausente') DEFAULT 'Presente',
-    observacoes TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (aluno_id) REFERENCES alunos(id) ON DELETE CASCADE,
-    FOREIGN KEY (turma_id) REFERENCES turmas(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_aluno_data (aluno_id, data)
-);
+CREATE TABLE railway.termos_aceitos LIKE PokeCreche.termos_aceitos;
+INSERT INTO railway.termos_aceitos SELECT * FROM PokeCreche.termos_aceitos;
 
--- Tabela de Termos Aceitos
-CREATE TABLE IF NOT EXISTS termos_aceitos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_type ENUM('aluno', 'docente') NOT NULL,
-    user_id INT NOT NULL,
-    aceito BOOLEAN DEFAULT FALSE,
-    data_aceite TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    ip_address VARCHAR(45),
-    UNIQUE KEY unique_user_terms (user_type, user_id)
-);
+CREATE TABLE railway.sessoes LIKE PokeCreche.sessoes;
+INSERT INTO railway.sessoes SELECT * FROM PokeCreche.sessoes;
 
--- Tabela de Sessões/Tokens
-CREATE TABLE IF NOT EXISTS sessoes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_type ENUM('aluno', 'docente') NOT NULL,
-    user_id INT NOT NULL,
-    token VARCHAR(500) NOT NULL,
-    remember_me BOOLEAN DEFAULT FALSE,
-    expires_at TIMESTAMP,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+USE railway;
+SELECT * FROM alunos;
+select * from docentes;
+select * from calendario_events;
 
--- Índices para melhor performance
-CREATE INDEX idx_alunos_matricula ON alunos(matricula);
-CREATE INDEX idx_alunos_cpf ON alunos(cpf);
-CREATE INDEX idx_docentes_identificador ON docentes(identificador);
-CREATE INDEX idx_calendario_date ON calendario_events(date);
-CREATE INDEX idx_calendario_teacher ON calendario_events(teacher_id);
-CREATE INDEX idx_comunicados_docente ON comunicados(docente_id);
-CREATE INDEX idx_comunicados_created ON comunicados(created_at);
-CREATE INDEX idx_registros_aluno ON registros_alunos(aluno_id);
-CREATE INDEX idx_registros_data ON registros_alunos(data);
-CREATE INDEX idx_turma_alunos_turma ON turma_alunos(turma_id);
-CREATE INDEX idx_turma_alunos_aluno ON turma_alunos(aluno_id);
-
--- Dados de exemplo (opcional)
--- INSERT INTO turmas (nome, ano) VALUES 
--- ('Turma A', 2024),
--- ('Turma B', 2024),
--- ('Turma C', 2024);
-
-select * from alunos;
-SELECT DATABASE();
+ALTER TABLE railway.comunicados ADD COLUMN data DATE;
