@@ -15,14 +15,14 @@ $border: #e0b589;
 }
 
 .compose-title {
-  color: #{$white};
+  color: #{$black};
   font-size: 16px;
   font-weight: 600;
   font-family: "Segoe UI", system-ui, sans-serif;
 }
 
 .close-btn {
-  --color: #{$white};
+  --color: #{$black};
 }
 
 .compose-content {
@@ -96,6 +96,7 @@ $border: #e0b589;
     text-transform: none;
   }
 }
+
 
 /* ===== ÁREA DE MENSAGEM ===== */
 .compose-body {
