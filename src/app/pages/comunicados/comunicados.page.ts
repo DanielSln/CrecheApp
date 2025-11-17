@@ -53,7 +53,7 @@ export class ComunicadosPage implements OnInit {
     const userId = localStorage.getItem('userId');
     const userType = 'aluno';
     
-    fetch(`https://back-end-pokecreche-production.up.railway.app/comunicados/visiveis?user_id=${userId}&user_type=${userType}`)
+    fetch('https://back-end-pokecreche-production.up.railway.app/comunicados')
       .then(res => res.json())
       .then(data => {
         this.comunicados = data.map((c: any) => ({
