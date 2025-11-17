@@ -49,15 +49,17 @@ export class VerRascunhosPage implements OnInit {
   }
 
   carregarRascunhos() {
-    try {
-      const rascunhosSalvos = JSON.parse(localStorage.getItem('rascunhos') || '[]');
-      this.rascunhos = rascunhosSalvos.sort((a: any, b: any) => 
-        new Date(b.savedAt || 0).getTime() - new Date(a.savedAt || 0).getTime()
-      );
-    } catch (error) {
-      console.error('Erro ao carregar rascunhos:', error);
-      this.rascunhos = [];
-    }
+    const docenteId = localStorage.getItem('userId');
+    
+    fetch(`https://back-end-pokecreche-production.up.railway.app/rascunhos/${docenteId}`)
+      .then(res => res.json())
+      .then(data => {
+        this.rascunhos = data;
+      })
+      .catch(err => {
+        console.error('Erro ao carregar rascunhos:', err);
+        this.rascunhos = [];
+      });
   }
 
   carregarRascunho(rascunho: any) {
@@ -96,17 +98,15 @@ export class VerRascunhosPage implements OnInit {
     await alert.present();
   }
 
-  private confirmarExclusao(rascunho: any) {
+  private async confirmarExclusao(rascunho: any) {
     try {
-      const rascunhosAtuais = JSON.parse(localStorage.getItem('rascunhos') || '[]');
-      const rascunhosFiltrados = rascunhosAtuais.filter((r: any) => 
-        r.savedAt !== rascunho.savedAt || r.subject !== rascunho.subject
-      );
+      const response = await fetch(`https://back-end-pokecreche-production.up.railway.app/rascunhos/${rascunho.id}`, {
+        method: 'DELETE'
+      });
+
+      if (!response.ok) throw new Error('Erro ao excluir');
       
-      localStorage.setItem('rascunhos', JSON.stringify(rascunhosFiltrados));
       this.carregarRascunhos();
-      
-      // Mostrar mensagem de sucesso
       this.mostrarMensagemSucesso('Rascunho excluído com sucesso!');
     } catch (error) {
       console.error('Erro ao excluir rascunho:', error);

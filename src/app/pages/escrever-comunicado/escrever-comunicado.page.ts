@@ -295,22 +295,31 @@ export class EscreverComunicadoPage implements OnInit {
     this.comunicado.icon = '🔔';
   }
 
-  salvarRascunho() {
+  async salvarRascunho() {
     if (!this.comunicado.subject && !this.comunicado.message) {
       this.mostrarMensagem('Aviso', 'Preencha pelo menos o assunto ou a mensagem para salvar como rascunho.');
       return;
     }
 
     try {
-      const rascunhos = JSON.parse(localStorage.getItem('rascunhos') || '[]');
+      const docenteId = localStorage.getItem('userId') || '1';
       
-      const novoRascunho = {
-        ...this.comunicado,
-        savedAt: new Date().toLocaleString('pt-BR')
-      };
+      const response = await fetch('https://back-end-pokecreche-production.up.railway.app/rascunhos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          docente_id: docenteId,
+          title: this.comunicado.subject,
+          subject: this.comunicado.subject,
+          message: this.comunicado.message,
+          destinatarios: this.comunicado.to,
+          cc: this.comunicado.cc,
+          bcc: this.comunicado.bcc,
+          icon: this.comunicado.icon
+        })
+      });
 
-      rascunhos.unshift(novoRascunho);
-      localStorage.setItem('rascunhos', JSON.stringify(rascunhos));
+      if (!response.ok) throw new Error('Erro ao salvar');
       
       this.mostrarMensagem('Sucesso', 'Rascunho salvo com sucesso!');
     } catch (error) {
