@@ -106,6 +106,12 @@ export class ComunicadosPage implements OnInit {
 
 
 
+  formatarData(data: string): string {
+    if (!data) return '';
+    const date = new Date(data);
+    return date.toLocaleDateString('pt-BR');
+  }
+
   goToMenu() {
     this.router.navigateByUrl('/menu-docente');
   }
