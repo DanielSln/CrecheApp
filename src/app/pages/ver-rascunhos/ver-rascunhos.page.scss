@@ -6,10 +6,15 @@ ion-toolbar {
 }
 
 ion-title {
-  color: #ffffff;
+  color: #000000;
   font-weight: bold;
   font-family: "Segoe UI", system-ui, sans-serif;
   text-align: center;
+  margin-right: 40px;
+}
+
+ion-back-button {
+  --color: #000000;
 }
 
 ion-content {
