@@ -13,7 +13,7 @@
     <ng-container *ngIf="comunicados && comunicados.length > 0; else vazio">
       <div 
         class="comunicado-card" 
-        *ngFor="let comunicado of comunicados; let i = index" 
+        *ngFor="let comunicado of comunicados; trackBy: trackByComunicado" 
         (click)="openComunicado(comunicado)"
       >
         <div class="comunicado-avatar" [ngClass]="comunicado.type || 'default'">{{ comunicado.emoji || '📝' }}</div>

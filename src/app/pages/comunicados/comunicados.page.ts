@@ -40,10 +40,8 @@ export class ComunicadosPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log('ComunicadosPage ngOnInit chamado');
     this.carregarComunicados();
-    this.autoRefresh.startAutoRefresh('comunicados', () => this.carregarComunicados());
-    console.log('Total de comunicados:', this.comunicados.length);
+    this.autoRefresh.startAutoRefresh('comunicados', () => this.carregarComunicados(), 30000);
   }
   
   ionViewWillEnter() {
@@ -56,23 +54,19 @@ export class ComunicadosPage implements OnInit {
   }
   
   carregarComunicados() {
-    const userId = localStorage.getItem('userId');
-    const userType = 'aluno';
-    
     fetch('https://back-end-pokecreche-production.up.railway.app/comunicados')
       .then(res => res.json())
       .then(data => {
-        this.comunicados = data.map((c: any) => ({
-          ...c,
-          preview: c.message?.substring(0, 100) + (c.message?.length > 100 ? '...' : ''),
-          emoji: c.icon,
-          content: c.message
+        this.comunicados = data.slice(0, 20).map((c: any) => ({
+          id: c.id,
+          title: c.title,
+          preview: c.message?.substring(0, 80) + '...',
+          emoji: c.icon || '📝',
+          content: c.message,
+          data: c.data
         }));
       })
-      .catch(err => {
-        console.error('Erro ao carregar comunicados:', err);
-        this.comunicados = [];
-      });
+      .catch(() => this.comunicados = []);
   }
 
   irParaEscrever() {
@@ -105,6 +99,10 @@ export class ComunicadosPage implements OnInit {
   }
 
 
+
+  trackByComunicado(index: number, item: any): any {
+    return item.id;
+  }
 
   formatarData(data: string): string {
     if (!data) return '';
