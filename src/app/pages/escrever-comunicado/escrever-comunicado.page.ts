@@ -324,30 +324,6 @@ export class EscreverComunicadoPage implements OnInit {
 
     try {
       const docenteId = localStorage.getItem('userId') || '1';
-      
-      // Extrair IDs dos destinatários e determinar visibilidade
-      let destinatariosIds: number[] = [];
-      let tipoDestinatario = 'geral';
-      let visibilidade = 'publico';
-      let tipoVisibilidade = 'geral';
-      
-      if (this.comunicado.to.includes('Geral')) {
-        tipoDestinatario = 'geral';
-        visibilidade = 'publico';
-        tipoVisibilidade = 'geral';
-      } else if (this.comunicado.to.includes('Alunos:')) {
-        tipoDestinatario = 'aluno';
-        visibilidade = 'privado';
-        tipoVisibilidade = 'individual';
-        const nomes = this.comunicado.to.replace('Alunos:', '').split(',').map((n: string) => n.trim());
-        destinatariosIds = this.alunos.filter(a => nomes.includes(a.nome)).map(a => a.id);
-      } else if (this.comunicado.to.includes('Docentes:')) {
-        tipoDestinatario = 'docente';
-        visibilidade = 'privado';
-        tipoVisibilidade = 'individual';
-        const nomes = this.comunicado.to.replace('Docentes:', '').split(',').map((n: string) => n.trim());
-        destinatariosIds = this.docentes.filter(d => nomes.includes(d.nome)).map(d => d.id);
-      }
 
       const response = await fetch('https://back-end-pokecreche-production.up.railway.app/comunicados', {
         method: 'POST',
@@ -355,13 +331,8 @@ export class EscreverComunicadoPage implements OnInit {
         body: JSON.stringify({
           docente_id: docenteId,
           title: this.comunicado.subject,
-          subject: this.comunicado.subject,
           message: this.comunicado.message,
-          destinatarios: this.comunicado.to,
-          cc: this.comunicado.cc,
-          bcc: this.comunicado.bcc,
-          icon: this.comunicado.icon,
-          tipo: 'default'
+          destinatarios: this.comunicado.to || 'Geral'
         })
       });
 
