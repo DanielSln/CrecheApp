@@ -15,6 +15,7 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { pencil } from 'ionicons/icons';
+import { AutoRefreshService } from '../../services/auto-refresh.service';
 
 @Component({
   selector: 'app-comunicados-docente',
@@ -41,7 +42,8 @@ export class ComunicadosDocentePage implements OnInit {
 
   constructor(
     private router: Router,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private autoRefresh: AutoRefreshService
   ) {
     addIcons({ pencil });
     console.log('ComunicadosDocentePage constructor chamado');
@@ -50,12 +52,17 @@ export class ComunicadosDocentePage implements OnInit {
   ngOnInit() {
     console.log('ComunicadosDocentePage ngOnInit chamado');
     this.carregarComunicados();
+    this.autoRefresh.startAutoRefresh('comunicados-docente', () => this.carregarComunicados());
     console.log('Total de comunicados:', this.comunicados.length);
   }
   
   ionViewWillEnter() {
     console.log('ionViewWillEnter - recarregando comunicados');
     this.carregarComunicados();
+  }
+
+  ionViewWillLeave() {
+    this.autoRefresh.stopAutoRefresh('comunicados-docente');
   }
   
   carregarComunicados() {

@@ -10,6 +10,7 @@ import {
   IonMenuButton,
   AlertController
 } from '@ionic/angular/standalone';
+import { AutoRefreshService } from '../../services/auto-refresh.service';
 
 
 @Component({
@@ -30,10 +31,10 @@ import {
 export class ComunicadosPage implements OnInit {
   comunicados: any[] = [];
   comunicadoSelecionado: any = null;
-
   constructor(
     private router: Router,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private autoRefresh: AutoRefreshService
   ) {
     console.log('ComunicadosPage constructor chamado');
   }
@@ -41,12 +42,17 @@ export class ComunicadosPage implements OnInit {
   ngOnInit() {
     console.log('ComunicadosPage ngOnInit chamado');
     this.carregarComunicados();
+    this.autoRefresh.startAutoRefresh('comunicados', () => this.carregarComunicados());
     console.log('Total de comunicados:', this.comunicados.length);
   }
   
   ionViewWillEnter() {
     console.log('ionViewWillEnter - recarregando comunicados');
     this.carregarComunicados();
+  }
+
+  ionViewWillLeave() {
+    this.autoRefresh.stopAutoRefresh('comunicados');
   }
   
   carregarComunicados() {
