@@ -18,7 +18,7 @@
 
       @for(page of pages; track page.title) {
       <ion-menu-toggle class="menu-itens" autohide="false">
-        <ion-item lines="none" class="ion-padding-start" [ngClass]="{'selected': page?.active}" (click)="onItemTap(page)" >
+        <ion-item lines="none" class="ion-padding-start" [ngClass]="{'selected': page?.active, 'sair-item': page.title === 'Sair'}" (click)="onItemTap(page)" >
           <ion-icon slot="start" [name]="page.icon"></ion-icon>
 
           <ion-label>{{ page.title }}</ion-label>

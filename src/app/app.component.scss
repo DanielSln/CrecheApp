@@ -79,3 +79,9 @@ ion-item.selected {
         border-left: 5px solid #fff;
     }
 }
+
+ion-item.sair-item {
+    ion-label, ion-icon {
+        color: red !important;
+    }
+}
