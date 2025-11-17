@@ -31,7 +31,7 @@
           >
             {{ comunicado.type === 'urgent' ? 'URGENTE' : 'INFO' }}
           </span>
-          <span class="comunicado-date">{{ comunicado.date || 'Data não informada' }}</span>
+          <span class="comunicado-date">{{ comunicado.data || comunicado.date || 'Data não informada' }}</span>
         </div>
       </div>
     </ng-container>
@@ -64,7 +64,7 @@
           <div class="comunicado-info-modal">
             <h3 class="comunicado-titulo-modal">{{ comunicadoSelecionado.title || 'Sem título' }}</h3>
             <div class="comunicado-meta-modal">
-              <span class="comunicado-data-modal">{{ comunicadoSelecionado.date || 'Data não informada' }}</span>
+              <span class="comunicado-data-modal">{{ comunicadoSelecionado.data || comunicadoSelecionado.date || 'Data não informada' }}</span>
               <span 
                 class="comunicado-badge-modal" 
                 [ngClass]="comunicadoSelecionado.type" 
