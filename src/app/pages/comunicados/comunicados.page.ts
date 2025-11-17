@@ -98,10 +98,7 @@ export class ComunicadosPage implements OnInit {
     this.comunicadoSelecionado = null;
   }
 
-  editarComunicado() {
-    sessionStorage.setItem('comunicadoEditar', JSON.stringify(this.comunicadoSelecionado));
-    this.router.navigateByUrl('/escrever-comunicado');
-  }
+
 
   goToMenu() {
     this.router.navigateByUrl('/menu-docente');
