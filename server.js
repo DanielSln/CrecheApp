@@ -506,13 +506,13 @@ app.get('/termos/:user_type/:user_id', (req, res) => {
 });
 
 // Fallback para rotas do Angular (SPA)
-app.get('*', (req, res) => {
+app.use((req, res, next) => {
   // Não interceptar rotas da API
   if (req.path.startsWith('/api') || req.path.startsWith('/login') || req.path.startsWith('/register') || 
       req.path.startsWith('/alunos') || req.path.startsWith('/docentes') || req.path.startsWith('/turmas') || 
       req.path.startsWith('/comunicados') || req.path.startsWith('/rascunhos') || req.path.startsWith('/registros') || 
       req.path.startsWith('/eventos') || req.path.startsWith('/termos') || req.path.startsWith('/setup')) {
-    return;
+    return next();
   }
   res.sendFile(path.join(__dirname, 'www', 'index.html'));
 });
