@@ -22,10 +22,7 @@ const db = mysql.createPool({
   password: process.env.MYSQLPASSWORD || 'q1w2e3',
   database: process.env.MYSQLDATABASE || 'PokeCreche',
   port: process.env.MYSQLPORT || 3306,
-  connectionLimit: 10,
-  acquireTimeout: 60000,
-  timeout: 60000,
-  reconnect: true
+  connectionLimit: 10
 });
 
 db.getConnection((err, connection) => {
