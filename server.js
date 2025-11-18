@@ -41,7 +41,12 @@ app.use(express.static(path.join(__dirname, 'www')));
 
 // Rota para servir o app Angular
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'www', 'index.html'));
+  try {
+    res.sendFile(path.join(__dirname, 'www', 'index.html'));
+  } catch (error) {
+    console.error('Erro ao servir index.html:', error);
+    res.status(200).send('PokeCreche API está funcionando!');
+  }
 });
 
 // Função para validar CPF
