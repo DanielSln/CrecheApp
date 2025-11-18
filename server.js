@@ -257,6 +257,14 @@ app.get('/docentes', (req, res) => {
   });
 });
 
+// Endpoint temporário para debug - listar todos os docentes
+app.get('/debug/docentes', (req, res) => {
+  db.query('SELECT id, nome, identificador FROM docentes', (err, result) => {
+    if (err) return res.status(500).json({ message: 'Erro ao buscar docentes' });
+    res.json(result);
+  });
+});
+
 app.put('/docentes/:id/avatar', (req, res) => {
   const { avatar } = req.body;
   db.query('UPDATE docentes SET avatar = ? WHERE id = ?', [avatar, req.params.id], (err) => {
