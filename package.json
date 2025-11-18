@@ -7,11 +7,11 @@
     "ng": "ng",
     "start": "node server.js",
     "dev": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration production",
+    "build:railway": "npm install && ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint",
-
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
