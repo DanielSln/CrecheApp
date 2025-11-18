@@ -181,6 +181,8 @@ app.post('/login/aluno', (req, res) => {
 
 app.post('/login/docente', async (req, res) => {
   const { identificador, senha } = req.body || {};
+  
+  console.log('Tentativa de login:', { identificador, senha: senha ? '***' : 'undefined' });
 
   if (!identificador || !senha) {
     return res.status(400).json({ 
@@ -192,15 +194,20 @@ app.post('/login/docente', async (req, res) => {
   const sql = 'SELECT * FROM docentes WHERE identificador = ?';
   db.query(sql, [identificador], async (err, result) => {
     if (err) {
+      console.error('Erro na consulta:', err);
       return res.status(500).json({ 
         success: false,
         message: 'Erro no servidor' 
       });
     }
+    
+    console.log('Docentes encontrados:', result.length);
 
     if (result.length > 0) {
       const docente = result[0];
+      console.log('Docente encontrado:', docente.identificador);
       const senhaValida = await bcrypt.compare(senha, docente.senha);
+      console.log('Senha válida:', senhaValida);
 
       if (senhaValida) {
         const token = 'token_' + docente.id;
@@ -222,6 +229,7 @@ app.post('/login/docente', async (req, res) => {
         });
       }
     } else {
+      console.log('Nenhum docente encontrado com identificador:', identificador);
       res.status(401).json({ 
         success: false,
         message: 'Identificador ou senha inválidos' 
