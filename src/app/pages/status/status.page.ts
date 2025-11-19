@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { restaurantOutline, happyOutline, peopleOutline } from 'ionicons/icons';
 import { HttpClient } from '@angular/common/http';
+import { AvatarService } from '../../services/avatar.service';
 
 
 @Component({
@@ -41,6 +42,7 @@ import { HttpClient } from '@angular/common/http';
 export class StatusPage implements OnInit {
   registroAtual: number = 0;
   totalRegistros: number = 5;
+  profileImage: string = 'assets/img/avatar.jpg';
 
   status = [
     {
@@ -68,7 +70,7 @@ export class StatusPage implements OnInit {
 
   private apiUrl = 'https://back-end-pokecreche-production.up.railway.app';
 
-  constructor(private router: Router, private http: HttpClient) {
+  constructor(private router: Router, private http: HttpClient, private avatarService: AvatarService) {
     addIcons({
       'restaurant-outline': restaurantOutline,
       'happy-outline': happyOutline,
@@ -77,7 +79,14 @@ export class StatusPage implements OnInit {
   }
 
   ngOnInit() {
+    this.loadProfileImage();
     this.calcularPorcentagens();
+  }
+
+  private loadProfileImage() {
+    this.avatarService.getAvatar().subscribe((avatar) => {
+      this.profileImage = avatar;
+    });
   }
 
   calcularPorcentagens() {

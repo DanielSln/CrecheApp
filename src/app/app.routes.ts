@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -12,11 +13,13 @@ export const routes: Routes = [
     path: 'menu',
     loadComponent: () =>
       import('./pages/menu/menu.page').then((m) => m.MenuPage),
+    canActivate: [authGuard],
   },
   {
     path: 'filho',
     loadComponent: () =>
       import('./pages/filho/filho.page').then((m) => m.FilhoPage),
+    canActivate: [authGuard],
   },
   {
     path: 'calendario',
@@ -24,14 +27,17 @@ export const routes: Routes = [
       import('./pages/calendario/calendario.page').then(
         (m) => m.CalendarioPage
       ),
+    canActivate: [authGuard],
   },
   {
     path: 'status',
     loadComponent: () =>
       import('./pages/status/status.page').then((m) => m.StatusPage),
+    canActivate: [authGuard],
   },
   {
     path: 'comunicados',
+    canActivate: [authGuard],
     children: [
       {
         path: '',
@@ -76,9 +82,11 @@ export const routes: Routes = [
       import('./pages/menu-docente/menu-docente.page').then(
         (m) => m.MenuDocentePage
       ),
+    canActivate: [authGuard],
   },
   {
     path: 'comunicados-docente',
+    canActivate: [authGuard],
     children: [
       {
         path: '',
@@ -100,6 +108,7 @@ export const routes: Routes = [
     path: 'docente',
     loadComponent: () =>
       import('./pages/docente/docente.page').then((m) => m.DocentePage),
+    canActivate: [authGuard],
   },
   {
     path: 'termos-docente',
@@ -114,19 +123,23 @@ export const routes: Routes = [
       import('./pages/calendario-docente/calendario-docente.page').then(
         (m) => m.CalendarioDocentePage
       ),
+    canActivate: [authGuard],
   },
   {
     path: 'turmas',
     loadComponent: () =>
       import('./pages/turmas/turmas.page').then((m) => m.TurmasPage),
+    canActivate: [authGuard],
   },
   {
     path: 'escrever-comunicado',
-    loadComponent: () => import('./pages/escrever-comunicado/escrever-comunicado.page').then( m => m.EscreverComunicadoPage)
+    loadComponent: () => import('./pages/escrever-comunicado/escrever-comunicado.page').then( m => m.EscreverComunicadoPage),
+    canActivate: [authGuard],
   },
   {
     path: 'ver-rascunhos',
-    loadComponent: () => import('./pages/ver-rascunhos/ver-rascunhos.page').then( m => m.VerRascunhosPage)
+    loadComponent: () => import('./pages/ver-rascunhos/ver-rascunhos.page').then( m => m.VerRascunhosPage),
+    canActivate: [authGuard],
   },
 
 

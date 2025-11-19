@@ -13,6 +13,8 @@ import {
   IonLabel,
 } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { AvatarService } from '../../services/avatar.service';
 
 @Component({
   selector: 'app-login-professor',
@@ -42,7 +44,9 @@ export class LoginProfessorPage implements OnInit {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private authService: AuthService,
+    private avatarService: AvatarService
   ) {}
 
   ngOnInit() {
@@ -76,12 +80,17 @@ export class LoginProfessorPage implements OnInit {
         next: async (response: any) => {
           this.isLoading = false;
           if (response.success && response.user) {
-            localStorage.setItem('userType', 'docente');
+            // Autentica o usuário através do AuthService
+            this.authService.login('docente');
+            
             localStorage.setItem('userId', response.user.id);
             localStorage.setItem('userName', response.user.nome);
             localStorage.setItem('userEmail', 'ID: ' + (response.user.id || this.id));
             localStorage.setItem('userIdentificador', this.id);
             localStorage.setItem('userToken', response.token || '');
+
+            // Recarrega o avatar para o novo usuário
+            this.avatarService.reloadAvatar();
 
             if (this.rememberMe) {
               localStorage.setItem('rememberedNome', this.nome);

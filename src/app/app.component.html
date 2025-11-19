@@ -1,10 +1,10 @@
 <ion-app>
-  <ion-menu contentId="main-content" [swipeGesture]="!isLoginRoute">
+  <ion-menu contentId="main-content" [swipeGesture]="false">
     <ion-header class="ion-no-border">
       <div class="bg"></div>
       <ion-item lines="none">
         <ion-avatar slot="start">
-          <img src="assets/img/avatar.jpg"/>
+          <img [src]="avatarService.getAvatar() | async" alt="Avatar do usuário"/>
         </ion-avatar>
         <ion-label>
           {{ profile.name }}
