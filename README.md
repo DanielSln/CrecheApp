@@ -75,8 +75,6 @@ npx ionic serve
 npm run dev
 ```
 
-Observação: O `server.js` serve os arquivos estáticos da pasta `www`. Para servir a versão de produção do frontend, gere o build do Angular/Ionic e copie/produza os arquivos em `www` antes de iniciar o `node server.js`:
-
 ```powershell
 npm run build
 # em seguida iniciar o servidor
@@ -142,7 +140,8 @@ npm test
 
 ## 👥 Autores
 
-- Daniel Solano (autor indicado no `LICENSE`)
+- [Daniel Solano](https://github.com/DanielSln)
+- [Anthony](https://github.com/Anthony3043)
 
 ## 📄 Licença
 
