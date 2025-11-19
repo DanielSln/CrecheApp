@@ -1,8 +1,8 @@
-# 📌 PokeCreche
+# 📌 CrecheApp
 
 ## 📖 Descrição
 
-PokeCreche é um sistema híbrido (aplicativo móvel com Ionic/Angular + API em Node/Express) para gestão de creches e comunicação entre docentes e responsáveis. Oferece cadastro e autenticação de alunos e docentes, envio de comunicados com controle de visibilidade, gerenciamento de turmas, registros diários de alimentação/presença/comportamento, calendário de eventos e rascunhos de comunicados.
+CrecheApp é um sistema híbrido (aplicativo móvel com Ionic/Angular + API em Node/Express) para gestão de creches e comunicação entre docentes e responsáveis. Oferece cadastro e autenticação de alunos e docentes, envio de comunicados com controle de visibilidade, gerenciamento de turmas, registros diários de alimentação/presença/comportamento, calendário de eventos e rascunhos de comunicados.
 
 ## 🚀 Funcionalidades principais
 
