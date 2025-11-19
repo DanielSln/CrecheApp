@@ -43,7 +43,8 @@ export class LoginAlunoPage implements OnInit {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -83,7 +84,9 @@ export class LoginAlunoPage implements OnInit {
       next: async (response: any) => {
         this.isLoading = false;
         if (response.success && response.user) {
-          localStorage.setItem('userType', 'aluno');
+          // Autentica o usuário através do AuthService
+          this.authService.login('aluno');
+          
           localStorage.setItem('userId', response.user.id);
           localStorage.setItem('userName', response.user.nome);
           localStorage.setItem('userEmail', 'Matrícula: ' + response.user.matricula);
