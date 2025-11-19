@@ -1,11 +1,11 @@
 export const API_CONFIG = {
-  BASE_URL: 'https://api-cadastro-six.vercel.app',
+  BASE_URL: 'https://your-railway-app.railway.app', // Substitua pela URL do seu Railway
   
   ENDPOINTS: {
     LOGIN_ALUNO: '/login/aluno',
     LOGIN_DOCENTE: '/login/docente',
     REGISTER_ALUNO: '/register/aluno',
     REGISTER_DOCENTE: '/register/docente',
-    EVENTS: '/api/events'
+    EVENTS: '/eventos'
   }
 };

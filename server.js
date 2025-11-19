@@ -22,10 +22,7 @@ const db = mysql.createPool({
   password: process.env.MYSQLPASSWORD || 'q1w2e3',
   database: process.env.MYSQLDATABASE || 'PokeCreche',
   port: process.env.MYSQLPORT || 3306,
-  connectionLimit: 10,
-  acquireTimeout: 60000,
-  timeout: 60000,
-  reconnect: true
+  connectionLimit: 10
 });
 
 db.getConnection((err, connection) => {
@@ -39,8 +36,17 @@ db.getConnection((err, connection) => {
 
 
 
+// Servir arquivos estáticos do Angular
+app.use(express.static(path.join(__dirname, 'www')));
+
+// Rota para servir o app Angular
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'alunos.html'));
+  try {
+    res.sendFile(path.join(__dirname, 'www', 'index.html'));
+  } catch (error) {
+    console.error('Erro ao servir index.html:', error);
+    res.status(200).send('PokeCreche API está funcionando!');
+  }
 });
 
 // Função para validar CPF
@@ -175,6 +181,8 @@ app.post('/login/aluno', (req, res) => {
 
 app.post('/login/docente', async (req, res) => {
   const { identificador, senha } = req.body || {};
+  
+  console.log('Tentativa de login:', { identificador, senha: senha ? '***' : 'undefined' });
 
   if (!identificador || !senha) {
     return res.status(400).json({ 
@@ -186,15 +194,20 @@ app.post('/login/docente', async (req, res) => {
   const sql = 'SELECT * FROM docentes WHERE identificador = ?';
   db.query(sql, [identificador], async (err, result) => {
     if (err) {
+      console.error('Erro na consulta:', err);
       return res.status(500).json({ 
         success: false,
         message: 'Erro no servidor' 
       });
     }
+    
+    console.log('Docentes encontrados:', result.length);
 
     if (result.length > 0) {
       const docente = result[0];
+      console.log('Docente encontrado:', docente.identificador);
       const senhaValida = await bcrypt.compare(senha, docente.senha);
+      console.log('Senha válida:', senhaValida);
 
       if (senhaValida) {
         const token = 'token_' + docente.id;
@@ -216,6 +229,7 @@ app.post('/login/docente', async (req, res) => {
         });
       }
     } else {
+      console.log('Nenhum docente encontrado com identificador:', identificador);
       res.status(401).json({ 
         success: false,
         message: 'Identificador ou senha inválidos' 
@@ -246,6 +260,14 @@ app.put('/alunos/:id/avatar', (req, res) => {
 // Docentes
 app.get('/docentes', (req, res) => {
   db.query('SELECT id, nome, identificador, email, avatar FROM docentes', (err, result) => {
+    if (err) return res.status(500).json({ message: 'Erro ao buscar docentes' });
+    res.json(result);
+  });
+});
+
+// Endpoint temporário para debug - listar todos os docentes
+app.get('/debug/docentes', (req, res) => {
+  db.query('SELECT id, nome, identificador FROM docentes', (err, result) => {
     if (err) return res.status(500).json({ message: 'Erro ao buscar docentes' });
     res.json(result);
   });
@@ -504,7 +526,17 @@ app.get('/termos/:user_type/:user_id', (req, res) => {
   });
 });
 
-app.use(express.static(path.join(__dirname)));
+// Fallback para rotas do Angular (SPA)
+app.use((req, res, next) => {
+  // Não interceptar rotas da API
+  if (req.path.startsWith('/api') || req.path.startsWith('/login') || req.path.startsWith('/register') || 
+      req.path.startsWith('/alunos') || req.path.startsWith('/docentes') || req.path.startsWith('/turmas') || 
+      req.path.startsWith('/comunicados') || req.path.startsWith('/rascunhos') || req.path.startsWith('/registros') || 
+      req.path.startsWith('/eventos') || req.path.startsWith('/termos') || req.path.startsWith('/setup')) {
+    return next();
+  }
+  res.sendFile(path.join(__dirname, 'www', 'index.html'));
+});
 
 // Endpoint temporário para modificar colunas avatar para LONGTEXT
 app.get('/setup-avatar-columns', (req, res) => {
