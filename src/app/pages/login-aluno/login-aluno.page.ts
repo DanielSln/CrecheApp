@@ -13,6 +13,7 @@ import {
   IonLabel,
 } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login-aluno',

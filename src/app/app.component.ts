@@ -16,6 +16,7 @@ import {
   IonText,
   IonIcon,
 } from '@ionic/angular/standalone';
+import { AuthService } from './services/auth.service';
 
 import { addIcons } from 'ionicons';
 import {
@@ -106,7 +107,7 @@ export class AppComponent {
     return this.userType === 'docente' ? this.pagesDocente : this.pagesAluno;
   }
 
-  constructor(private router: Router, private menuCtrl: MenuController) {
+  constructor(private router: Router, private menuCtrl: MenuController, private authService: AuthService) {
     this.addAllIcons();
     this.loadUserType();
     this.setupMenuListener();
@@ -187,7 +188,7 @@ export class AppComponent {
   }
 
   logout() {
-    localStorage.removeItem('userType');
+    this.authService.logout();
     const loginUrl =
       this.userType === 'docente' ? '/login-professor' : '/login-aluno';
     this.router.navigateByUrl(loginUrl);
