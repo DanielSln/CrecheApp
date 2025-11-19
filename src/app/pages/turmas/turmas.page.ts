@@ -77,10 +77,54 @@ export class TurmasPage implements OnInit {
     this.http.get<any[]>(`${this.apiUrl}/turmas`).subscribe({
       next: (turmas) => {
         this.turmas = turmas;
+        // Limpa alunos órfãos após carregar as turmas
+        this.limparAlunosOrfaos();
       },
       error: (err) => {
         console.error('Erro ao carregar turmas:', err);
         this.turmas = [];
+      }
+    });
+  }
+
+  /**
+   * Limpa alunos que estão vinculados a turmas que não existem mais
+   */
+  private limparAlunosOrfaos() {
+    const turmasIds = this.turmas.map(t => t.id);
+    
+    this.http.get<any[]>(`${this.apiUrl}/alunos`).subscribe({
+      next: (alunos) => {
+        // Identifica alunos com turma_id inválido
+        const alunosOrfaos = alunos.filter(a => a.turma_id && !turmasIds.includes(a.turma_id));
+        
+        if (alunosOrfaos.length > 0) {
+          console.warn('Alunos órfãos encontrados:', alunosOrfaos);
+          
+          // Para cada aluno órfão, tenta remover a associação com a turma deletada
+          alunosOrfaos.forEach(aluno => {
+            this.removerAlunoOrfao(aluno);
+          });
+        }
+      },
+      error: (err) => {
+        console.error('Erro ao buscar alunos para limpeza:', err);
+      }
+    });
+  }
+
+  /**
+   * Remove a associação de um aluno órfão com uma turma que não existe
+   */
+  private removerAlunoOrfao(aluno: any) {
+    // Tenta remover através de um endpoint específico ou atualiza o aluno
+    this.http.put(`${this.apiUrl}/alunos/${aluno.id}/turma`, { turma_id: null }).subscribe({
+      next: () => {
+        console.log(`Aluno ${aluno.nome} (ID: ${aluno.id}) desvinculado de turma órfã`);
+      },
+      error: (err) => {
+        // Se o endpoint não existir, tenta outro método
+        console.warn(`Não foi possível desvincular aluno ${aluno.nome}:`, err);
       }
     });
   }
@@ -289,8 +333,23 @@ export class TurmasPage implements OnInit {
       next: (alunos) => {
         console.log('Alunos recebidos:', alunos);
         const alunosNaTurma = this.studentsByTurma[this.selectedTurma.id] || [];
-        this.alunosDisponiveis = alunos.filter(a => !alunosNaTurma.find(s => s.id === a.id));
+        const turmasIds = this.turmas.map(t => t.id);
+        
+        // Filtra alunos que:
+        // 1. Não estão na turma atual
+        // 2. OU estão vinculados a uma turma que não existe (órfãos)
+        this.alunosDisponiveis = alunos.filter(a => {
+          const naoEstaEmEstaTurma = !alunosNaTurma.find(s => s.id === a.id);
+          const temTurmaInvalida = a.turma_id && !turmasIds.includes(a.turma_id);
+          return naoEstaEmEstaTurma && (!a.turma_id || temTurmaInvalida);
+        });
+        
         console.log('Alunos disponíveis:', this.alunosDisponiveis);
+        
+        if (this.alunosDisponiveis.length === 0) {
+          alert('ℹ️ Nenhum aluno disponível para adicionar nesta turma.');
+        }
+        
         this.showAddAlunoModal = true;
       },
       error: (err) => {
@@ -342,7 +401,26 @@ export class TurmasPage implements OnInit {
   }
 
   adicionarAluno(aluno: any) {
-    this.http.post(`${this.apiUrl}/turmas/${this.selectedTurma.id}/alunos`, { aluno_id: aluno.id }).subscribe({
+    // Valida os dados antes de enviar
+    if (!this.selectedTurma || !this.selectedTurma.id) {
+      alert('Turma não selecionada');
+      return;
+    }
+
+    if (!aluno || !aluno.id) {
+      alert('Aluno inválido');
+      return;
+    }
+
+    // Tenta primeiro com formato aluno_id
+    let payload: any = { aluno_id: aluno.id };
+    
+    console.log('Adicionando aluno à turma');
+    console.log('Aluno:', aluno);
+    console.log('Turma ID:', this.selectedTurma.id);
+    console.log('Payload:', payload);
+    
+    this.http.post(`${this.apiUrl}/turmas/${this.selectedTurma.id}/alunos`, payload).subscribe({
       next: () => {
         if (!this.studentsByTurma[this.selectedTurma.id]) {
           this.studentsByTurma[this.selectedTurma.id] = [];
@@ -355,10 +433,25 @@ export class TurmasPage implements OnInit {
           falta: false,
         });
         this.fecharAddAlunoModal();
+        alert('✅ Aluno adicionado com sucesso!');
       },
       error: (err) => {
         console.error('Erro ao adicionar aluno:', err);
-        alert('Erro ao adicionar aluno à turma');
+        console.error('Status:', err.status);
+        console.error('Response:', err.error);
+        
+        // Trata erros específicos
+        if (err.status === 400 && err.error?.message) {
+          // Erro de validação do backend (ex: aluno já está em outra turma)
+          alert(`⚠️ ${err.error.message}`);
+        } else if (err.status === 500) {
+          // Erro interno do servidor
+          alert('❌ Erro no servidor ao adicionar aluno. Tente novamente mais tarde.');
+        } else {
+          // Outro erro
+          const mensagem = err.error?.message || 'Erro ao adicionar aluno à turma';
+          alert(`❌ Erro: ${mensagem}`);
+        }
       }
     });
   }
