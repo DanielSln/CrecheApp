@@ -1,4 +1,4 @@
-import { NgClass } from '@angular/common';
+import { NgClass, AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import { Title } from '@angular/platform-browser';
@@ -17,6 +17,7 @@ import {
   IonIcon,
 } from '@ionic/angular/standalone';
 import { AuthService } from './services/auth.service';
+import { AvatarService } from './services/avatar.service';
 
 import { addIcons } from 'ionicons';
 import {
@@ -49,11 +50,38 @@ import {
     IonText,
     IonIcon,
     NgClass,
+    AsyncPipe,
   ],
 })
 export class AppComponent {
   userType: 'aluno' | 'docente' = 'aluno';
   menuOpen = false;
+
+  constructor(
+    private router: Router,
+    private menuCtrl: MenuController,
+    private authService: AuthService,
+    public avatarService: AvatarService
+  ) {
+    this.addAllIcons();
+    this.loadUserType();
+    this.setupMenuListener();
+    // atualiza o item ativo com base na rota atual e infere tipo de usuário pela rota
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        const currentUrl = event.urlAfterRedirects.split('?')[0];
+        this.pages.forEach((p) => (p.active = p.url === currentUrl));
+        // se a rota indicar área do docente, alterna o menu para docente; caso contrário usa aluno
+        this.inferUserTypeFromUrl(currentUrl);
+        // Desabilita o menu nas telas de login
+        if (currentUrl === '/login-aluno' || currentUrl === '/login-professor') {
+          this.menuCtrl.enable(false);
+        } else {
+          this.menuCtrl.enable(true);
+        }
+      }
+    });
+  }
 
   get profile() {
     const name =
@@ -104,27 +132,6 @@ export class AppComponent {
 
   get pages() {
     return this.userType === 'docente' ? this.pagesDocente : this.pagesAluno;
-  }
-
-  constructor(private router: Router, private menuCtrl: MenuController, private authService: AuthService) {
-    this.addAllIcons();
-    this.loadUserType();
-    this.setupMenuListener();
-    // atualiza o item ativo com base na rota atual e infere tipo de usuário pela rota
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        const currentUrl = event.urlAfterRedirects.split('?')[0];
-        this.pages.forEach((p) => (p.active = p.url === currentUrl));
-        // se a rota indicar área do docente, alterna o menu para docente; caso contrário usa aluno
-        this.inferUserTypeFromUrl(currentUrl);
-        // Desabilita o menu nas telas de login
-        if (currentUrl === '/login-aluno' || currentUrl === '/login-professor') {
-          this.menuCtrl.enable(false);
-        } else {
-          this.menuCtrl.enable(true);
-        }
-      }
-    });
   }
 
   private inferUserTypeFromUrl(url: string) {

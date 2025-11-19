@@ -4,7 +4,7 @@
       <div class="bg"></div>
       <ion-item lines="none">
         <ion-avatar slot="start">
-          <img src="assets/img/avatar.jpg"/>
+          <img [src]="avatarService.getAvatar() | async" alt="Avatar do usuário"/>
         </ion-avatar>
         <ion-label>
           {{ profile.name }}

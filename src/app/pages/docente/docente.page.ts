@@ -16,6 +16,7 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { addIcons } from 'ionicons';
 import { camera } from 'ionicons/icons';
 import { HttpClient } from '@angular/common/http';
+import { AvatarService } from '../../services/avatar.service';
 
 @Component({
   selector: 'app-docente',
@@ -42,7 +43,7 @@ export class DocentePage implements OnInit {
   id: string = '';
   private apiUrl = 'https://back-end-pokecreche-production.up.railway.app';
 
-  constructor(private router: Router, private http: HttpClient) {
+  constructor(private router: Router, private http: HttpClient, private avatarService: AvatarService) {
     addIcons({ camera });
   }
 
@@ -63,7 +64,8 @@ export class DocentePage implements OnInit {
         this.profileImage = image.dataUrl;
         const userId = localStorage.getItem('userId');
         if (userId) {
-          this.http.put(`${this.apiUrl}/docentes/${userId}/avatar`, { avatar: image.dataUrl }).subscribe();
+          // Atualiza o avatar através do serviço
+          this.avatarService.updateAvatar(image.dataUrl);
         }
       }
     } catch (error) {

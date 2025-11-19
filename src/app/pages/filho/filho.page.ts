@@ -18,6 +18,7 @@ addIcons({ camera });
 import { Router } from '@angular/router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { HttpClient } from '@angular/common/http';
+import { AvatarService } from '../../services/avatar.service';
 
 @Component({
   selector: 'app-filho',
@@ -55,10 +56,8 @@ export class FilhoPage implements OnInit {
         const userId = localStorage.getItem('userId');
         console.log('UserId:', userId);
         if (userId) {
-          this.http.put(`${this.apiUrl}/alunos/${userId}/avatar`, { avatar: image.dataUrl }).subscribe({
-            next: (res) => console.log('Avatar atualizado:', res),
-            error: (err) => console.error('Erro ao atualizar avatar:', err)
-          });
+          // Atualiza o avatar através do serviço
+          this.avatarService.updateAvatar(image.dataUrl);
         } else {
           console.error('UserId não encontrado no localStorage');
         }
@@ -71,7 +70,7 @@ export class FilhoPage implements OnInit {
   nome: string = '';
   matricula: string = '';
 
-  constructor(private router: Router, private http: HttpClient) {
+  constructor(private router: Router, private http: HttpClient, private avatarService: AvatarService) {
     addIcons({ camera });
   }
 
