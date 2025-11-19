@@ -14,6 +14,7 @@ import {
 } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { AvatarService } from '../../services/avatar.service';
 
 @Component({
   selector: 'app-login-aluno',
@@ -44,7 +45,8 @@ export class LoginAlunoPage implements OnInit {
     private router: Router,
     private http: HttpClient,
     private alertController: AlertController,
-    private authService: AuthService
+    private authService: AuthService,
+    private avatarService: AvatarService
   ) {}
 
   ngOnInit() {
@@ -91,6 +93,9 @@ export class LoginAlunoPage implements OnInit {
           localStorage.setItem('userName', response.user.nome);
           localStorage.setItem('userEmail', 'Matrícula: ' + response.user.matricula);
           localStorage.setItem('userToken', response.token || '');
+
+          // Recarrega o avatar para o novo usuário
+          this.avatarService.reloadAvatar();
 
           if (this.rememberMe) {
             localStorage.setItem('rememberedNomeAluno', this.nome);

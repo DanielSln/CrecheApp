@@ -28,16 +28,21 @@ export class AvatarService {
 
   /**
    * Busca o avatar do usuário no servidor
+   * Detecta automaticamente se é aluno ou docente pelo userType
    */
   private fetchUserAvatar(): void {
     const userId = localStorage.getItem('userId');
+    const userType = localStorage.getItem('userType');
+    
     if (userId) {
-      this.http.get<any>(`${this.apiUrl}/alunos`).subscribe({
-        next: (alunos) => {
-          const aluno = alunos.find((a: any) => a.id == userId);
-          if (aluno?.avatar) {
-            this.userAvatarSubject.next(aluno.avatar);
-            localStorage.setItem('userAvatar', aluno.avatar);
+      const endpoint = userType === 'docente' ? 'docentes' : 'alunos';
+      
+      this.http.get<any>(`${this.apiUrl}/${endpoint}`).subscribe({
+        next: (usuarios) => {
+          const usuario = usuarios.find((u: any) => u.id == userId);
+          if (usuario?.avatar) {
+            this.userAvatarSubject.next(usuario.avatar);
+            localStorage.setItem('userAvatar', usuario.avatar);
           }
         },
         error: () => {
@@ -49,11 +54,16 @@ export class AvatarService {
 
   /**
    * Atualiza o avatar do usuário
+   * Detecta automaticamente se é aluno ou docente pelo userType
    */
   updateAvatar(avatarData: string): void {
     const userId = localStorage.getItem('userId');
+    const userType = localStorage.getItem('userType');
+    
     if (userId) {
-      this.http.put(`${this.apiUrl}/alunos/${userId}/avatar`, { avatar: avatarData }).subscribe({
+      const endpoint = userType === 'docente' ? 'docentes' : 'alunos';
+      
+      this.http.put(`${this.apiUrl}/${endpoint}/${userId}/avatar`, { avatar: avatarData }).subscribe({
         next: (response: any) => {
           this.userAvatarSubject.next(avatarData);
           localStorage.setItem('userAvatar', avatarData);
@@ -63,6 +73,14 @@ export class AvatarService {
         }
       });
     }
+  }
+
+  /**
+   * Recarrega o avatar do usuário (útil ao trocar de usuário)
+   */
+  reloadAvatar(): void {
+    localStorage.removeItem('userAvatar');
+    this.fetchUserAvatar();
   }
 
   /**
