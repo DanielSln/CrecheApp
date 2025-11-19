@@ -142,7 +142,8 @@ npm test
 
 ## 👥 Autores
 
-- Daniel Solano (autor indicado no `LICENSE`)
+- [Daniel Solano](https://github.com/DanielSln)
+- [Anthony](https://github.com/Anthony3043)
 
 ## 📄 Licença
 
