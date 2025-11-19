@@ -1,5 +1,6 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
+import { MenuController } from '@ionic/angular';
 import { Title } from '@angular/platform-browser';
 import { Router, NavigationEnd } from '@angular/router';
 import {
@@ -104,7 +105,7 @@ export class AppComponent {
     return this.userType === 'docente' ? this.pagesDocente : this.pagesAluno;
   }
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private menuCtrl: MenuController) {
     this.addAllIcons();
     this.loadUserType();
     this.setupMenuListener();
@@ -115,6 +116,12 @@ export class AppComponent {
         this.pages.forEach((p) => (p.active = p.url === currentUrl));
         // se a rota indicar área do docente, alterna o menu para docente; caso contrário usa aluno
         this.inferUserTypeFromUrl(currentUrl);
+        // Desabilita o menu nas telas de login
+        if (currentUrl === '/login-aluno' || currentUrl === '/login-professor') {
+          this.menuCtrl.enable(false);
+        } else {
+          this.menuCtrl.enable(true);
+        }
       }
     });
   }
