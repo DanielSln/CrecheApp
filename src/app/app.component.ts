@@ -52,7 +52,6 @@ import {
   ],
 })
 export class AppComponent {
-  isLoginRoute = false;
   userType: 'aluno' | 'docente' = 'aluno';
   menuOpen = false;
 
@@ -118,8 +117,6 @@ export class AppComponent {
         this.pages.forEach((p) => (p.active = p.url === currentUrl));
         // se a rota indicar área do docente, alterna o menu para docente; caso contrário usa aluno
         this.inferUserTypeFromUrl(currentUrl);
-        // Atualiza flag de rota de login
-        this.isLoginRoute = (currentUrl === '/login-aluno' || currentUrl === '/login-professor');
         // Desabilita o menu nas telas de login
         if (currentUrl === '/login-aluno' || currentUrl === '/login-professor') {
           this.menuCtrl.enable(false);
