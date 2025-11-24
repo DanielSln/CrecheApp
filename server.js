@@ -329,18 +329,10 @@ app.get('/turmas/:id/alunos', (req, res) => {
 app.post('/turmas/:id/alunos', (req, res) => {
   const { aluno_id } = req.body;
   
-  // Verificar se o aluno já está em alguma turma
-  db.query('SELECT turma_id FROM turma_alunos WHERE aluno_id = ?', [aluno_id], (err, result) => {
-    if (err) return res.status(500).json({ message: 'Erro ao verificar aluno' });
-    
-    if (result.length > 0) {
-      return res.status(400).json({ message: 'Aluno já está em outra turma' });
-    }
-    
-    db.query('INSERT INTO turma_alunos (turma_id, aluno_id) VALUES (?, ?)', [req.params.id, aluno_id], (err) => {
-      if (err) return res.status(500).json({ message: 'Erro ao adicionar aluno' });
-      res.json({ message: 'Aluno adicionado' });
-    });
+  // Simplesmente adiciona o aluno, ignorando se já existe
+  db.query('INSERT IGNORE INTO turma_alunos (turma_id, aluno_id) VALUES (?, ?)', [req.params.id, aluno_id], (err) => {
+    if (err) return res.status(500).json({ message: 'Erro ao adicionar aluno' });
+    res.json({ message: 'Aluno adicionado' });
   });
 });
 
@@ -349,6 +341,24 @@ app.delete('/turmas/:turmaId/alunos/:alunoId', (req, res) => {
     if (err) return res.status(500).json({ message: 'Erro ao remover aluno' });
     res.json({ message: 'Aluno removido' });
   });
+});
+
+// Endpoint para atualizar turma do aluno
+app.put('/alunos/:id/turma', (req, res) => {
+  const { turma_id } = req.body;
+  if (turma_id === null) {
+    // Remove aluno de qualquer turma
+    db.query('DELETE FROM turma_alunos WHERE aluno_id = ?', [req.params.id], (err) => {
+      if (err) return res.status(500).json({ message: 'Erro ao remover aluno da turma' });
+      res.json({ message: 'Aluno removido de todas as turmas' });
+    });
+  } else {
+    // Atualiza turma do aluno
+    db.query('INSERT INTO turma_alunos (turma_id, aluno_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE turma_id = ?', [turma_id, req.params.id, turma_id], (err) => {
+      if (err) return res.status(500).json({ message: 'Erro ao atualizar turma do aluno' });
+      res.json({ message: 'Turma do aluno atualizada' });
+    });
+  }
 });
 
 // Comunicados
@@ -545,6 +555,60 @@ app.get('/setup-avatar-columns', (req, res) => {
       const msg1 = err1 ? err1.message : 'OK';
       const msg2 = err2 ? err2.message : 'OK';
       res.json({ success: true, alunos: msg1, docentes: msg2 });
+    });
+  });
+});
+
+// Endpoint para criar tabela turma_alunos
+app.get('/setup-turma-alunos', (req, res) => {
+  const createTableQuery = `
+    CREATE TABLE IF NOT EXISTS turma_alunos (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      turma_id INT NOT NULL,
+      aluno_id INT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (turma_id) REFERENCES turmas(id) ON DELETE CASCADE,
+      FOREIGN KEY (aluno_id) REFERENCES alunos(id) ON DELETE CASCADE,
+      UNIQUE KEY unique_aluno_turma (aluno_id)
+    )
+  `;
+  
+  db.query(createTableQuery, (err) => {
+    if (err) {
+      return res.status(500).json({ success: false, error: err.message });
+    }
+    res.json({ success: true, message: 'Tabela turma_alunos criada/verificada com sucesso' });
+  });
+});
+
+// Endpoint para limpar alunos órfãos (vinculados a turmas que não existem)
+app.get('/limpar-alunos-orfaos', (req, res) => {
+  const query = `
+    DELETE ta FROM turma_alunos ta
+    LEFT JOIN turmas t ON ta.turma_id = t.id
+    WHERE t.id IS NULL
+  `;
+  
+  db.query(query, (err, result) => {
+    if (err) {
+      return res.status(500).json({ success: false, error: err.message });
+    }
+    res.json({ 
+      success: true, 
+      message: `${result.affectedRows} alunos órfãos removidos com sucesso` 
+    });
+  });
+});
+
+// Endpoint alternativo para limpar TODOS os vínculos de turma_alunos
+app.get('/reset-turma-alunos', (req, res) => {
+  db.query('DELETE FROM turma_alunos', (err, result) => {
+    if (err) {
+      return res.status(500).json({ success: false, error: err.message });
+    }
+    res.json({ 
+      success: true, 
+      message: `Todos os vínculos removidos: ${result.affectedRows} registros` 
     });
   });
 });
