@@ -51,7 +51,21 @@ ion-toolbar {
   margin-bottom: 20px;
 }
  
-.botao-Aluno,
+.botao-Aluno {
+  flex: 1; /* faz os dois terem o mesmo tamanho */
+  max-width: 120px; /* limite para não ficarem muito largos */
+  background: #f4cba1;
+  padding: 6px 0;
+  border-radius: 8px;
+  border: 1px solid black;
+  font-weight: bold;
+  color: #4d4035;
+  cursor: pointer;
+  font-size: 16px; /* menor que antes */
+  text-align: center;
+
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.6), inset 0 0 10px rgb(255, 255, 255);
+}
 .botao-Professor {
   flex: 1; /* faz os dois terem o mesmo tamanho */
   max-width: 120px; /* limite para não ficarem muito largos */
@@ -64,11 +78,8 @@ ion-toolbar {
   cursor: pointer;
   font-size: 16px; /* menor que antes */
   text-align: center;
- 
-  /* sombra interna + externa */
-  box-shadow:
-    0 0 4px rgba(0,0,0,0.6),
-    inset 0 0 10px rgba(0,0,0,0.4);
+
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(0, 0, 0, 0.4);
 }
  
 .botao-Aluno:hover,
