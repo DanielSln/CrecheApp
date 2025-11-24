@@ -81,12 +81,30 @@ export class StatusPage implements OnInit {
   ngOnInit() {
     this.loadProfileImage();
     this.calcularPorcentagens();
+    
+    // Escuta mudanças no avatar
+    this.avatarService.getAvatar().subscribe((avatar) => {
+      if (avatar !== 'assets/img/avatar.jpg') {
+        this.profileImage = avatar;
+      }
+    });
   }
 
   private loadProfileImage() {
-    this.avatarService.getAvatar().subscribe((avatar) => {
-      this.profileImage = avatar;
-    });
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      this.http.get<any>(`${this.apiUrl}/alunos`).subscribe({
+        next: (alunos) => {
+          const aluno = alunos.find((a: any) => a.id == userId);
+          this.profileImage = aluno?.avatar || 'assets/img/avatar.jpg';
+        },
+        error: () => {
+          this.profileImage = 'assets/img/avatar.jpg';
+        }
+      });
+    } else {
+      this.profileImage = 'assets/img/avatar.jpg';
+    }
   }
 
   calcularPorcentagens() {
