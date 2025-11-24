@@ -3,7 +3,8 @@ ion-toolbar {
 }
 
 ion-menu-button {
-  color: #000;
+  --color: #000;
+  font-size: 24px;
 }
 
 ion-toolbar ion-title {

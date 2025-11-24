@@ -35,3 +35,40 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+/* Fix para resquício preto no menu-button */
+ion-menu-button {
+  --color: #000000 !important;
+  --background: transparent !important;
+  background: transparent !important;
+  
+  /* Remove qualquer sombra ou borda que possa causar o resquício */
+  --box-shadow: none !important;
+  --border: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  
+  /* Garante que o ícone interno use a cor correta */
+  ion-icon {
+    color: #000000 !important;
+    --color: #000000 !important;
+    background: transparent !important;
+  }
+  
+  /* Remove qualquer pseudo-elemento que possa estar causando o resquício */
+  &::before,
+  &::after {
+    display: none !important;
+  }
+  
+  /* Remove qualquer ripple effect que possa estar causando o problema */
+  .button-native {
+    background: transparent !important;
+    box-shadow: none !important;
+    
+    &::before,
+    &::after {
+      display: none !important;
+    }
+  }
+}
