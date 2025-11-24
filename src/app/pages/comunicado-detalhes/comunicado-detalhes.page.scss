@@ -8,6 +8,10 @@ ion-toolbar ion-title {
   margin-left: 45px;
   font-family: "Mango AC", sans-serif;
   font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 120px);
 }
 
 ion-content {
@@ -21,6 +25,9 @@ ion-back-button {
 
 .comunicado-detalhes {
   padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .comunicado-header {
@@ -104,6 +111,8 @@ ion-back-button {
   border: 1px solid #C6C6C8;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   line-height: 1.6;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .comunicado-content p {
@@ -113,9 +122,30 @@ ion-back-button {
   font-family: system-ui, sans-serif;
 }
 
+/* Tablets e telas médias */
+@media (max-width: 768px) {
+  .comunicado-detalhes {
+    padding: 16px;
+    max-width: 100%;
+  }
+  
+  .comunicado-header {
+    padding: 18px;
+  }
+  
+  .comunicado-info h1 {
+    font-size: 22px;
+  }
+  
+  .comunicado-content {
+    padding: 22px;
+  }
+}
+
+/* Smartphones */
 @media (max-width: 480px) {
   .comunicado-detalhes {
-    padding: 15px;
+    padding: 12px;
   }
   
   .comunicado-header {
@@ -134,11 +164,34 @@ ion-back-button {
   }
   
   .comunicado-content {
-    padding: 20px;
+    padding: 18px;
   }
   
   .comunicado-content p {
     font-size: 15px;
+  }
+}
+
+/* Telas muito pequenas */
+@media (max-width: 320px) {
+  .comunicado-detalhes {
+    padding: 8px;
+  }
+  
+  .comunicado-header {
+    padding: 12px;
+  }
+  
+  .comunicado-info h1 {
+    font-size: 18px;
+  }
+  
+  .comunicado-content {
+    padding: 15px;
+  }
+  
+  .comunicado-content p {
+    font-size: 14px;
   }
 }
 
