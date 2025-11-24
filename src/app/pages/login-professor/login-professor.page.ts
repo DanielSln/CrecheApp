@@ -104,7 +104,6 @@ export class LoginProfessorPage implements OnInit {
               localStorage.removeItem('rememberMe');
             }
 
-            await this.mostrarAlerta('Sucesso', 'Login realizado com sucesso!');
             const termosAceitos = localStorage.getItem('termosAceitosDocente');
             if (termosAceitos === 'true') {
               this.router.navigateByUrl('/menu-docente');

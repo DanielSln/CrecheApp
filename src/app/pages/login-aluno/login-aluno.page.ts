@@ -109,7 +109,6 @@ export class LoginAlunoPage implements OnInit {
             localStorage.removeItem('rememberMeAluno');
           }
 
-          await this.mostrarAlerta('Sucesso', 'Login realizado com sucesso!');
           const termosAceitos = localStorage.getItem('termosAceitos');
           if (termosAceitos === 'true') {
             this.router.navigateByUrl('/menu');
