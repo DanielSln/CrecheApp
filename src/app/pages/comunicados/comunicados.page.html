@@ -31,7 +31,7 @@
           >
             {{ comunicado.type === 'urgent' ? 'URGENTE' : 'INFO' }}
           </span>
-          <span class="comunicado-date">{{ formatarData(comunicado.data) || comunicado.date || 'Data não informada' }}</span>
+          <span class="comunicado-date">{{ formatarData(comunicado.created_at || comunicado.data) }}</span>
         </div>
       </div>
     </ng-container>
@@ -39,8 +39,8 @@
     <ng-template #vazio>
       <div class="empty-state">
         <div class="empty-icon">📝</div>
-        <h3>Nenhum comunicado enviado</h3>
-        <p>Você ainda não enviou nenhum comunicado.</p>
+        <h3>Nenhum comunicado recebido</h3>
+        <p>Ainda não há comunicados para exibir.</p>
       </div>
     </ng-template>
 
@@ -64,7 +64,7 @@
           <div class="comunicado-info-modal">
             <h3 class="comunicado-titulo-modal">{{ comunicadoSelecionado.title || 'Sem título' }}</h3>
             <div class="comunicado-meta-modal">
-              <span class="comunicado-data-modal">{{ formatarData(comunicadoSelecionado.data) || comunicadoSelecionado.date || 'Data não informada' }}</span>
+              <span class="comunicado-data-modal">{{ formatarData(comunicadoSelecionado.created_at || comunicadoSelecionado.data) }}</span>
               <span 
                 class="comunicado-badge-modal" 
                 [ngClass]="comunicadoSelecionado.type" 

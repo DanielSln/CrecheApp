@@ -66,7 +66,7 @@ export class ComunicadosPage implements OnInit {
             preview: c.message?.substring(0, 80) + '...',
             emoji: c.icon || '📝',
             content: c.message,
-            data: c.data || c.data_evento || c.created_at,
+            data: c.data || c.created_at,
             created_at: c.created_at
           }));
       })
@@ -111,6 +111,13 @@ export class ComunicadosPage implements OnInit {
   formatarData(data: string): string {
     if (!data) return '';
     const date = new Date(data);
+    const now = new Date();
+    const diffTime = now.getTime() - date.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) return 'Hoje';
+    if (diffDays === 1) return 'Ontem';
+    if (diffDays < 7) return `${diffDays} dias atrás`;
     return date.toLocaleDateString('pt-BR');
   }
 
