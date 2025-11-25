@@ -123,8 +123,8 @@
           </div>
         </div>
         <div class="modal-actions">
-          <button class="btn btn-secondary" (click)="fecharModal()">Cancelar</button>
           <button class="btn btn-primary" (click)="salvarNomeTurma()">Salvar Alterações</button>
+          <button class="btn btn-secondary" (click)="fecharModal()">Cancelar</button>
         </div>
       </div>
     </div>
@@ -142,8 +142,8 @@
           <p class="delete-message">Você realmente deseja apagar esta turma?</p>
         </div>
         <div class="modal-actions">
-          <button class="btn btn-secondary" (click)="fecharModalExcluir()">Cancelar</button>
           <button class="btn btn-danger" (click)="confirmarExcluirTurma()">Excluir</button>
+          <button class="btn btn-secondary" (click)="fecharModalExcluir()">Cancelar</button>
         </div>
       </div>
     </div>
@@ -197,8 +197,8 @@
           <p class="delete-message">Você realmente deseja tirá-lo da turma?</p>
         </div>
         <div class="modal-actions">
-          <button class="btn btn-secondary" (click)="fecharModalRemover()">Cancelar</button>
           <button class="btn btn-danger" (click)="confirmarRemoverAluno()">Remover</button>
+          <button class="btn btn-secondary" (click)="fecharModalRemover()">Cancelar</button>
         </div>
       </div>
     </div>
@@ -223,8 +223,8 @@
           </div>
         </div>
         <div class="modal-actions">
-          <button class="btn btn-secondary" (click)="fecharAddTurmaModal()">Cancelar</button>
           <button class="btn btn-primary" (click)="salvarNovaTurma()">Adicionar</button>
+          <button class="btn btn-secondary" (click)="fecharAddTurmaModal()">Cancelar</button>
         </div>
       </div>
     </div>
@@ -252,7 +252,7 @@
             <div class="form-group">
               <label>Alimentação</label>
               <select [(ngModel)]="alunoSelecionado.alimentacao" class="form-select">
-                <option value="">— Selecione —</option>
+                <option value="" disabled selected>— Selecione —</option>
                 <option value="Ótimo">Ótimo</option>
                 <option value="Bom">Bom</option>
                 <option value="Regular">Regular</option>
@@ -263,7 +263,7 @@
             <div class="form-group">
               <label>Comportamento</label>
               <select [(ngModel)]="alunoSelecionado.comportamento" class="form-select">
-                <option value="">— Selecione —</option>
+                <option value="" disabled selected>— Selecione —</option>
                 <option value="Ótimo">Ótimo</option>
                 <option value="Bom">Bom</option>
                 <option value="Regular">Regular</option>
@@ -274,7 +274,7 @@
             <div class="form-group">
               <label>Presença</label>
               <select [(ngModel)]="alunoSelecionado.presenca" class="form-select">
-                <option value="">— Selecione —</option>
+                <option value="" disabled selected>— Selecione —</option>
                 <option value="Presente">Presente</option>
                 <option value="Ausente">Ausente</option>
               </select>
@@ -282,8 +282,8 @@
           </div>
         </div>
         <div class="modal-actions">
+          <button class="btn btn-success" (click)="salvarRegistroAluno()">Salvar Registro</button>
           <button class="btn btn-secondary" (click)="fecharAlunoModal()">Cancelar</button>
-          <button class="btn btn-primary" (click)="salvarRegistroAluno()">Salvar Registro</button>
         </div>
       </div>
     </div>
