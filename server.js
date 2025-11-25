@@ -363,12 +363,19 @@ app.put('/alunos/:id/turma', (req, res) => {
 
 // Comunicados
 app.get('/comunicados', (req, res) => {
-  const { user_id, user_type } = req.query;
+  const { user_id, user_type, docente_id } = req.query;
   
-  if (user_id && user_type) {
+  if (docente_id) {
+    // Buscar comunicados de um docente específico
+    const sql = 'SELECT *, data_evento as data FROM comunicados WHERE docente_id = ? ORDER BY created_at DESC';
+    db.query(sql, [docente_id], (err, result) => {
+      if (err) return res.status(500).json({ message: 'Erro ao buscar comunicados' });
+      res.json(result);
+    });
+  } else if (user_id && user_type) {
     // Buscar comunicados filtrados por destinatário
     const sql = `
-      SELECT DISTINCT c.* FROM comunicados c
+      SELECT DISTINCT c.*, c.data_evento as data FROM comunicados c
       INNER JOIN comunicado_destinatarios cd ON c.id = cd.comunicado_id
       WHERE cd.tipo = 'geral' 
          OR (cd.tipo = ? AND cd.destinatario_id = ?)
@@ -380,7 +387,7 @@ app.get('/comunicados', (req, res) => {
     });
   } else {
     // Buscar todos os comunicados
-    db.query('SELECT * FROM comunicados ORDER BY created_at DESC', (err, result) => {
+    db.query('SELECT *, data_evento as data FROM comunicados ORDER BY created_at DESC', (err, result) => {
       if (err) return res.status(500).json({ message: 'Erro ao buscar comunicados' });
       res.json(result);
     });
@@ -396,7 +403,7 @@ app.get('/comunicados/visiveis', (req, res) => {
   }
   
   const sql = `
-    SELECT DISTINCT c.* FROM comunicados c
+    SELECT DISTINCT c.*, c.data_evento as data FROM comunicados c
     LEFT JOIN comunicado_destinatarios cd ON c.id = cd.comunicado_id
     LEFT JOIN comunicado_visibilidade cv ON c.id = cv.comunicado_id AND cv.user_type = ? AND cv.user_id = ?
     WHERE 
@@ -413,14 +420,14 @@ app.get('/comunicados/visiveis', (req, res) => {
 });
 
 app.post('/comunicados', (req, res) => {
-  const { docente_id, title, subject, message, destinatarios, cc, bcc, icon, tipo } = req.body;
+  const { docente_id, title, subject, message, destinatarios, cc, bcc, icon, tipo, data } = req.body;
   
   if (!docente_id || !title || !message) {
     return res.status(400).json({ message: 'Campos obrigatórios: docente_id, title, message' });
   }
   
-  const sql = 'INSERT INTO comunicados (docente_id, title, subject, message, destinatarios, cc, bcc, icon, tipo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-  db.query(sql, [docente_id, title, subject || title, message, destinatarios || '', cc || '', bcc || '', icon || '📝', tipo || 'default'], (err, result) => {
+  const sql = 'INSERT INTO comunicados (docente_id, title, subject, message, destinatarios, cc, bcc, icon, tipo, data_evento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  db.query(sql, [docente_id, title, subject || title, message, destinatarios || '', cc || '', bcc || '', icon || '📝', tipo || 'default', data || null], (err, result) => {
     if (err) {
       console.error('Erro ao criar comunicado:', err);
       return res.status(500).json({ message: 'Erro ao criar comunicado', error: err.message });
@@ -431,11 +438,14 @@ app.post('/comunicados', (req, res) => {
 });
 
 app.put('/comunicados/:id', (req, res) => {
-  const { title, subject, message, destinatarios, cc, bcc, icon } = req.body;
-  const sql = 'UPDATE comunicados SET title = ?, subject = ?, message = ?, destinatarios = ?, cc = ?, bcc = ?, icon = ? WHERE id = ?';
-  db.query(sql, [title, subject, message, destinatarios, cc, bcc, icon, req.params.id], (err) => {
-    if (err) return res.status(500).json({ message: 'Erro ao atualizar comunicado' });
-    res.json({ message: 'Comunicado atualizado' });
+  const { title, subject, message, destinatarios, cc, bcc, icon, data } = req.body;
+  const sql = 'UPDATE comunicados SET title = ?, subject = ?, message = ?, destinatarios = ?, cc = ?, bcc = ?, icon = ?, data_evento = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?';
+  db.query(sql, [title, subject, message, destinatarios, cc, bcc, icon, data || null, req.params.id], (err) => {
+    if (err) {
+      console.error('Erro ao atualizar comunicado:', err);
+      return res.status(500).json({ message: 'Erro ao atualizar comunicado', error: err.message });
+    }
+    res.json({ message: 'Comunicado atualizado com sucesso' });
   });
 });
 
@@ -618,6 +628,7 @@ app.get('/setup-visibilidade', (req, res) => {
   const queries = [
     'ALTER TABLE comunicados ADD COLUMN IF NOT EXISTS tipo_destinatario ENUM(\'geral\', \'individual\', \'grupo\') DEFAULT \'geral\'',
     'ALTER TABLE comunicados ADD COLUMN IF NOT EXISTS visibilidade ENUM(\'publico\', \'privado\') DEFAULT \'publico\'',
+    'ALTER TABLE comunicados ADD COLUMN IF NOT EXISTS data_evento DATE NULL',
     `CREATE TABLE IF NOT EXISTS comunicado_visibilidade (
       id INT AUTO_INCREMENT PRIMARY KEY,
       comunicado_id INT NOT NULL,

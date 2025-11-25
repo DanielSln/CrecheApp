@@ -6,7 +6,7 @@
       </ion-button>
     </ion-buttons>
     
-    <ion-title class="compose-title">Novo Comunicado</ion-title>
+    <ion-title class="compose-title">{{ pageTitle }}</ion-title>
     
     <ion-buttons slot="end">
       <ion-button class="action-btn" (click)="mostrarOpcoes()">
@@ -155,7 +155,7 @@
         (click)="enviarComunicado()"
       >
         <ion-icon name="send" slot="start"></ion-icon>
-        Enviar Comunicado
+        {{ isEditing ? 'Atualizar Comunicado' : 'Enviar Comunicado' }}
       </ion-button>
       
       <div class="secondary-actions">

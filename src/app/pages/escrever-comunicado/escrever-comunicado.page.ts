@@ -48,6 +48,8 @@ export class EscreverComunicadoPage implements OnInit {
   alunos: any[] = [];
   docentes: any[] = [];
   nomeDocente: string = '';
+  isEditing = false;
+  pageTitle = 'Novo Comunicado';
   
   comunicado: any = {
     to: '',
@@ -75,6 +77,12 @@ export class EscreverComunicadoPage implements OnInit {
     this.carregarComunicadoEditar();
     this.carregarAlunos();
     this.carregarDocentes();
+    this.updatePageTitle();
+  }
+  
+  updatePageTitle() {
+    this.isEditing = !!this.comunicado.id;
+    this.pageTitle = this.isEditing ? 'Editar Comunicado' : 'Novo Comunicado';
   }
 
   carregarAlunos() {
@@ -162,15 +170,22 @@ export class EscreverComunicadoPage implements OnInit {
       try {
         const comunicado = JSON.parse(comunicadoEditar);
         this.comunicado = {
-          to: comunicado.to || '',
+          id: comunicado.id,
+          to: comunicado.destinatarios || '',
           cc: comunicado.cc || '',
           bcc: comunicado.bcc || '',
           subject: comunicado.subject || comunicado.title || '',
           message: comunicado.message || comunicado.content || '',
-          icon: comunicado.icon || comunicado.emoji || '📝'
+          icon: comunicado.icon || comunicado.emoji || '📝',
+          data: comunicado.data || ''
         };
-        this.comunicado.id = comunicado.id;
+        
+        // Mostrar campos CC/BCC se tiverem conteúdo
+        if (this.comunicado.cc) this.showCc = true;
+        if (this.comunicado.bcc) this.showBcc = true;
+        
         sessionStorage.removeItem('comunicadoEditar');
+        this.updatePageTitle();
       } catch (error) {
         console.error('Erro ao carregar comunicado para editar:', error);
       }
@@ -336,9 +351,16 @@ export class EscreverComunicadoPage implements OnInit {
 
     try {
       const docenteId = localStorage.getItem('userId') || '1';
+      const isEditing = !!this.comunicado.id;
+      
+      const url = isEditing 
+        ? `https://back-end-pokecreche-production.up.railway.app/comunicados/${this.comunicado.id}`
+        : 'https://back-end-pokecreche-production.up.railway.app/comunicados';
+      
+      const method = isEditing ? 'PUT' : 'POST';
 
-      const response = await fetch('https://back-end-pokecreche-production.up.railway.app/comunicados', {
-        method: 'POST',
+      const response = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           docente_id: docenteId,
@@ -355,12 +377,12 @@ export class EscreverComunicadoPage implements OnInit {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ message: 'Erro desconhecido' }));
-        throw new Error(errorData.message || 'Erro ao enviar comunicado');
+        throw new Error(errorData.message || `Erro ao ${isEditing ? 'atualizar' : 'enviar'} comunicado`);
       }
       
       const result = await response.json();
       
-      // Limpar formulário após envio
+      // Limpar formulário após envio/atualização
       this.comunicado = {
         to: '',
         cc: '',
@@ -374,16 +396,16 @@ export class EscreverComunicadoPage implements OnInit {
       this.showCc = false;
       this.showBcc = false;
       
-      this.mostrarMensagem('Sucesso', 'Comunicado enviado com sucesso!');
+      this.mostrarMensagem('Sucesso', `Comunicado ${isEditing ? 'atualizado' : 'enviado'} com sucesso!`);
       
-      // Navegar de volta para comunicados após envio
+      // Navegar de volta para comunicados após envio/atualização
       setTimeout(() => {
         this.router.navigateByUrl('/comunicados-docente');
       }, 1500);
       
     } catch (error: any) {
-      console.error('Erro ao enviar comunicado:', error);
-      this.mostrarMensagem('Erro', error.message || 'Não foi possível enviar o comunicado.');
+      console.error('Erro ao processar comunicado:', error);
+      this.mostrarMensagem('Erro', error.message || 'Não foi possível processar o comunicado.');
     }
   }
 

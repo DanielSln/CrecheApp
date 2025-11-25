@@ -75,7 +75,8 @@ export class ComunicadosDocentePage implements OnInit {
           ...c,
           preview: c.message?.substring(0, 100) + (c.message?.length > 100 ? '...' : ''),
           emoji: c.icon,
-          content: c.message
+          content: c.message,
+          data: c.data || c.data_evento
         }));
         console.log('Total de comunicados após carregar:', this.comunicados.length);
       })
@@ -114,11 +115,25 @@ export class ComunicadosDocentePage implements OnInit {
     this.comunicadoSelecionado = null;
   }
 
-  // Editar comunicado (funcionalidade futura)
+  // Editar comunicado
   editarComunicado() {
     console.log('Editando comunicado:', this.comunicadoSelecionado.id);
-    alert('Funcionalidade de edição em desenvolvimento!');
+    
+    // Armazenar dados do comunicado para edição
+    sessionStorage.setItem('comunicadoEditar', JSON.stringify({
+      id: this.comunicadoSelecionado.id,
+      title: this.comunicadoSelecionado.title,
+      subject: this.comunicadoSelecionado.subject || this.comunicadoSelecionado.title,
+      message: this.comunicadoSelecionado.message || this.comunicadoSelecionado.content,
+      destinatarios: this.comunicadoSelecionado.destinatarios,
+      cc: this.comunicadoSelecionado.cc,
+      bcc: this.comunicadoSelecionado.bcc,
+      icon: this.comunicadoSelecionado.icon || this.comunicadoSelecionado.emoji,
+      data: this.comunicadoSelecionado.data
+    }));
+    
     this.fecharDetalhes();
+    this.router.navigateByUrl('/escrever-comunicado');
   }
 
   formatarData(data: string): string {
