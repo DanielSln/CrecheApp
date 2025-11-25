@@ -134,17 +134,7 @@ ion-button {
   position: relative;
   overflow: hidden;
   
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #c4680b, #a35207);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
+
 }
 
 .comunicado-card:hover {
@@ -153,10 +143,6 @@ ion-button {
     0 16px 48px rgba(196, 104, 11, 0.25),
     0 4px 16px rgba(0, 0, 0, 0.1);
   background: #fafafa;
-  
-  &::before {
-    opacity: 1;
-  }
 }
 
 /* ===== AVATAR DO COMUNICADO ===== */
