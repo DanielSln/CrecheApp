@@ -50,8 +50,6 @@
 }
 
 /* Remove foco de todos os botões */
-ion-button:focus,
-ion-button *:focus,
 ion-menu-button:focus,
 ion-menu-button *:focus,
 button:focus {
@@ -163,4 +161,30 @@ ion-button {
 
 .button-native::after {
   display: none !important;
+}
+
+/* ===== RESPONSIVIDADE PARA MENUS ===== */
+.menu-container {
+  padding: clamp(15px, 3vw, 30px);
+}
+
+.botoes-menu {
+  display: grid;
+  gap: clamp(12px, 2vw, 20px);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .botoes-menu {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .botoes-menu {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 800px;
+  }
 }

@@ -191,3 +191,44 @@ ion-item {
     background: transparent !important;
     }
 }
+
+/* ===== RESPONSIVIDADE LOGIN ===== */
+@media (max-width: 480px) {
+  .balao-principal {
+    width: 90%;
+    max-width: 300px;
+    padding: 20px;
+  }
+  
+  .balao-principal h1 {
+    font-size: 24px;
+  }
+  
+  .balao-topo {
+    gap: 10px;
+  }
+  
+  .botao-Aluno,
+  .botao-Professor {
+    max-width: 100%;
+    padding: 10px 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .balao-principal {
+    width: 400px;
+    padding: 30px 40px;
+  }
+  
+  .balao-principal h1 {
+    font-size: 32px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .balao-principal {
+    width: 450px;
+    padding: 35px 45px;
+  }
+}
