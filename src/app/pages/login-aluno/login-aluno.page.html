@@ -7,7 +7,7 @@
 <ion-content [fullscreen]="true" class="background-content">
   <div id="container">
     <div class="balao-principal">
-      <h1>Login do Aluno</h1>
+      <h1 id="login-title" role="heading" aria-level="1">Login do Aluno</h1>
 
       <!-- Botões de seleção -->
       <div class="balao-topo">
@@ -15,6 +15,8 @@
           type="button"
           class="botao-Aluno"
           id="aluno-page"
+          aria-pressed="true"
+          aria-describedby="login-title"
           (click)="irParaLoginAluno()"
         >
           Aluno
@@ -24,6 +26,8 @@
           type="button"
           class="botao-Professor"
           id="professor-page"
+          aria-pressed="false"
+          aria-describedby="login-title"
           (click)="irParaLoginProfessor()"
         >
           Docente
@@ -32,44 +36,59 @@
 
       <!-- Formulário -->
       <div class="balao-interno">
-        <form>
+        <form role="form" aria-labelledby="login-title">
+          <label for="nome-aluno" class="sr-only">Nome do aluno</label>
           <input
             type="text"
             id="nome-aluno"
             name="nome"
             placeholder="Nome"
+            aria-label="Nome do aluno"
+            aria-required="true"
             [(ngModel)]="nome"
           />
+          <label for="cpf-aluno" class="sr-only">CPF do responsável</label>
           <input
             type="text"
             id="cpf-aluno"
             name="cpf"
             placeholder="CPF"
+            aria-label="CPF do responsável"
+            aria-required="true"
             [(ngModel)]="cpf"
           />
+          <label for="matricula-aluno" class="sr-only">Número da matrícula</label>
           <input
             type="text"
             id="matricula-aluno"
             name="matricula"
             placeholder="Nº Matrícula"
+            aria-label="Número da matrícula"
+            aria-required="true"
             [(ngModel)]="matricula"
           />
           <ion-item lines="none">
             <ion-checkbox
               [(ngModel)]="rememberMe"
               name="rememberMe"
+              aria-label="Lembrar dados de login"
             ></ion-checkbox>
             <ion-label>Lembrar-me</ion-label>
           </ion-item>
           <button
-            type="button"
+            type="submit"
             class="btn-submit"
             expand="block"
             (click)="irParaTermos()"
             [disabled]="isLoading"
+            [attr.aria-busy]="isLoading"
+            aria-describedby="login-status"
           >
-            {{ isLoading ? 'Carregando...' : 'Logar' }}
+            {{ isLoading ? 'Carregando...' : 'Login' }}
           </button>
+          <div id="login-status" class="sr-only" [attr.aria-live]="isLoading ? 'polite' : null">
+            {{ isLoading ? 'Processando login, aguarde...' : '' }}
+          </div>
 
         </form>
       </div>

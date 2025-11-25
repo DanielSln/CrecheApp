@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
   <meta charset="utf-8" />
-  <title>Ionic App</title>
+  <title>CrecheApp - Sistema de Gestão Escolar</title>
+  <meta name="description" content="Sistema de gestão escolar para creches - comunicação entre pais e professores" />
 
   <base href="/" />
 
@@ -17,21 +18,18 @@
   <!-- add to homescreen for ios -->
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 </head>
 
 <body>
   <app-root></app-root>
   <script>
-    // Suprime warnings de acessibilidade do Angular/Ionic em desenvolvimento
-    const originalConsoleWarn = console.warn;
-    console.warn = function(...args) {
-      const message = args.join(' ');
-      if (message.includes('aria-hidden') || message.includes('NG0912')) {
-        return; // Suprime estes warnings específicos
-      }
-      originalConsoleWarn.apply(console, args);
-    };
+    // Carrega QRCode de forma assíncrona
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
+    script.async = true;
+    document.head.appendChild(script);
   </script>
 </body>
 

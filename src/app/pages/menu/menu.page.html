@@ -10,18 +10,20 @@
 <ion-content [fullscreen]="true">
   <div class="menu-container">
     <div class="welcome-section">
-      <h2>Menu Principal</h2>
-      <p>Escolha uma opção abaixo</p>
+      <h2 id="menu-title" role="heading" aria-level="1">Menu Principal</h2>
+      <p id="menu-description">Escolha uma opção abaixo para navegar</p>
     </div>
 
-    <div class="botoes-menu">
+    <nav class="botoes-menu" role="navigation" aria-labelledby="menu-title" aria-describedby="menu-description">
       <ion-button
         class="menu-btn"
         id="Filho"
         expand="block"
         (click)="irParaFilho()"
+        aria-label="Acessar informações do filho"
       >
-        👶 Filho(a)
+        <ion-icon name="person" slot="start" aria-hidden="true"></ion-icon>
+        Filho(a)
       </ion-button>
 
       <ion-button
@@ -29,8 +31,10 @@
         id="Calendario"
         expand="block"
         (click)="irParaCalendario()"
+        aria-label="Visualizar calendário escolar"
       >
-        📅 Calendário
+        <ion-icon name="calendar" slot="start" aria-hidden="true"></ion-icon>
+        Calendário
       </ion-button>
 
       <ion-button
@@ -38,8 +42,10 @@
         id="Status"
         expand="block"
         (click)="irParaStatus()"
+        aria-label="Verificar status da criança"
       >
-        📊 Status
+        <ion-icon name="stats-chart" slot="start" aria-hidden="true"></ion-icon>
+        Status
       </ion-button>
 
       <ion-button 
@@ -47,11 +53,13 @@
         id="Comunicados" 
         expand="block"
         (click)="irParaComunicados()"
+        aria-label="Ler comunicados da escola"
         >
-        📧 Comunicados
+        <ion-icon name="mail" slot="start" aria-hidden="true"></ion-icon>
+        Comunicados
       </ion-button>
 
-    </div>
+    </nav>
     
   </div>
 </ion-content>
