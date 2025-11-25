@@ -657,7 +657,38 @@ app.get('/setup-visibilidade', (req, res) => {
   });
 });
 
+// Função para limpar comunicados antigos (3 semanas)
+function limparComunicadosAntigos() {
+  const sql = 'DELETE FROM comunicados WHERE created_at < DATE_SUB(NOW(), INTERVAL 21 DAY)';
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error('Erro ao limpar comunicados antigos:', err);
+    } else {
+      console.log(`${result.affectedRows} comunicados antigos removidos`);
+    }
+  });
+}
+
+// Executar limpeza a cada 24 horas
+setInterval(limparComunicadosAntigos, 24 * 60 * 60 * 1000);
+
+// Endpoint manual para limpeza
+app.get('/limpar-comunicados-antigos', (req, res) => {
+  const sql = 'DELETE FROM comunicados WHERE created_at < DATE_SUB(NOW(), INTERVAL 21 DAY)';
+  db.query(sql, (err, result) => {
+    if (err) {
+      return res.status(500).json({ success: false, error: err.message });
+    }
+    res.json({ 
+      success: true, 
+      message: `${result.affectedRows} comunicados antigos removidos` 
+    });
+  });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
+  // Executar limpeza na inicialização
+  limparComunicadosAntigos();
 });
