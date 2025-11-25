@@ -71,6 +71,27 @@ export class TurmasPage implements OnInit {
   ngOnInit() {
     this.isDocente = localStorage.getItem('userType') === 'docente';
     this.carregarTurmas();
+    
+    // Otimização para dispositivos móveis
+    this.setupMobileOptimizations();
+  }
+  
+  private setupMobileOptimizations() {
+    // Detecta se é dispositivo móvel
+    const isMobile = window.innerWidth <= 768;
+    
+    if (isMobile) {
+      // Adiciona classe para otimizações móveis
+      document.body.classList.add('mobile-device');
+      
+      // Otimiza scroll em modais
+      document.addEventListener('touchmove', (e) => {
+        if (this.showAlunoModal || this.showEditModal || this.showDeleteModal || 
+            this.showAddAlunoModal || this.showAddTurmaModal || this.showRemoveModal) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+    }
   }
 
   carregarTurmas() {
@@ -104,13 +125,17 @@ export class TurmasPage implements OnInit {
 
 
   filteredTurmas() {
-    const q = this.query?.trim();
+    const q = this.query?.trim().toLowerCase();
     if (!q) return this.turmas;
-    return this.turmas.filter((t) => t.nome.includes(q));
+    return this.turmas.filter((t) => 
+      t.nome.toLowerCase().includes(q) || 
+      t.ano.toString().includes(q)
+    );
   }
 
   selectTurma(t: any) {
     this.selectedTurma = t;
+    
     this.http.get<any[]>(`${this.apiUrl}/turmas/${t.id}/alunos`).subscribe({
       next: (alunos) => {
         this.studentsByTurma[t.id] = alunos.map((aluno) => ({
@@ -121,10 +146,15 @@ export class TurmasPage implements OnInit {
           falta: false,
           contador: '0 / 5'
         }));
-        this.studentsByTurma[t.id].forEach(aluno => this.carregarContadorAluno(aluno));
+        
+        // Carrega contadores de forma assíncrona para melhor performance
+        this.studentsByTurma[t.id].forEach((aluno, index) => {
+          setTimeout(() => this.carregarContadorAluno(aluno), index * 50);
+        });
       },
       error: () => {
         this.studentsByTurma[t.id] = [];
+        console.error('Erro ao carregar alunos da turma');
       }
     });
   }
@@ -158,6 +188,17 @@ export class TurmasPage implements OnInit {
     this.alunoSelecionado = { ...student };
     this.carregarContadorRegistros(student.id);
     this.showAlunoModal = true;
+    
+    // Adiciona classe para otimizações móveis
+    document.body.classList.add('modal-open');
+    
+    // Foca no primeiro elemento do modal para acessibilidade
+    setTimeout(() => {
+      const firstInput = document.querySelector('.modal-content select, .modal-content input') as HTMLElement;
+      if (firstInput) {
+        firstInput.focus();
+      }
+    }, 100);
   }
 
   carregarContadorRegistros(alunoId: number) {
@@ -179,6 +220,9 @@ export class TurmasPage implements OnInit {
   fecharAlunoModal() {
     this.showAlunoModal = false;
     this.alunoSelecionado = null;
+    
+    // Remove classe de otimização móvel
+    document.body.classList.remove('modal-open');
   }
 
   salvarRegistroAluno() {
@@ -212,11 +256,13 @@ export class TurmasPage implements OnInit {
   editarNomeTurma() {
     this.novoNomeTurma = this.selectedTurma.nome;
     this.showEditModal = true;
+    document.body.classList.add('modal-open');
   }
 
   fecharModal() {
     this.showEditModal = false;
     this.novoNomeTurma = '';
+    document.body.classList.remove('modal-open');
   }
 
   salvarNomeTurma() {
@@ -250,10 +296,12 @@ export class TurmasPage implements OnInit {
 
   abrirModalExcluir() {
     this.showDeleteModal = true;
+    document.body.classList.add('modal-open');
   }
 
   fecharModalExcluir() {
     this.showDeleteModal = false;
+    document.body.classList.remove('modal-open');
   }
 
   confirmarExcluirTurma() {
@@ -277,11 +325,13 @@ export class TurmasPage implements OnInit {
   abrirModalRemover(aluno: any) {
     this.alunoParaRemover = aluno;
     this.showRemoveModal = true;
+    document.body.classList.add('modal-open');
   }
 
   fecharModalRemover() {
     this.showRemoveModal = false;
     this.alunoParaRemover = null;
+    document.body.classList.remove('modal-open');
   }
 
   confirmarRemoverAluno() {
@@ -300,10 +350,8 @@ export class TurmasPage implements OnInit {
   }
 
   abrirAdicionarAluno() {
-    console.log('Buscando alunos...');
     this.http.get<any[]>(`${this.apiUrl}/alunos`).subscribe({
       next: (alunos) => {
-        console.log('Alunos recebidos:', alunos);
         const alunosNaTurma = this.studentsByTurma[this.selectedTurma.id] || [];
         
         // Filtra apenas alunos que não estão na turma atual
@@ -311,13 +359,14 @@ export class TurmasPage implements OnInit {
           return !alunosNaTurma.find(s => s.id === a.id);
         });
         
-        console.log('Alunos disponíveis:', this.alunosDisponiveis);
         this.showAddAlunoModal = true;
+        document.body.classList.add('modal-open');
       },
       error: (err) => {
         console.error('Erro ao buscar alunos:', err);
         this.alunosDisponiveis = [];
         this.showAddAlunoModal = true;
+        document.body.classList.add('modal-open');
       }
     });
   }
@@ -326,6 +375,7 @@ export class TurmasPage implements OnInit {
     this.showAddAlunoModal = false;
     this.alunosDisponiveis = [];
     this.searchAluno = '';
+    document.body.classList.remove('modal-open');
   }
 
   filteredAlunosDisponiveis() {
@@ -339,12 +389,14 @@ export class TurmasPage implements OnInit {
 
   abrirAdicionarTurma() {
     this.showAddTurmaModal = true;
+    document.body.classList.add('modal-open');
   }
 
   fecharAddTurmaModal() {
     this.showAddTurmaModal = false;
     this.novaTurmaNome = '';
     this.novaTurmaAno = '';
+    document.body.classList.remove('modal-open');
   }
 
   salvarNovaTurma() {

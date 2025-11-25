@@ -371,9 +371,10 @@ ion-menu-button {
   padding: 18px;
   gap: 12px;
   background: #8d8f84;
-  border: 2px groove #000000;
+  border: 2px solid #000000;
   border-radius: 16px;
   min-height: 160px;
+  cursor: pointer;
 }
 
 .contador-card {
@@ -456,6 +457,8 @@ ion-menu-button {
   overflow-y: auto;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   border: 2px solid #000000;
+  margin: auto;
+  position: relative;
 }
 
 .modal-header {
@@ -602,6 +605,7 @@ ion-menu-button {
 
 .modal-delete {
   max-width: 400px;
+  text-align: center;
 }
 
 .delete-message {
