@@ -57,14 +57,18 @@ export class ComunicadosPage implements OnInit {
     fetch('https://back-end-pokecreche-production.up.railway.app/comunicados')
       .then(res => res.json())
       .then(data => {
-        this.comunicados = data.slice(0, 20).map((c: any) => ({
-          id: c.id,
-          title: c.title,
-          preview: c.message?.substring(0, 80) + '...',
-          emoji: c.icon || '📝',
-          content: c.message,
-          data: c.data
-        }));
+        this.comunicados = data
+          .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+          .slice(0, 20)
+          .map((c: any) => ({
+            id: c.id,
+            title: c.title,
+            preview: c.message?.substring(0, 80) + '...',
+            emoji: c.icon || '📝',
+            content: c.message,
+            data: c.data || c.data_evento || c.created_at,
+            created_at: c.created_at
+          }));
       })
       .catch(() => this.comunicados = []);
   }
