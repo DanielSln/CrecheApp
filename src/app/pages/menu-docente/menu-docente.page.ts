@@ -9,9 +9,12 @@ import {
   IonButton,
   IonMenuButton,
   IonButtons,
+  IonIcon,
 } from '@ionic/angular/standalone';
 
 import { Router, RouterLink } from '@angular/router';
+import { addIcons } from 'ionicons';
+import { person, calendar, people, chatbubbles } from 'ionicons/icons';
 
 @Component({
   selector: 'app-menu-docente',
@@ -28,10 +31,13 @@ import { Router, RouterLink } from '@angular/router';
     IonButton,
     IonMenuButton,
     IonButtons,
+    IonIcon,
   ],
 })
 export class MenuDocentePage implements OnInit {
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    addIcons({ person, calendar, people, chatbubbles });
+  }
 
   ngOnInit() {}
   irParaDocente() {

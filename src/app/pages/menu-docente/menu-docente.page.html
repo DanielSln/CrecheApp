@@ -10,18 +10,20 @@
 <ion-content [fullscreen]="true">
   <div class="menu-container">
     <div class="welcome-section">
-      <h2>Menu Principal</h2>
-      <p>Escolha uma opção abaixo</p>
+      <h2 id="menu-title" role="heading" aria-level="1">Menu Principal</h2>
+      <p id="menu-description">Escolha uma opção abaixo para navegar</p>
     </div>
 
-    <div class="botoes-menu">
+    <nav class="botoes-menu" role="navigation" aria-labelledby="menu-title" aria-describedby="menu-description">
       <ion-button
         class="menu-btn"
         id="Docente"
         expand="block"
         (click)="irParaDocente()"
+        aria-label="Acessar perfil do docente"
       >
-        👨‍🏫 Docente
+        <ion-icon name="person" slot="start" aria-hidden="true"></ion-icon>
+        Docente
       </ion-button>
 
       <ion-button
@@ -29,8 +31,10 @@
         id="Calendario"
         expand="block"
         (click)="IrParaCalendarioDocente()"
+        aria-label="Editar calendário escolar"
       >
-        📅 Editar calendário
+        <ion-icon name="calendar" slot="start" aria-hidden="true"></ion-icon>
+        Editar calendário
       </ion-button>
 
       <ion-button
@@ -38,11 +42,21 @@
         id="Turmas"
         expand="block"
         (click)="IrParaTurmas()"
+        aria-label="Gerenciar turmas"
       >
-        👨‍👩‍👧‍👦 Turmas
+        <ion-icon name="people" slot="start" aria-hidden="true"></ion-icon>
+        Turmas
       </ion-button>
 
-      <ion-button class="menu-btn" expand="block" (click)="IrParaComunicados()"> 📧 Comunicados </ion-button>
-    </div>
+      <ion-button 
+        class="menu-btn" 
+        expand="block" 
+        (click)="IrParaComunicados()"
+        aria-label="Gerenciar comunicados"
+      >
+        <ion-icon name="chatbubbles" slot="start" aria-hidden="true"></ion-icon>
+        Comunicados
+      </ion-button>
+    </nav>
   </div>
 </ion-content>

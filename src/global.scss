@@ -49,10 +49,13 @@
   border: 0 !important;
 }
 
-/* Melhor contraste para foco */
-*:focus {
-  outline: 2px solid #005fcc !important;
-  outline-offset: 2px !important;
+/* Remove foco de todos os botões */
+ion-button:focus,
+ion-button *:focus,
+ion-menu-button:focus,
+ion-menu-button *:focus,
+button:focus {
+  outline: none !important;
 }
 
 /* Animações reduzidas para usuários sensíveis */
@@ -69,6 +72,8 @@ ion-menu-button {
   --color: #000000 !important;
   --background: transparent !important;
   background: transparent !important;
+  --ripple-color: transparent !important;
+  pointer-events: auto !important;
   
   /* Remove qualquer sombra ou borda que possa causar o resquício */
   --box-shadow: none !important;
@@ -93,10 +98,69 @@ ion-menu-button {
   .button-native {
     background: transparent !important;
     box-shadow: none !important;
+    --ripple-color: transparent !important;
+    transition: none !important;
     
     &::before,
     &::after {
       display: none !important;
     }
+    
+    &:active,
+    &:focus,
+    &:hover {
+      background: transparent !important;
+      --background: transparent !important;
+    }
   }
+
+  /* Remove animação de clique */
+  ion-ripple-effect {
+    display: none !important;
+  }
+  
+  /* Remove todas as transições */
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Remove ripple de todos os botões */
+ion-button {
+  --ripple-color: transparent !important;
+  
+  .button-native {
+    transition: none !important;
+    --background-activated: transparent !important;
+    --background-focused: transparent !important;
+    --background-hover: transparent !important;
+    
+    &:active,
+    &:focus,
+    &:hover {
+      background: var(--background) !important;
+    }
+  }
+  
+  ion-ripple-effect {
+    display: none !important;
+  }
+}
+
+/* Remove highlight de toque em dispositivos móveis */
+* {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+}
+
+/* Remove animação azul específica do Ionic */
+.ion-activated {
+  --background: transparent !important;
+  background: transparent !important;
+}
+
+.button-native::after {
+  display: none !important;
 }

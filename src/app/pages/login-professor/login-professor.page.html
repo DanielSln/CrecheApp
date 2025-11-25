@@ -7,7 +7,7 @@
 <ion-content [fullscreen]="true" class="background-content">
   <div id="container">
     <div class="balao-principal">
-      <h1>Login do Docente</h1>
+      <h1 id="login-title" role="heading" aria-level="1">Login do Docente</h1>
 
       <div class="balao-topo">
         <button
@@ -15,37 +15,48 @@
           class="botao-Aluno"
           id="aluno-page"
           expand="block"
+          aria-pressed="false"
+          aria-describedby="login-title"
           (click)="irParaLoginAluno()"
         >
           Aluno
         </button>
-        <button type="button" class="botao-Professor">Docente</button>
+        <button type="button" class="botao-Professor" aria-pressed="true" aria-describedby="login-title">Docente</button>
       </div>
 
       <!-- Formulário -->
       <div class="balao-interno">
-        <form>
+        <form role="form" aria-labelledby="login-title">
+          <label for="nome-professor" class="sr-only">Nome do professor</label>
           <input
             type="text"
             id="nome-professor"
             name="nome"
             placeholder="Nome"
+            aria-label="Nome do professor"
+            aria-required="true"
             [(ngModel)]="nome"
             required
           />
+          <label for="id-professor" class="sr-only">ID do professor</label>
           <input
             type="text"
             id="id-professor"
             name="id"
             placeholder="ID"
+            aria-label="ID do professor"
+            aria-required="true"
             [(ngModel)]="id"
             required
           />
+          <label for="senha-professor" class="sr-only">Senha</label>
           <input
             type="password"
             id="senha-professor"
             name="senha"
             placeholder="Senha"
+            aria-label="Senha de acesso"
+            aria-required="true"
             [(ngModel)]="senha"
             required
           />
@@ -53,19 +64,25 @@
             <ion-checkbox
               [(ngModel)]="rememberMe"
               name="rememberMe"
+              aria-label="Lembrar dados de login"
             ></ion-checkbox>
             <ion-label>Lembrar-me</ion-label>
           </ion-item>
           <button
-            type="button"
+            type="submit"
             class="btn-submit"
             id="aceitar"
             expand="block"
             (click)="aceitarTermos()"
             [disabled]="isLoading"
+            [attr.aria-busy]="isLoading"
+            aria-describedby="login-status"
           >
             {{ isLoading ? 'Carregando...' : 'Login' }}
           </button>
+          <div id="login-status" class="sr-only" [attr.aria-live]="isLoading ? 'polite' : null">
+            {{ isLoading ? 'Processando login, aguarde...' : '' }}
+          </div>
 
         </form>
       </div>

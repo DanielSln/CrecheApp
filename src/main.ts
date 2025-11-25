@@ -10,8 +10,8 @@ bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular({
-      rippleEffect: false, // Melhora performance
-      mode: 'md' // Consistência visual
+      rippleEffect: false,
+      mode: 'md'
     }),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideHttpClient(withInterceptorsFromDi()),
