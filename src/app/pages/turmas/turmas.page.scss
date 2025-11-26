@@ -577,18 +577,18 @@ ion-menu-button {
   padding: 12px 24px;
   border: none;
   border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 17px;
+  font-weight: 500;
   font-family: 'Segoe UI', system-ui, sans-serif;
   cursor: pointer;
   transition: all 0.2s ease;
   
   &.btn-primary {
-    background: #c4680b;
+    background: #27ae60;
     color: #ffffff;
     
     &:hover {
-      background: #a55609;
+      background: #229954;
       transform: translateY(-1px);
     }
   }
