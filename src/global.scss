@@ -34,7 +34,7 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+/* @import '@ionic/angular/css/palettes/dark.system.css'; */
 
 /* Classes de acessibilidade */
 .sr-only {
@@ -161,6 +161,15 @@ ion-button {
 
 .button-native::after {
   display: none !important;
+}
+
+/* Força as mesmas cores em ambos os modos */
+* {
+  color-scheme: light !important;
+}
+
+html {
+  color-scheme: light !important;
 }
 
 /* ===== RESPONSIVIDADE PARA MENUS ===== */
