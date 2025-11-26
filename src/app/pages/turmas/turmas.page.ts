@@ -39,6 +39,7 @@ export class TurmasPage implements OnInit {
   showEditModal: boolean = false;
   novoNomeTurma: string = '';
   fotoTurma: File | null = null;
+  turmaImage: string = 'assets/img/avatar.jpg';
   showAlunoModal: boolean = false;
   alunoSelecionado: any = null;
   showAddAlunoModal: boolean = false;
@@ -274,6 +275,7 @@ export class TurmasPage implements OnInit {
   editarNomeTurma() {
     this.novoNomeTurma = this.selectedTurma.nome;
     this.fotoTurma = null;
+    this.turmaImage = this.selectedTurma.foto || 'assets/img/avatar.jpg';
     this.showEditModal = true;
     document.body.classList.add('modal-open');
   }
@@ -282,14 +284,26 @@ export class TurmasPage implements OnInit {
     this.showEditModal = false;
     this.novoNomeTurma = '';
     this.fotoTurma = null;
+    this.turmaImage = 'assets/img/avatar.jpg';
     document.body.classList.remove('modal-open');
   }
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.fotoTurma = file;
-    }
+  selectTurmaImage() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (event: any) => {
+      const file = event.target.files[0];
+      if (file) {
+        this.fotoTurma = file;
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.turmaImage = reader.result as string;
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    input.click();
   }
 
   salvarNomeTurma() {

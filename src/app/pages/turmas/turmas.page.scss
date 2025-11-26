@@ -103,8 +103,8 @@ ion-menu-button {
 /* ===== GRADE DE TURMAS ===== */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 12px;
   margin-bottom: 16px;
 }
 
@@ -117,6 +117,7 @@ ion-menu-button {
   transition: all 0.3s ease;
   cursor: pointer;
   overflow: hidden;
+  min-height: 120px;
   
   &:hover {
     transform: translateY(-2px);
@@ -125,28 +126,71 @@ ion-menu-button {
 }
 
 .card-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   padding: 24px;
-  text-align: center;
 }
 
 .avatar {
   font-size: 48px;
-  margin-bottom: 12px;
   opacity: 0.8;
 }
 
+.turma-avatar {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.turma-foto {
+  width: 100px;
+  height: 100px;
+  border-radius: 20px;
+  object-fit: cover;
+  border: 2px solid #c4680b;
+}
+
+.turma-info {
+  flex: 1;
+  min-width: 0;
+}
+
 .turma-id {
-  font-weight: 800;
-  font-size: 18px;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 8px 12px;
-  border-radius: 8px;
+  font-weight: 700;
+  font-size: 16px;
   color: #000000;
   font-family: 'Segoe UI', system-ui, sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.turma-nome-linha {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   margin-bottom: 4px;
 }
 
-.turma-label {
+.turma-nome-label,
+.turma-ano-label {
+  font-size: 12px;
+  color: #c4680b;
+  font-weight: 700;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: 120px;
+}
+
+.turma-ano-linha {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.turma-ano {
   font-size: 14px;
   color: #000000;
   font-weight: 600;
@@ -404,8 +448,8 @@ ion-menu-button {
 }
 
 .avatar-img {
-  width: 80px;
-  height: 80px;
+  width: 150px;
+  height: 150px;
   border-radius: 12px;
   object-fit: cover;
   border: 2px groove #000000;
@@ -460,9 +504,9 @@ ion-menu-button {
 .modal-content {
   background: #f6d0a7;
   border-radius: 16px;
-  width: calc(100vw - 24px);
-  max-width: 400px;
-  max-height: 85vh;
+  width: calc(100vw - 16px);
+  max-width: 600px;
+  max-height: 95vh;
   overflow-y: auto;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   border: 2px solid #000000;
@@ -805,7 +849,7 @@ ion-menu-button {
   }
   
   .modal-content {
-    max-width: 480px;
+    max-width: 80vw;
     max-height: 75vh;
   }
   
@@ -827,8 +871,8 @@ ion-menu-button {
   }
   
   .avatar-img {
-    width: 80px;
-    height: 80px;
+    width: 120px;
+    height: 120px;
   }
 }
 
@@ -881,8 +925,8 @@ ion-menu-button {
   }
   
   .modal-content {
-    width: calc(100vw - 20px);
-    max-width: 500px;
+    width: calc(100vw - 16px);
+    max-width: 85vw;
     max-height: 85vh;
     transform: translateZ(0);
     -webkit-font-smoothing: antialiased;
@@ -1011,4 +1055,69 @@ ion-menu-button {
 .form-select:valid:not([value=""]) {
   border-color: #c4680b;
   box-shadow: 0 0 0 2px rgba(196, 104, 11, 0.2);
+}
+/* ===== FOTO SECTION NO MODAL ===== */
+.foto-section {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+    color: #000000;
+    font-size: 16px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+
+  .foto-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .foto-container {
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 2px solid #c4680b;
+    cursor: pointer;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover img {
+      transform: scale(1.1);
+    }
+  }
+
+  .change-photo-btn {
+    --background: #c4680b;
+    --color: white;
+    --border-radius: 50%;
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+    --padding-start: 8px;
+    --padding-end: 8px;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+
+    ion-icon {
+      font-size: 20px;
+    }
+
+    &:hover {
+      --background: #a55609;
+      transform: translateY(-1px);
+    }
+  }
 }

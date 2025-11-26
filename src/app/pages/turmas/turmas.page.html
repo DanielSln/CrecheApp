@@ -31,9 +31,20 @@
       <div class="grid">
         <div class="card" *ngFor="let t of filteredTurmas()" (click)="selectTurma(t)">
           <div class="card-content">
-            <div class="avatar">👥</div>
-            <div class="turma-id">{{ t.nome }}</div>
-            <div class="turma-label">Ano: {{ t.ano }}</div>
+            <div class="turma-avatar">
+              <div class="avatar" *ngIf="!t.foto || t.foto === 'assets/img/avatar.jpg'">👥</div>
+              <img *ngIf="t.foto && t.foto !== 'assets/img/avatar.jpg'" [src]="t.foto" class="turma-foto" alt="Foto da turma">
+            </div>
+            <div class="turma-info">
+              <div class="turma-nome-linha">
+                <span class="turma-nome-label">Nome da turma:</span>
+                <span class="turma-id">{{ t.nome }}</span>
+              </div>
+              <div class="turma-ano-linha">
+                <span class="turma-ano-label">Ano da Turma:</span>
+                <span class="turma-ano">{{ t.ano }}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -121,9 +132,16 @@
             <label>Nome da Turma</label>
             <input type="text" [(ngModel)]="novoNomeTurma" placeholder="Digite o novo nome" class="modal-input" />
           </div>
-          <div class="input-wrapper">
+          <div class="foto-section">
             <label>Foto da Turma</label>
-            <input type="file" accept="image/*" class="modal-input" (change)="onFileSelected($event)" />
+            <div class="foto-wrapper">
+              <div class="foto-container" (click)="selectTurmaImage()">
+                <img [src]="turmaImage || 'assets/img/avatar.jpg'" alt="Foto da turma">
+              </div>
+              <ion-button fill="clear" class="change-photo-btn" (click)="selectTurmaImage()">
+                <ion-icon name="camera"></ion-icon>
+              </ion-button>
+            </div>
           </div>
         </div>
         <div class="modal-actions">
