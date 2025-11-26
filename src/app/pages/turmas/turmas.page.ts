@@ -38,6 +38,7 @@ export class TurmasPage implements OnInit {
   query: string = '';
   showEditModal: boolean = false;
   novoNomeTurma: string = '';
+  fotoTurma: File | null = null;
   showAlunoModal: boolean = false;
   alunoSelecionado: any = null;
   showAddAlunoModal: boolean = false;
@@ -272,6 +273,7 @@ export class TurmasPage implements OnInit {
 
   editarNomeTurma() {
     this.novoNomeTurma = this.selectedTurma.nome;
+    this.fotoTurma = null;
     this.showEditModal = true;
     document.body.classList.add('modal-open');
   }
@@ -279,36 +281,65 @@ export class TurmasPage implements OnInit {
   fecharModal() {
     this.showEditModal = false;
     this.novoNomeTurma = '';
+    this.fotoTurma = null;
     document.body.classList.remove('modal-open');
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.fotoTurma = file;
+    }
   }
 
   salvarNomeTurma() {
     if (this.novoNomeTurma && this.novoNomeTurma.trim()) {
       const novoNome = this.novoNomeTurma.trim();
-      const payload = { 
-        nome: novoNome, 
-        ano: this.selectedTurma.ano || new Date().getFullYear().toString() 
-      };
       
-      console.log('Atualizando turma:', this.selectedTurma.id, payload);
-      
-      this.http.put(`${this.apiUrl}/turmas/${this.selectedTurma.id}`, payload).subscribe({
-        next: (response) => {
-          console.log('Resposta do servidor:', response);
-          this.selectedTurma.nome = novoNome;
-          const turma = this.turmas.find(t => t.id === this.selectedTurma.id);
-          if (turma) turma.nome = novoNome;
-          alert('Nome da turma atualizado com sucesso!');
-          this.fecharModal();
-        },
-        error: (err) => {
-          console.error('Erro completo:', err);
-          alert('Erro ao atualizar nome da turma: ' + (err.error?.message || err.message));
-        }
-      });
+      if (this.fotoTurma) {
+        // Se há foto, converte para base64 e envia
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64 = reader.result as string;
+          const payload = { 
+            nome: novoNome, 
+            ano: this.selectedTurma.ano || new Date().getFullYear().toString(),
+            foto: base64
+          };
+          this.atualizarTurma(payload);
+        };
+        reader.readAsDataURL(this.fotoTurma);
+      } else {
+        // Sem foto, apenas nome
+        const payload = { 
+          nome: novoNome, 
+          ano: this.selectedTurma.ano || new Date().getFullYear().toString() 
+        };
+        this.atualizarTurma(payload);
+      }
     } else {
       this.fecharModal();
     }
+  }
+
+  private atualizarTurma(payload: any) {
+    this.http.put(`${this.apiUrl}/turmas/${this.selectedTurma.id}`, payload).subscribe({
+      next: (response) => {
+        this.selectedTurma.nome = payload.nome;
+        if (payload.foto) this.selectedTurma.foto = payload.foto;
+        const turma = this.turmas.find(t => t.id === this.selectedTurma.id);
+        if (turma) {
+          turma.nome = payload.nome;
+          if (payload.foto) turma.foto = payload.foto;
+        }
+        alert('Turma atualizada com sucesso!');
+        this.fecharModal();
+      },
+      error: (err) => {
+        console.error('Erro:', err);
+        alert('Erro ao atualizar turma: ' + (err.error?.message || err.message));
+      }
+    });
   }
 
   abrirModalExcluir() {

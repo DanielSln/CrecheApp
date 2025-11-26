@@ -111,7 +111,7 @@
     <div class="modal-overlay" *ngIf="showEditModal" (click)="fecharModal()">
       <div class="modal-content" (click)="$event.stopPropagation()">
         <div class="modal-header">
-          <h3>Editar Nome da Turma</h3>
+          <h3>Editar Informações da Turma</h3>
           <button class="close-btn" (click)="fecharModal()">
             <ion-icon name="close-outline"></ion-icon>
           </button>
@@ -120,6 +120,10 @@
           <div class="input-wrapper">
             <label>Nome da Turma</label>
             <input type="text" [(ngModel)]="novoNomeTurma" placeholder="Digite o novo nome" class="modal-input" />
+          </div>
+          <div class="input-wrapper">
+            <label>Foto da Turma</label>
+            <input type="file" accept="image/*" class="modal-input" (change)="onFileSelected($event)" />
           </div>
         </div>
         <div class="modal-actions">
