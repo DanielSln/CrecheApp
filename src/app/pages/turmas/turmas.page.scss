@@ -1007,3 +1007,8 @@ ion-menu-button {
 .profile-name {
   text-rendering: optimizeLegibility;
 }
+/* Feedback visual para campos válidos - laranja */
+.form-select:valid:not([value=""]) {
+  border-color: #c4680b;
+  box-shadow: 0 0 0 2px rgba(196, 104, 11, 0.2);
+}
