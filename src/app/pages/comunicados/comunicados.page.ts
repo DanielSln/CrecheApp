@@ -20,6 +20,11 @@ interface Comunicado {
   content: string;
   data: string;
   created_at: string;
+  type?: 'urgent' | 'info' | 'default';
+  from?: string;
+  to?: string;
+  cc?: string;
+  bcc?: string;
 }
 
 @Component({
