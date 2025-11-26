@@ -6,17 +6,16 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class AvatarService {
-  private apiUrl = 'https://back-end-pokecreche-production.up.railway.app';
-  private userAvatarSubject = new BehaviorSubject<string>('assets/img/avatar.jpg');
+  private readonly apiUrl = 'https://back-end-pokecreche-production.up.railway.app';
+  private readonly defaultAvatar = 'assets/img/avatar.jpg';
+  private userAvatarSubject = new BehaviorSubject<string>(this.defaultAvatar);
   public userAvatar$ = this.userAvatarSubject.asObservable();
+  private avatarCache = new Map<string, string>();
 
   constructor(private http: HttpClient) {
     this.loadUserAvatar();
   }
 
-  /**
-   * Carrega o avatar do usuário do localStorage ou do servidor
-   */
   private loadUserAvatar(): void {
     const savedAvatar = localStorage.getItem('userAvatar');
     if (savedAvatar) {
@@ -26,73 +25,64 @@ export class AvatarService {
     }
   }
 
-  /**
-   * Busca o avatar do usuário no servidor
-   * Detecta automaticamente se é aluno ou docente pelo userType
-   */
   private fetchUserAvatar(): void {
     const userId = localStorage.getItem('userId');
     const userType = localStorage.getItem('userType');
     
-    if (userId) {
-      const endpoint = userType === 'docente' ? 'docentes' : 'alunos';
-      
-      this.http.get<any>(`${this.apiUrl}/${endpoint}`).subscribe({
-        next: (usuarios) => {
-          const usuario = usuarios.find((u: any) => u.id == userId);
-          if (usuario?.avatar) {
-            this.userAvatarSubject.next(usuario.avatar);
-            localStorage.setItem('userAvatar', usuario.avatar);
-          }
-        },
-        error: () => {
-          this.userAvatarSubject.next('assets/img/avatar.jpg');
-        }
-      });
+    if (!userId || !userType) return;
+
+    const cacheKey = `${userType}-${userId}`;
+    if (this.avatarCache.has(cacheKey)) {
+      const cachedAvatar = this.avatarCache.get(cacheKey)!;
+      this.userAvatarSubject.next(cachedAvatar);
+      return;
     }
+
+    const endpoint = userType === 'docente' ? 'docentes' : 'alunos';
+    
+    this.http.get<any>(`${this.apiUrl}/${endpoint}/${userId}`).subscribe({
+      next: (usuario) => {
+        const avatar = usuario?.avatar || this.defaultAvatar;
+        this.userAvatarSubject.next(avatar);
+        localStorage.setItem('userAvatar', avatar);
+        this.avatarCache.set(cacheKey, avatar);
+      },
+      error: () => {
+        this.userAvatarSubject.next(this.defaultAvatar);
+      }
+    });
   }
 
-  /**
-   * Atualiza o avatar do usuário
-   * Detecta automaticamente se é aluno ou docente pelo userType
-   */
   updateAvatar(avatarData: string): void {
     const userId = localStorage.getItem('userId');
     const userType = localStorage.getItem('userType');
     
-    if (userId) {
-      const endpoint = userType === 'docente' ? 'docentes' : 'alunos';
-      
-      this.http.put(`${this.apiUrl}/${endpoint}/${userId}/avatar`, { avatar: avatarData }).subscribe({
-        next: (response: any) => {
-          this.userAvatarSubject.next(avatarData);
-          localStorage.setItem('userAvatar', avatarData);
-        },
-        error: (error) => {
-          console.error('Erro ao atualizar avatar:', error);
-        }
-      });
-    }
+    if (!userId || !userType) return;
+
+    const endpoint = userType === 'docente' ? 'docentes' : 'alunos';
+    
+    this.http.put(`${this.apiUrl}/${endpoint}/${userId}/avatar`, { avatar: avatarData }).subscribe({
+      next: () => {
+        this.userAvatarSubject.next(avatarData);
+        localStorage.setItem('userAvatar', avatarData);
+        this.avatarCache.set(`${userType}-${userId}`, avatarData);
+      },
+      error: (error) => {
+        console.error('Erro ao atualizar avatar:', error);
+      }
+    });
   }
 
-  /**
-   * Recarrega o avatar do usuário (útil ao trocar de usuário)
-   */
   reloadAvatar(): void {
     localStorage.removeItem('userAvatar');
+    this.avatarCache.clear();
     this.fetchUserAvatar();
   }
 
-  /**
-   * Retorna o avatar atual do usuário
-   */
   getCurrentAvatar(): string {
     return this.userAvatarSubject.value;
   }
 
-  /**
-   * Retorna um observable do avatar do usuário
-   */
   getAvatar(): Observable<string> {
     return this.userAvatar$;
   }
