@@ -487,6 +487,15 @@ export class TurmasPage implements OnInit {
     }
   }
 
+  getAlunosOrdenados(turmaId: string) {
+    const alunos = this.studentsByTurma[turmaId] || [];
+    return alunos.sort((a, b) => {
+      const statusA = parseInt(a.contador?.split(' / ')[0] || '0');
+      const statusB = parseInt(b.contador?.split(' / ')[0] || '0');
+      return statusA - statusB;
+    });
+  }
+
   adicionarAluno(aluno: any) {
     // Valida os dados antes de enviar
     if (!this.selectedTurma || !this.selectedTurma.id) {
