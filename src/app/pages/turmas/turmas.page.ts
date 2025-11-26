@@ -324,10 +324,11 @@ export class TurmasPage implements OnInit {
         };
         reader.readAsDataURL(this.fotoTurma);
       } else {
-        // Sem foto, apenas nome
+        // Sem nova foto, mantém a existente
         const payload = { 
           nome: novoNome, 
-          ano: this.selectedTurma.ano || new Date().getFullYear().toString() 
+          ano: this.selectedTurma.ano || new Date().getFullYear().toString(),
+          foto: this.selectedTurma.foto
         };
         this.atualizarTurma(payload);
       }

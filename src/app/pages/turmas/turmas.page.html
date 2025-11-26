@@ -8,7 +8,7 @@
     <ion-buttons slot="start" *ngIf="!selectedTurma">
       <ion-menu-button class="menu-button-externo"></ion-menu-button>
     </ion-buttons>
-    <ion-title>{{ selectedTurma ? 'Turma ' + selectedTurma.id : '' }}</ion-title>
+    <ion-title></ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -93,7 +93,7 @@
 
       <!-- Students Grid -->
       <div class="grid students-grid">
-        <div class="card student-card" *ngFor="let s of studentsByTurma[selectedTurma.id]">
+        <div class="card student-card" *ngFor="let s of getAlunosOrdenados(selectedTurma.id)">
           <div class="contador-card">{{ s.contador }}</div>
           <div (click)="abrirRegistroAluno(s)" style="flex: 1; display: flex; align-items: center; gap: 12px;">
             <div class="student-avatar">
@@ -101,8 +101,14 @@
               <div class="presence-indicator" [class.present]="!s.falta"></div>
             </div>
             <div class="student-info">
-              <div class="student-name">{{ s.name }}</div>
-              <div class="student-id">{{ s.id }}</div>
+              <div class="student-nome-linha">
+                <span class="student-nome-label">Nome:</span>
+                <span class="student-name">{{ s.name }}</span>
+              </div>
+              <div class="student-id-linha">
+                <span class="student-id-label">Matrícula:</span>
+                <span class="student-id">{{ s.id }}</span>
+              </div>
             </div>
           </div>
           <button class="remove-student-btn" (click)="abrirModalRemover(s); $event.stopPropagation()">

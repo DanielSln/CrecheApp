@@ -420,26 +420,36 @@ ion-menu-button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px;
-  gap: 12px;
-  background: #8d8f84;
-  border: 2px solid #000000;
-  border-radius: 16px;
-  min-height: 160px;
+  padding: 20px;
+  gap: 16px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 2px solid #c4680b;
+  border-radius: 20px;
+  min-height: 140px;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(196, 104, 11, 0.15);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(196, 104, 11, 0.25);
+    border-color: #a55609;
+  }
 }
 
 .contador-card {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  background: #c4680b;
+  top: 12px;
+  right: 12px;
+  background: linear-gradient(135deg, #c4680b, #a55609);
   color: white;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-weight: bold;
-  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 11px;
   z-index: 10;
+  box-shadow: 0 2px 8px rgba(196, 104, 11, 0.3);
+  letter-spacing: 0.5px;
 }
 
 .student-avatar {
@@ -450,9 +460,9 @@ ion-menu-button {
 .avatar-img {
   width: 150px;
   height: 150px;
-  border-radius: 12px;
+  border-radius: 20px;
   object-fit: cover;
-  border: 2px groove #000000;
+
 }
 
 
@@ -461,11 +471,60 @@ ion-menu-button {
   min-width: 0;
 }
 
+.student-nome-linha,
+.student-id-linha {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.student-nome-label,
+.student-id-label {
+  font-size: 11px;
+  color: #c4680b;
+  font-weight: 700;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: 70px;
+  flex-shrink: 0;
+}
+
 .student-name {
   font-weight: 700;
   color: #000000;
   font-size: 16px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.student-nome-linha,
+.student-id-linha {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   margin-bottom: 4px;
+}
+
+.student-nome-label,
+.student-id-label {
+  font-size: 12px;
+  color: #c4680b;
+  font-weight: 700;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.student-name {
+  font-weight: 700;
+  color: #000000;
+  font-size: 16px;
   font-family: 'Segoe UI', system-ui, sans-serif;
   white-space: nowrap;
   overflow: hidden;
