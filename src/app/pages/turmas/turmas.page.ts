@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -58,7 +58,7 @@ export class TurmasPage implements OnInit {
 
   private apiUrl = 'https://back-end-pokecreche-production.up.railway.app';
 
-  constructor(private router: Router, private http: HttpClient) {
+  constructor(private router: Router, private http: HttpClient, private cdr: ChangeDetectorRef) {
     addIcons({ 
       chevronBack, 
       searchOutline, 
@@ -105,26 +105,11 @@ export class TurmasPage implements OnInit {
       next: (turmas) => {
         this.turmas = turmas;
         this._filteredTurmas = turmas;
-        this.limparAlunosOrfaos();
       },
       error: (err) => {
         console.error('Erro ao carregar turmas:', err);
         this.turmas = [];
         this._filteredTurmas = [];
-      }
-    });
-  }
-
-  /**
-   * Limpa alunos que estão vinculados a turmas que não existem mais
-   */
-  private limparAlunosOrfaos() {
-    this.http.get(`${this.apiUrl}/limpar-alunos-orfaos`).subscribe({
-      next: (response: any) => {
-        console.log('Limpeza de alunos órfãos:', response.message);
-      },
-      error: (err) => {
-        console.error('Erro ao limpar alunos órfãos:', err);
       }
     });
   }
@@ -182,9 +167,14 @@ export class TurmasPage implements OnInit {
         const registrosOrdenados = registros.sort((a, b) => 
           new Date(b.data).getTime() - new Date(a.data).getTime()
         );
+        
+        // Pega os últimos 5 registros (semana atual)
+        const ultimosRegistros = registrosOrdenados.slice(0, 5);
         const totalRegistros = registrosOrdenados.length;
-        const registroAtual = (totalRegistros % 5) || (totalRegistros > 0 ? 5 : 0);
+        const registroAtual = Math.min(totalRegistros, 5);
+        
         aluno.contador = `${registroAtual} / 5`;
+        this.cdr.detectChanges();
       },
       error: () => {
         aluno.contador = '0 / 5';
@@ -258,9 +248,17 @@ export class TurmasPage implements OnInit {
       };
 
       this.http.post(`${this.apiUrl}/registros`, registro).subscribe({
-        next: () => {
-          alert('Registro salvo com sucesso!');
+        next: (response) => {
+          const alunoId = this.alunoSelecionado.id;
           this.fecharAlunoModal();
+          setTimeout(() => {
+            if (this.selectedTurma && this.studentsByTurma[this.selectedTurma.id]) {
+              const alunoNaLista = this.studentsByTurma[this.selectedTurma.id].find(a => a.id === alunoId);
+              if (alunoNaLista) {
+                this.carregarContadorAluno(alunoNaLista);
+              }
+            }
+          }, 500);
         },
         error: (err) => {
           console.error('Erro ao salvar registro:', err);
@@ -580,5 +578,13 @@ export class TurmasPage implements OnInit {
         }
       }
     });
+  }
+
+  getInicioSemana(data: Date): Date {
+    const d = new Date(data);
+    d.setHours(0, 0, 0, 0);
+    const dia = d.getDay();
+    const diff = d.getDate() - dia + (dia === 0 ? -6 : 1);
+    return new Date(d.setDate(diff));
   }
 }

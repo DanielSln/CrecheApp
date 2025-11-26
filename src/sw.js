@@ -1,26 +1,13 @@
-const CACHE_NAME = 'creche-app-v1';
-const urlsToCache = [
-  '/',
-  '/assets/img/avatar.jpg',
-  '/assets/icon/favicon.png'
-];
-
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
-  );
+// Service Worker básico
+self.addEventListener('install', (event) => {
+  console.log('Service Worker instalado');
 });
 
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      }
-    )
-  );
+self.addEventListener('activate', (event) => {
+  console.log('Service Worker ativado');
+});
+
+self.addEventListener('fetch', (event) => {
+  // Deixa as requisições passarem normalmente
+  event.respondWith(fetch(event.request));
 });
