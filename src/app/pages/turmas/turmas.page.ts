@@ -103,6 +103,14 @@ export class TurmasPage implements OnInit {
   carregarTurmas() {
     this.http.get<any[]>(`${this.apiUrl}/turmas`).subscribe({
       next: (turmas) => {
+        console.log('Turmas carregadas do servidor:', turmas);
+        turmas.forEach(t => {
+          if (t.foto) {
+            console.log(`Turma ${t.nome} tem foto:`, t.foto.substring(0, 50) + '...');
+          } else {
+            console.log(`Turma ${t.nome} não tem foto`);
+          }
+        });
         this.turmas = turmas;
         this._filteredTurmas = turmas;
         this.limparAlunosOrfaos();
@@ -338,8 +346,14 @@ export class TurmasPage implements OnInit {
   }
 
   private atualizarTurma(payload: any) {
+    console.log('Enviando payload para atualizar turma:', {
+      ...payload,
+      foto: payload.foto ? payload.foto.substring(0, 50) + '...' : 'sem foto'
+    });
+    
     this.http.put(`${this.apiUrl}/turmas/${this.selectedTurma.id}`, payload).subscribe({
       next: (response) => {
+        console.log('Resposta do servidor:', response);
         this.selectedTurma.nome = payload.nome;
         if (payload.foto) this.selectedTurma.foto = payload.foto;
         const turma = this.turmas.find(t => t.id === this.selectedTurma.id);
