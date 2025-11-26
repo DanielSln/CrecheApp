@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -12,6 +12,15 @@ import {
 } from '@ionic/angular/standalone';
 import { AutoRefreshService } from '../../services/auto-refresh.service';
 
+interface Comunicado {
+  id: number;
+  title: string;
+  preview: string;
+  emoji: string;
+  content: string;
+  data: string;
+  created_at: string;
+}
 
 @Component({
   selector: 'app-comunicados',
@@ -28,24 +37,29 @@ import { AutoRefreshService } from '../../services/auto-refresh.service';
     FormsModule,
   ],
 })
-export class ComunicadosPage implements OnInit {
-  comunicados: any[] = [];
-  comunicadoSelecionado: any = null;
+export class ComunicadosPage implements OnInit, OnDestroy {
+  comunicados: Comunicado[] = [];
+  comunicadoSelecionado: Comunicado | null = null;
+  private readonly apiUrl = 'https://back-end-pokecreche-production.up.railway.app/comunicados';
+  private abortController?: AbortController;
+
   constructor(
     private router: Router,
     private alertController: AlertController,
     private autoRefresh: AutoRefreshService
-  ) {
-    console.log('ComunicadosPage constructor chamado');
-  }
+  ) {}
 
   ngOnInit() {
     this.carregarComunicados();
     this.autoRefresh.startAutoRefresh('comunicados', () => this.carregarComunicados(), 30000);
   }
+
+  ngOnDestroy() {
+    this.abortController?.abort();
+    this.autoRefresh.stopAutoRefresh('comunicados');
+  }
   
   ionViewWillEnter() {
-    console.log('ionViewWillEnter - recarregando comunicados');
     this.carregarComunicados();
   }
 
@@ -53,58 +67,64 @@ export class ComunicadosPage implements OnInit {
     this.autoRefresh.stopAutoRefresh('comunicados');
   }
   
-  carregarComunicados() {
-    fetch('https://back-end-pokecreche-production.up.railway.app/comunicados')
-      .then(res => res.json())
-      .then(data => {
-        this.comunicados = data
-          .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-          .slice(0, 20)
-          .map((c: any) => ({
-            id: c.id,
-            title: c.title,
-            preview: c.message?.substring(0, 80) + '...',
-            emoji: c.icon || '📝',
-            content: c.message,
-            data: c.data || c.created_at,
-            created_at: c.created_at
-          }));
-      })
-      .catch(() => this.comunicados = []);
+  async carregarComunicados() {
+    this.abortController?.abort();
+    this.abortController = new AbortController();
+
+    try {
+      const response = await fetch(this.apiUrl, {
+        signal: this.abortController.signal,
+        headers: { 'Accept': 'application/json' }
+      });
+      
+      if (!response.ok) throw new Error('Network error');
+      
+      const data = await response.json();
+      this.comunicados = this.processarComunicados(data);
+    } catch (error) {
+      if (error instanceof Error && error.name !== 'AbortError') {
+        this.comunicados = [];
+      }
+    }
+  }
+
+  private processarComunicados(data: any[]): Comunicado[] {
+    return data
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+      .slice(0, 20)
+      .map(c => ({
+        id: c.id,
+        title: c.title,
+        preview: c.message?.substring(0, 80) + '...',
+        emoji: c.icon || '📝',
+        content: c.message,
+        data: c.data || c.created_at,
+        created_at: c.created_at
+      }));
   }
 
   irParaEscrever() {
-    console.log('irParaEscrever chamado');
-    // Limpar qualquer rascunho carregado anterior para começar novo
     sessionStorage.removeItem('rascunhoCarregado');
-    console.log('Navegando para /escrever-comunicado');
     this.router.navigateByUrl('/escrever-comunicado');
   }
 
   verRascunhos() {
-    console.log('verRascunhos chamado - navegando para página de rascunhos');
     this.router.navigateByUrl('/ver-rascunhos');
   }
 
   abrirRascunhos() {
-    // Alias para verRascunhos para manter compatibilidade com o template
     this.verRascunhos();
   }
 
-  // NOVA FUNÇÃO: Abrir modal de detalhes do comunicado
-  openComunicado(comunicado: any) {
-    console.log('Abrindo detalhes do comunicado:', comunicado.title);
+  openComunicado(comunicado: Comunicado) {
     this.comunicadoSelecionado = comunicado;
   }
 
-  // Fechar modal de detalhes
   fecharDetalhes() {
     this.comunicadoSelecionado = null;
   }
 
-
-
-  trackByComunicado(index: number, item: any): any {
+  trackByComunicado(index: number, item: Comunicado): number {
     return item.id;
   }
 

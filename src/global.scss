@@ -36,27 +36,18 @@
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 /* @import '@ionic/angular/css/palettes/dark.system.css'; */
 
-/* Classes de acessibilidade */
 .sr-only {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-/* Remove foco de todos os botões */
-ion-menu-button:focus,
-ion-menu-button *:focus,
-button:focus {
-  outline: none !important;
-}
-
-/* Animações reduzidas para usuários sensíveis */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
@@ -65,114 +56,36 @@ button:focus {
   }
 }
 
-/* Fix para resquício preto no menu-button */
-ion-menu-button {
-  --color: #000000 !important;
-  --background: transparent !important;
-  background: transparent !important;
-  --ripple-color: transparent !important;
-  pointer-events: auto !important;
-  
-  /* Remove qualquer sombra ou borda que possa causar o resquício */
-  --box-shadow: none !important;
-  --border: none !important;
-  box-shadow: none !important;
-  border: none !important;
-  
-  /* Garante que o ícone interno use a cor correta */
-  ion-icon {
-    color: #000000 !important;
-    --color: #000000 !important;
-    background: transparent !important;
-  }
-  
-  /* Remove qualquer pseudo-elemento que possa estar causando o resquício */
-  &::before,
-  &::after {
-    display: none !important;
-  }
-  
-  /* Remove qualquer ripple effect que possa estar causando o problema */
-  .button-native {
-    background: transparent !important;
-    box-shadow: none !important;
-    --ripple-color: transparent !important;
-    transition: none !important;
-    
-    &::before,
-    &::after {
-      display: none !important;
-    }
-    
-    &:active,
-    &:focus,
-    &:hover {
-      background: transparent !important;
-      --background: transparent !important;
-    }
-  }
-
-  /* Remove animação de clique */
-  ion-ripple-effect {
-    display: none !important;
-  }
-  
-  /* Remove todas as transições */
-  * {
-    transition: none !important;
-    animation: none !important;
-  }
-}
-
-/* Remove ripple de todos os botões */
+ion-menu-button,
 ion-button {
-  --ripple-color: transparent !important;
+  --ripple-color: transparent;
   
   .button-native {
-    transition: none !important;
-    --background-activated: transparent !important;
-    --background-focused: transparent !important;
-    --background-hover: transparent !important;
-    
-    &:active,
-    &:focus,
-    &:hover {
-      background: var(--background) !important;
-    }
+    --background-activated: transparent;
+    --background-focused: transparent;
+    --background-hover: transparent;
   }
   
   ion-ripple-effect {
-    display: none !important;
+    display: none;
   }
 }
 
-/* Remove highlight de toque em dispositivos móveis */
 * {
-  -webkit-tap-highlight-color: transparent !important;
-  -webkit-touch-callout: none !important;
-  -webkit-user-select: none !important;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  color-scheme: light;
 }
 
-/* Remove animação azul específica do Ionic */
 .ion-activated {
-  --background: transparent !important;
-  background: transparent !important;
+  --background: transparent;
 }
 
 .button-native::after {
-  display: none !important;
+  display: none;
 }
 
-/* Força as mesmas cores em ambos os modos */
-* {
-  color-scheme: light !important;
-}
-
-html {
-  color-scheme: light !important;
-}
-
-/* ===== RESPONSIVIDADE PARA MENUS ===== */
 .menu-container {
   padding: clamp(15px, 3vw, 30px);
 }
@@ -181,19 +94,14 @@ html {
   display: grid;
   gap: clamp(12px, 2vw, 20px);
   grid-template-columns: 1fr;
-}
-
-@media (min-width: 768px) {
-  .botoes-menu {
+  
+  @media (min-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
     max-width: 600px;
     margin: 0 auto;
   }
-}
-
-@media (min-width: 1024px) {
-  .botoes-menu {
-    grid-template-columns: repeat(2, 1fr);
+  
+  @media (min-width: 1024px) {
     max-width: 800px;
   }
 }

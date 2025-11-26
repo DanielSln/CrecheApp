@@ -16,6 +16,17 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { AvatarService } from '../../services/avatar.service';
 
+interface LoginResponse {
+  success: boolean;
+  user?: {
+    id: string;
+    nome: string;
+    matricula: string;
+  };
+  token?: string;
+  message?: string;
+}
+
 @Component({
   selector: 'app-login-aluno',
   templateUrl: './login-aluno.page.html',
@@ -35,11 +46,12 @@ import { AvatarService } from '../../services/avatar.service';
   ]
 })
 export class LoginAlunoPage implements OnInit {
-  nome: string = '';
-  cpf: string = '';
-  matricula: string = '';
-  isLoading: boolean = false;
-  rememberMe: boolean = false;
+  nome = '';
+  cpf = '';
+  matricula = '';
+  isLoading = false;
+  rememberMe = false;
+  private readonly apiUrl = 'https://back-end-pokecreche-production.up.railway.app/login/aluno';
 
   constructor(
     private router: Router,
@@ -50,15 +62,15 @@ export class LoginAlunoPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    const savedNome = localStorage.getItem('rememberedNomeAluno');
-    const savedCpf = localStorage.getItem('rememberedCpfAluno');
-    const savedMatricula = localStorage.getItem('rememberedMatriculaAluno');
-    const savedRemember = localStorage.getItem('rememberMeAluno');
+    this.loadSavedCredentials();
+  }
 
-    if (savedRemember === 'true' && savedCpf && savedMatricula) {
-      this.nome = savedNome || '';
-      this.cpf = savedCpf || '';
-      this.matricula = savedMatricula || '';
+  private loadSavedCredentials() {
+    const savedRemember = localStorage.getItem('rememberMeAluno');
+    if (savedRemember === 'true') {
+      this.nome = localStorage.getItem('rememberedNomeAluno') || '';
+      this.cpf = localStorage.getItem('rememberedCpfAluno') || '';
+      this.matricula = localStorage.getItem('rememberedMatriculaAluno') || '';
       this.rememberMe = true;
     }
   }
@@ -72,59 +84,63 @@ export class LoginAlunoPage implements OnInit {
   }
 
   async irParaTermos() {
-    if (!this.nome || !this.cpf || !this.matricula) {
+    if (!this.isFormValid()) {
       await this.mostrarAlerta('Erro', 'Por favor, preencha todos os campos!');
       return;
     }
 
     this.isLoading = true;
     
-    this.http.post('https://back-end-pokecreche-production.up.railway.app/login/aluno', {
-      matricula: this.matricula,
-      cpf: this.cpf
-    }).subscribe({
-      next: async (response: any) => {
-        this.isLoading = false;
-        if (response.success && response.user) {
-          // Autentica o usuário através do AuthService
-          this.authService.login('aluno');
-          
-          localStorage.setItem('userId', response.user.id);
-          localStorage.setItem('userName', response.user.nome);
-          localStorage.setItem('userEmail', 'Matrícula: ' + response.user.matricula);
-          localStorage.setItem('userToken', response.token || '');
+    try {
+      const response = await this.http.post<LoginResponse>(this.apiUrl, {
+        matricula: this.matricula,
+        cpf: this.cpf
+      }).toPromise();
 
-          // Recarrega o avatar para o novo usuário
-          this.avatarService.reloadAvatar();
-
-          if (this.rememberMe) {
-            localStorage.setItem('rememberedNomeAluno', this.nome);
-            localStorage.setItem('rememberedCpfAluno', this.cpf);
-            localStorage.setItem('rememberedMatriculaAluno', this.matricula);
-            localStorage.setItem('rememberMeAluno', 'true');
-          } else {
-            localStorage.removeItem('rememberedNomeAluno');
-            localStorage.removeItem('rememberedCpfAluno');
-            localStorage.removeItem('rememberedMatriculaAluno');
-            localStorage.removeItem('rememberMeAluno');
-          }
-
-          const termosAceitos = localStorage.getItem('termosAceitos');
-          if (termosAceitos === 'true') {
-            this.router.navigateByUrl('/menu');
-          } else {
-            this.router.navigateByUrl('/termos');
-          }
-        } else {
-          await this.mostrarAlerta('Erro', response.message || 'Credenciais inválidas!');
-        }
-      },
-      error: async (error: any) => {
-        this.isLoading = false;
-        console.error('Erro na requisição:', error);
-        await this.mostrarAlerta('Erro', 'Erro ao conectar com o servidor!');
+      if (response?.success && response.user) {
+        await this.handleSuccessfulLogin(response);
+      } else {
+        await this.mostrarAlerta('Erro', response?.message || 'Credenciais inválidas!');
       }
-    });
+    } catch (error) {
+      console.error('Erro na requisição:', error);
+      await this.mostrarAlerta('Erro', 'Erro ao conectar com o servidor!');
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  private isFormValid(): boolean {
+    return !!(this.nome.trim() && this.cpf.trim() && this.matricula.trim());
+  }
+
+  private async handleSuccessfulLogin(response: LoginResponse) {
+    this.authService.login('aluno');
+    
+    localStorage.setItem('userId', response.user!.id);
+    localStorage.setItem('userName', response.user!.nome);
+    localStorage.setItem('userEmail', `Matrícula: ${response.user!.matricula}`);
+    localStorage.setItem('userToken', response.token || '');
+
+    this.avatarService.reloadAvatar();
+    this.handleRememberMe();
+
+    const termosAceitos = localStorage.getItem('termosAceitos');
+    const nextRoute = termosAceitos === 'true' ? '/menu' : '/termos';
+    this.router.navigateByUrl(nextRoute);
+  }
+
+  private handleRememberMe() {
+    const keys = ['rememberedNomeAluno', 'rememberedCpfAluno', 'rememberedMatriculaAluno', 'rememberMeAluno'];
+    
+    if (this.rememberMe) {
+      localStorage.setItem('rememberedNomeAluno', this.nome);
+      localStorage.setItem('rememberedCpfAluno', this.cpf);
+      localStorage.setItem('rememberedMatriculaAluno', this.matricula);
+      localStorage.setItem('rememberMeAluno', 'true');
+    } else {
+      keys.forEach(key => localStorage.removeItem(key));
+    }
   }
 
   private async mostrarAlerta(titulo: string, mensagem: string) {

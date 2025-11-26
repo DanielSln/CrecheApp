@@ -12,11 +12,9 @@
  * Borda: #e0b589 (Laranja suave)
  */
 
-/* ===== COMPONENTES IONIC ===== */
 ion-toolbar {
   --background: #c4680b;
   background: linear-gradient(135deg, #c4680b 0%, #a35207 100%);
-  border: none;
   
   &::after {
     content: '';
@@ -137,19 +135,21 @@ ion-menu-button {
 
 
 
-.comunicado-avatar.urgent {
-  background: linear-gradient(135deg, #FF3B30 0%, #d70015 100%);
-  box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
-}
-
-.comunicado-avatar.info {
-  background: linear-gradient(135deg, #007AFF 0%, #0056cc 100%);
-  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
-}
-
-.comunicado-avatar.default {
-  background: linear-gradient(135deg, #34C759 0%, #28a745 100%);
-  box-shadow: 0 4px 12px rgba(52, 199, 89, 0.3);
+.comunicado-avatar {
+  &.urgent {
+    background: linear-gradient(135deg, #FF3B30 0%, #d70015 100%);
+    box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
+  }
+  
+  &.info {
+    background: linear-gradient(135deg, #007AFF 0%, #0056cc 100%);
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+  }
+  
+  &.default {
+    background: linear-gradient(135deg, #34C759 0%, #28a745 100%);
+    box-shadow: 0 4px 12px rgba(52, 199, 89, 0.3);
+  }
 }
 
 /* ===== CONTEÚDO DO COMUNICADO ===== */
@@ -210,12 +210,14 @@ ion-menu-button {
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-.comunicado-badge.urgent {
-  background: #FF3B30;
-}
-
-.comunicado-badge.info {
-  background: #007AFF;
+.comunicado-badge {
+  &.urgent {
+    background: #FF3B30;
+  }
+  
+  &.info {
+    background: #007AFF;
+  }
 }
 
 .comunicado-date {
@@ -999,10 +1001,21 @@ ion-button {
   }
 }
 
-/* ===== RESPONSIVIDADE ===== */
 @media (max-width: 768px) {
   .title {
     font-size: 22px;
+  }
+  
+  .comunicado-overlay {
+    padding: 15px;
+  }
+  
+  .modal-header {
+    padding: 15px 20px;
+  }
+  
+  .modal-content {
+    padding: 20px;
   }
 }
 
@@ -1021,6 +1034,14 @@ ion-button {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
+    
+    h3 {
+      font-size: 16px;
+    }
+    
+    p {
+      font-size: 13px;
+    }
   }
   
   .comunicado-avatar {
@@ -1046,14 +1067,6 @@ ion-button {
     gap: 6px;
   }
   
-  .comunicado-card h3 {
-    font-size: 16px;
-  }
-  
-  .comunicado-card p {
-    font-size: 13px;
-  }
-  
   .button-group {
     margin-top: 25px;
     gap: 12px;
@@ -1066,9 +1079,20 @@ ion-button {
   .empty-icon {
     font-size: 48px;
   }
+  
+  .comunicado-overlay {
+    padding: 10px;
+  }
+  
+  .modal-header {
+    padding: 12px 15px;
+  }
+  
+  .modal-content {
+    padding: 15px;
+  }
 }
 
-/* ===== ACESSIBILIDADE ===== */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
@@ -1077,35 +1101,12 @@ ion-button {
   }
 }
 
-  .title {
-    font-size: 22px;
-  }
-  
-  .comunicado-overlay {
-    padding: 15px;
-  }
-  
-  .modal-header {
-    padding: 15px 20px;
-  }
-  
-  .modal-content {
-    padding: 20px;
-  }
-  
-  .comunicado-header-modal {
-    gap: 15px;
-  }
-  
-  .comunicado-avatar-modal {
-    width: 60px;
-    height: 60px;
-    font-size: 20px;
-  }
-  
-  .comunicado-titulo-modal {
-    font-size: 18px;
-  }
+.comunicado-card:focus-visible,
+.btn-modal:focus-visible,
+.close-btn:focus-visible {
+  outline: 3px solid #c4680b;
+  outline-offset: 2px;
+}
 
 
 @media (max-width: 480px) {
