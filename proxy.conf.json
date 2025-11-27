@@ -1,0 +1,13 @@
+{
+  "/api/*": {
+    "target": "https://back-end-crecheapp-26phaqoxn-anthony3043s-projects.vercel.app",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "headers": {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization"
+    }
+  }
+}

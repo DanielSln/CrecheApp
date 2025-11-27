@@ -6,7 +6,8 @@
   "scripts": {
     "ng": "ng",
     "start": "node server.js",
-    "dev": "ng serve",
+    "dev": "ng serve --proxy-config proxy.conf.json",
+    "dev:no-proxy": "ng serve",
     "build": "ng build --configuration production",
     "build:railway": "npm install && ng build --configuration production",
     "watch": "ng build --watch --configuration development",

@@ -15,6 +15,8 @@ import {
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { AvatarService } from '../../services/avatar.service';
+import { API_CONFIG } from '../../config/api.config';
+import { HttpService } from '../../services/http.service';
 
 interface LoginResponse {
   success: boolean;
@@ -51,14 +53,15 @@ export class LoginAlunoPage implements OnInit {
   matricula = '';
   isLoading = false;
   rememberMe = false;
-  private readonly apiUrl = 'https://back-end-crecheapp-26phaqoxn-anthony3043s-projects.vercel.app/login/aluno';
+  private readonly apiUrl = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.LOGIN_ALUNO}`;
 
   constructor(
     private router: Router,
     private http: HttpClient,
     private alertController: AlertController,
     private authService: AuthService,
-    private avatarService: AvatarService
+    private avatarService: AvatarService,
+    private httpService: HttpService
   ) {}
 
   ngOnInit() {
@@ -92,7 +95,7 @@ export class LoginAlunoPage implements OnInit {
     this.isLoading = true;
     
     try {
-      const response = await this.http.post<LoginResponse>(this.apiUrl, {
+      const response = await this.httpService.post<LoginResponse>(API_CONFIG.ENDPOINTS.LOGIN_ALUNO, {
         matricula: this.matricula,
         cpf: this.cpf
       }).toPromise();
@@ -102,9 +105,9 @@ export class LoginAlunoPage implements OnInit {
       } else {
         await this.mostrarAlerta('Erro', response?.message || 'Credenciais inválidas!');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro na requisição:', error);
-      await this.mostrarAlerta('Erro', 'Erro ao conectar com o servidor!');
+      await this.mostrarAlerta('Erro', error.message || 'Erro ao conectar com o servidor!');
     } finally {
       this.isLoading = false;
     }
