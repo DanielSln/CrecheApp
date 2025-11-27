@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  BASE_URL: 'https://your-railway-app.railway.app', // Substitua pela URL do seu Railway
+  BASE_URL: 'https://back-end-crecheapp-26phaqoxn-anthony3043s-projects.vercel.app',
   
   ENDPOINTS: {
     LOGIN_ALUNO: '/login/aluno',

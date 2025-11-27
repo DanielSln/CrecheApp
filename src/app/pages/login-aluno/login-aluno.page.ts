@@ -51,7 +51,7 @@ export class LoginAlunoPage implements OnInit {
   matricula = '';
   isLoading = false;
   rememberMe = false;
-  private readonly apiUrl = 'https://back-end-pokecreche-production.up.railway.app/login/aluno';
+  private readonly apiUrl = 'https://back-end-crecheapp-26phaqoxn-anthony3043s-projects.vercel.app/login/aluno';
 
   constructor(
     private router: Router,

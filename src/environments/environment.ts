@@ -7,7 +7,7 @@ export const environment = {
 };
 
 export const apiConfig = {
-  apiUrl: 'http://localhost:3000'
+  apiUrl: 'https://back-end-crecheapp-26phaqoxn-anthony3043s-projects.vercel.app'
 };
 
 /*
