@@ -51,17 +51,9 @@ db.getConnection((err, connection) => {
 
 
 
-// Servir arquivos estáticos do Angular
-app.use(express.static(path.join(__dirname, 'www')));
-
-// Rota para servir o app Angular
+// Rota raiz da API
 app.get('/', (req, res) => {
-  try {
-    res.sendFile(path.join(__dirname, 'www', 'index.html'));
-  } catch (error) {
-    console.error('Erro ao servir index.html:', error);
-    res.status(200).send('PokeCreche API está funcionando!');
-  }
+  res.json({ message: 'PokeCreche API está funcionando!', version: '1.0.0' });
 });
 
 // Função para validar CPF
@@ -577,17 +569,7 @@ app.get('/termos/:user_type/:user_id', (req, res) => {
   });
 });
 
-// Fallback para rotas do Angular (SPA)
-app.use((req, res, next) => {
-  // Não interceptar rotas da API
-  if (req.path.startsWith('/api') || req.path.startsWith('/login') || req.path.startsWith('/register') || 
-      req.path.startsWith('/alunos') || req.path.startsWith('/docentes') || req.path.startsWith('/turmas') || 
-      req.path.startsWith('/comunicados') || req.path.startsWith('/rascunhos') || req.path.startsWith('/registros') || 
-      req.path.startsWith('/eventos') || req.path.startsWith('/termos') || req.path.startsWith('/setup')) {
-    return next();
-  }
-  res.sendFile(path.join(__dirname, 'www', 'index.html'));
-});
+
 
 // Endpoint temporário para modificar colunas avatar para LONGTEXT
 app.get('/setup-avatar-columns', (req, res) => {
