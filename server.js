@@ -261,6 +261,14 @@ app.get('/alunos', (req, res) => {
   });
 });
 
+app.get('/alunos/:id', (req, res) => {
+  db.query('SELECT id, nome, matricula, cpf, avatar FROM alunos WHERE id = ?', [req.params.id], (err, result) => {
+    if (err) return res.status(500).json({ message: 'Erro ao buscar aluno' });
+    if (result.length === 0) return res.status(404).json({ message: 'Aluno não encontrado' });
+    res.json(result[0]);
+  });
+});
+
 app.put('/alunos/:id/avatar', (req, res) => {
   const { avatar } = req.body;
   db.query('UPDATE alunos SET avatar = ? WHERE id = ?', [avatar, req.params.id], (err) => {
