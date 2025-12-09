@@ -51,7 +51,7 @@ export class VerRascunhosPage implements OnInit {
   carregarRascunhos() {
     const docenteId = localStorage.getItem('userId');
     
-    fetch(`https://backend-crecheapp.vercel.app/rascunhos/${docenteId}`)
+    fetch(`https://creche-app.vercel.app/rascunhos/${docenteId}`)
       .then(res => res.json())
       .then(data => {
         this.rascunhos = data;
@@ -100,7 +100,7 @@ export class VerRascunhosPage implements OnInit {
 
   private async confirmarExclusao(rascunho: any) {
     try {
-      const response = await fetch(`https://backend-crecheapp.vercel.app/rascunhos/${rascunho.id}`, {
+      const response = await fetch(`https://creche-app.vercel.app/rascunhos/${rascunho.id}`, {
         method: 'DELETE'
       });
 

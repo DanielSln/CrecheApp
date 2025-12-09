@@ -41,7 +41,7 @@ export class DocentePage implements OnInit {
   instituicao: string = 'SENAC';
   nome: string = '';
   id: string = '';
-  private apiUrl = 'https://backend-crecheapp.vercel.app';
+  private apiUrl = 'https://creche-app.vercel.app';
 
   constructor(private router: Router, private http: HttpClient, private avatarService: AvatarService) {
     addIcons({ camera });

@@ -45,7 +45,7 @@ interface Comunicado {
 export class ComunicadosPage implements OnInit, OnDestroy {
   comunicados: Comunicado[] = [];
   comunicadoSelecionado: Comunicado | null = null;
-  private readonly apiUrl = 'https://backend-crecheapp-59gt4rjzl-anthony3043s-projects.vercel.app/comunicados';
+  private readonly apiUrl = 'https://creche-app.vercel.app/comunicados';
   private abortController?: AbortController;
 
   constructor(

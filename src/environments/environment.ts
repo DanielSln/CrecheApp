@@ -7,7 +7,7 @@ export const environment = {
 };
 
 export const apiConfig = {
-  apiUrl: 'https://backend-crecheapp-59gt4rjzl-anthony3043s-projects.vercel.app'
+  apiUrl: 'https://creche-app.vercel.app'
 };
 
 /*
