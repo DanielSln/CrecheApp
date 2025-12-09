@@ -20,6 +20,7 @@ app.use(cors({
       'http://localhost:8100',
       'http://localhost:4200',
       'http://localhost:3000',
+      'https://creche-app.vercel.app',
       'https://back-end-crecheapp-26phaqoxn-anthony3043s-projects.vercel.app',
       /\.vercel\.app$/,
       /localhost:\d+/
