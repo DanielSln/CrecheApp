@@ -1,0 +1,7 @@
+www/
+src/
+node_modules/
+.angular/
+*.md
+*.sql
+*.json.backup
