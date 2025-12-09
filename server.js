@@ -315,6 +315,14 @@ app.get('/turmas', (req, res) => {
   });
 });
 
+app.get('/turmas/:id', (req, res) => {
+  db.query('SELECT * FROM turmas WHERE id = ?', [req.params.id], (err, result) => {
+    if (err) return res.status(500).json({ message: 'Erro ao buscar turma' });
+    if (result.length === 0) return res.status(404).json({ message: 'Turma não encontrada' });
+    res.json(result[0]);
+  });
+});
+
 app.post('/turmas', (req, res) => {
   const { nome, ano } = req.body;
   db.query('INSERT INTO turmas (nome, ano) VALUES (?, ?)', [nome, ano], (err, result) => {
