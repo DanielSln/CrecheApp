@@ -72,7 +72,7 @@ export class LoginProfessorPage implements OnInit {
     this.isLoading = true;
 
     this.http
-      .post('https://backend-crecheapp.vercel.app/login/docente', {
+      .post('/login/docente', {
         identificador: this.id,
         senha: this.senha,
       })

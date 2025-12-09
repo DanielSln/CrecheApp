@@ -86,7 +86,7 @@ export class EscreverComunicadoPage implements OnInit {
   }
 
   carregarAlunos() {
-    fetch('https://backend-crecheapp.vercel.app/alunos')
+    fetch('/alunos')
       .then(res => res.json())
       .then(data => this.alunos = data)
       .catch(() => this.alunos = []);
@@ -94,7 +94,7 @@ export class EscreverComunicadoPage implements OnInit {
 
   async carregarDocentes() {
     try {
-      const response = await fetch('https://backend-crecheapp.vercel.app/docentes');
+      const response = await fetch('/docentes');
       this.docentes = await response.json();
     } catch {
       this.docentes = [];
@@ -319,7 +319,7 @@ export class EscreverComunicadoPage implements OnInit {
     try {
       const docenteId = localStorage.getItem('userId') || '1';
       
-      const response = await fetch('https://backend-crecheapp.vercel.app/rascunhos', {
+      const response = await fetch('/rascunhos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -354,8 +354,8 @@ export class EscreverComunicadoPage implements OnInit {
       const isEditing = !!this.comunicado.id;
       
       const url = isEditing 
-        ? `https://backend-crecheapp.vercel.app/comunicados/${this.comunicado.id}`
-        : 'https://backend-crecheapp.vercel.app/comunicados';
+        ? `/comunicados/${this.comunicado.id}`
+        : '/comunicados';
       
       const method = isEditing ? 'PUT' : 'POST';
 
