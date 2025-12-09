@@ -86,7 +86,7 @@ export class EscreverComunicadoPage implements OnInit {
   }
 
   carregarAlunos() {
-    fetch('/alunos')
+    fetch('https://backend-crecheapp-59gt4rjzl-anthony3043s-projects.vercel.app/alunos')
       .then(res => res.json())
       .then(data => this.alunos = data)
       .catch(() => this.alunos = []);
@@ -94,7 +94,7 @@ export class EscreverComunicadoPage implements OnInit {
 
   async carregarDocentes() {
     try {
-      const response = await fetch('/docentes');
+      const response = await fetch('https://backend-crecheapp-59gt4rjzl-anthony3043s-projects.vercel.app/docentes');
       this.docentes = await response.json();
     } catch {
       this.docentes = [];
@@ -319,7 +319,7 @@ export class EscreverComunicadoPage implements OnInit {
     try {
       const docenteId = localStorage.getItem('userId') || '1';
       
-      const response = await fetch('/rascunhos', {
+      const response = await fetch('https://backend-crecheapp-59gt4rjzl-anthony3043s-projects.vercel.app/rascunhos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -354,8 +354,8 @@ export class EscreverComunicadoPage implements OnInit {
       const isEditing = !!this.comunicado.id;
       
       const url = isEditing 
-        ? `/comunicados/${this.comunicado.id}`
-        : '/comunicados';
+        ? `https://backend-crecheapp-59gt4rjzl-anthony3043s-projects.vercel.app/comunicados/${this.comunicado.id}`
+        : 'https://backend-crecheapp-59gt4rjzl-anthony3043s-projects.vercel.app/comunicados';
       
       const method = isEditing ? 'PUT' : 'POST';
 

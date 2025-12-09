@@ -2,75 +2,11 @@
   "version": 2,
   "builds": [
     {
-      "src": "server.js",
-      "use": "@vercel/node"
-    },
-    {
       "src": "www/**",
       "use": "@vercel/static"
     }
   ],
   "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/register/(.*)",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/login/(.*)",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/alunos(.*)",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/docentes(.*)",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/turmas(.*)",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/comunicados(.*)",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/rascunhos(.*)",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/registros(.*)",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/eventos(.*)",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/termos(.*)",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/debug/(.*)",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/setup-(.*)",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/limpar-(.*)",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/reset-(.*)",
-      "dest": "/server.js"
-    },
     {
       "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot))",
       "dest": "/www/$1"
@@ -78,12 +14,6 @@
     {
       "src": "/(.*)",
       "dest": "/www/index.html"
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/((?!api|register|login|alunos|docentes|turmas|comunicados|rascunhos|registros|eventos|termos|debug|setup-|limpar-|reset-).*)",
-      "destination": "/www/index.html"
     }
   ]
 }

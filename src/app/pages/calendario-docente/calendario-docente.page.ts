@@ -48,7 +48,7 @@ export class CalendarioDocentePage implements OnInit {
   editTitle = '';
   panelOpen = false;
 
-  private apiUrl = '';
+  private apiUrl = 'https://backend-crecheapp-59gt4rjzl-anthony3043s-projects.vercel.app';
   private allEvents: DayEvent[] = [];
 
   constructor(private router: Router, private http: HttpClient) {}

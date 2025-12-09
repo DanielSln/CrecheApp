@@ -56,7 +56,7 @@ export class TurmasPage implements OnInit {
   selectedTurma: any = null;
   studentsByTurma: Record<string, any[]> = {};
 
-  private apiUrl = '';
+  private apiUrl = 'https://backend-crecheapp-59gt4rjzl-anthony3043s-projects.vercel.app';
 
   constructor(private router: Router, private http: HttpClient, private cdr: ChangeDetectorRef) {
     addIcons({ 
