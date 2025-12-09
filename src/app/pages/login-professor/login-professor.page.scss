@@ -99,12 +99,22 @@ ion-toolbar {
   padding: 10px 15px;
   border-radius: 25px;
   border: 1px solid #c99a62;
-  background-color: #ffffff;
+  background-color: #ffffff !important;
   font-size: 14px;
   font-family: Arial, sans-serif;
-  color: #4b3a00;
+  color: #4b3a00 !important;
   outline: none;
   position: relative;
+}
+
+/* Remove cores do autocomplete do navegador */
+.balao-interno input:-webkit-autofill,
+.balao-interno input:-webkit-autofill:hover,
+.balao-interno input:-webkit-autofill:focus,
+.balao-interno input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #ffffff inset !important;
+  -webkit-text-fill-color: #4b3a00 !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 .balao-interno input::after {
