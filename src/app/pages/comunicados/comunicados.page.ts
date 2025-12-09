@@ -45,7 +45,7 @@ interface Comunicado {
 export class ComunicadosPage implements OnInit, OnDestroy {
   comunicados: Comunicado[] = [];
   comunicadoSelecionado: Comunicado | null = null;
-  private readonly apiUrl = 'https://back-end-pokecreche-production.up.railway.app/comunicados';
+  private readonly apiUrl = 'https://backend-crecheapp.vercel.app/comunicados';
   private abortController?: AbortController;
 
   constructor(

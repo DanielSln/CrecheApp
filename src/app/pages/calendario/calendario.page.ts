@@ -46,7 +46,7 @@ export class CalendarioPage implements OnInit {
   currentMonth = this.current.getMonth(); // 0-11
   weeks: DayCell[][] = [];
 
-  private apiUrl = 'https://back-end-pokecreche-production.up.railway.app';
+  private apiUrl = 'https://backend-crecheapp.vercel.app';
 
   constructor(private router: Router, private http: HttpClient) {}
 

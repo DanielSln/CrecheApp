@@ -40,7 +40,7 @@ import { AvatarService } from '../../services/avatar.service';
 })
 export class FilhoPage implements OnInit {
   profileImage: string = '';
-  private apiUrl = 'https://back-end-pokecreche-production.up.railway.app';
+  private apiUrl = 'https://backend-crecheapp.vercel.app';
 
   async selectImage() {
     try {

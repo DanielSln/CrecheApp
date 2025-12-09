@@ -68,7 +68,7 @@ export class ComunicadosDocentePage implements OnInit {
   carregarComunicados() {
     const docenteId = localStorage.getItem('userId');
     
-    fetch(`https://back-end-pokecreche-production.up.railway.app/comunicados?docente_id=${docenteId}`)
+    fetch(`https://backend-crecheapp.vercel.app/comunicados?docente_id=${docenteId}`)
       .then(res => res.json())
       .then(data => {
         this.comunicados = data.map((c: any) => ({

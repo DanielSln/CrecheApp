@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class AvatarService {
-  private readonly apiUrl = 'https://back-end-pokecreche-production.up.railway.app';
+  private readonly apiUrl = 'https://backend-crecheapp.vercel.app';
   private readonly defaultAvatar = 'assets/img/avatar.jpg';
   private userAvatarSubject = new BehaviorSubject<string>(this.defaultAvatar);
   public userAvatar$ = this.userAvatarSubject.asObservable();
