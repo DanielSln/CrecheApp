@@ -1,8 +1,8 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://backend-crecheapp-59gt4rjzl-anthony3043s-projects.vercel.app'
+  apiUrl: 'https://backend-crecheapp.vercel.app'
 };
 
 export const API_CONFIG = {
-  BASE_URL: 'https://backend-crecheapp-59gt4rjzl-anthony3043s-projects.vercel.app'
+  BASE_URL: 'https://backend-crecheapp.vercel.app'
 };
