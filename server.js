@@ -52,8 +52,12 @@ db.getConnection((err, connection) => {
 
 
 // Rota raiz da API
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.json({ message: 'PokeCreche API está funcionando!', version: '1.0.0' });
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'healthy', message: 'API funcionando corretamente' });
 });
 
 // Função para validar CPF
