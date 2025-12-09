@@ -1,10 +1,30 @@
 {
-  "buildCommand": "echo 'Build already done'",
-  "outputDirectory": "www",
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "www"
+      }
+    }
+  ],
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "/server.js"
+    },
+    {
+      "src": "/(login|register|alunos|docentes|turmas|comunicados|rascunhos|registros|eventos|termos|debug|setup-.*|limpar-.*|reset-.*).*",
+      "dest": "/server.js"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/www/$1"
     }
   ]
 }
