@@ -288,6 +288,14 @@ app.get('/docentes', (req, res) => {
   });
 });
 
+app.get('/docentes/:id', (req, res) => {
+  db.query('SELECT id, nome, identificador, email, avatar FROM docentes WHERE id = ?', [req.params.id], (err, result) => {
+    if (err) return res.status(500).json({ message: 'Erro ao buscar docente' });
+    if (result.length === 0) return res.status(404).json({ message: 'Docente não encontrado' });
+    res.json(result[0]);
+  });
+});
+
 // Endpoint temporário para debug - listar todos os docentes
 app.get('/debug/docentes', (req, res) => {
   db.query('SELECT id, nome, identificador FROM docentes', (err, result) => {
