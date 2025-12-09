@@ -53,19 +53,36 @@ export class AvatarService {
     });
   }
 
-  updateAvatar(avatarData: string): void {
+  private compressImage(base64: string, maxWidth: number = 300): Promise<string> {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ratio = maxWidth / img.width;
+        canvas.width = maxWidth;
+        canvas.height = img.height * ratio;
+        const ctx = canvas.getContext('2d')!;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg', 0.7));
+      };
+      img.src = base64;
+    });
+  }
+
+  async updateAvatar(avatarData: string): Promise<void> {
     const userId = localStorage.getItem('userId');
     const userType = localStorage.getItem('userType');
     
     if (!userId || !userType) return;
 
+    const compressed = await this.compressImage(avatarData);
     const endpoint = userType === 'docente' ? 'docentes' : 'alunos';
     
-    this.http.put(`${this.apiUrl}/${endpoint}/${userId}/avatar`, { avatar: avatarData }).subscribe({
+    this.http.put(`${this.apiUrl}/${endpoint}/${userId}/avatar`, { avatar: compressed }).subscribe({
       next: () => {
-        this.userAvatarSubject.next(avatarData);
-        localStorage.setItem('userAvatar', avatarData);
-        this.avatarCache.set(`${userType}-${userId}`, avatarData);
+        this.userAvatarSubject.next(compressed);
+        localStorage.setItem('userAvatar', compressed);
+        this.avatarCache.set(`${userType}-${userId}`, compressed);
       },
       error: (error) => {
         console.error('Erro ao atualizar avatar:', error);
