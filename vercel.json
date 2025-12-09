@@ -1,22 +1,5 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/server.js"
-    }
-  ],
-  "env": {
-    "MYSQLHOST": "mysql.railway.internal",
-    "MYSQLUSER": "root",
-    "MYSQLPASSWORD": "omXXt3YoEiMPTTvgqQAfpRpxwMqskIDV",
-    "MYSQLDATABASE": "railway",
-    "MYSQLPORT": "3306"
-  }
+  "buildCommand": "npm run build",
+  "outputDirectory": "www",
+  "framework": "angular"
 }
