@@ -1,11 +1,14 @@
 {
-  "/api/*": {
-    "target": "https://back-end-crecheapp-26phaqoxn-anthony3043s-projects.vercel.app",
+  "/login/*": {
+    "target": "https://backend-crecheapp-59gt4rjzl-anthony3043s-projects.vercel.app",
     "secure": true,
     "changeOrigin": true,
-    "logLevel": "debug",
-    "pathRewrite": {
-      "^/api": ""
-    }
+    "logLevel": "debug"
+  },
+  "/register/*": {
+    "target": "https://backend-crecheapp-59gt4rjzl-anthony3043s-projects.vercel.app",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
   }
 }
