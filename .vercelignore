@@ -1,7 +1,10 @@
-www/
-src/
-node_modules/
-.angular/
+server.js
+node_modules
+src
+.angular
+*.ts
 *.md
-*.sql
-*.json.backup
+package.json
+package-lock.json
+angular.json
+tsconfig.json

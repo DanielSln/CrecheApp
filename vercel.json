@@ -1,19 +1,10 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "www/**",
-      "use": "@vercel/static"
-    }
-  ],
+  "buildCommand": "echo 'Build already done'",
+  "outputDirectory": "www",
   "routes": [
     {
-      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot))",
-      "dest": "/www/$1"
-    },
-    {
       "src": "/(.*)",
-      "dest": "/www/index.html"
+      "dest": "/index.html"
     }
   ]
 }
