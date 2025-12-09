@@ -9,12 +9,25 @@ const app = express();
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-// Configuração CORS simplificada - aceitar todas as origens Vercel
+// Configuração CORS - aceitar origens específicas
+const allowedOrigins = [
+  'http://localhost:8100',
+  'https://crecheapp.vercel.app',
+  'https://backend-crecheapp-59gt4rjzl-anthony3043s-projects.vercel.app',
+  'https://back-end-crecheapp-26phaqoxn-anthony3043s-projects.vercel.app'
+];
+
 app.use(cors({ 
-  origin: true,
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, true); // Aceitar todas por enquanto
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  credentials: true,
+  credentials: false,
   optionsSuccessStatus: 200
 }));
 
