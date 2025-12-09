@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  BASE_URL: 'https://back-end-crecheapp-26phaqoxn-anthony3043s-projects.vercel.app',
+  BASE_URL: 'https://backend-crecheapp-59gt4rjzl-anthony3043s-projects.vercel.app',
   
   ENDPOINTS: {
     LOGIN_ALUNO: '/login/aluno',
