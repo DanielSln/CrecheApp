@@ -350,19 +350,6 @@ app.delete('/turmas/:id', (req, res) => {
   });
 });
 
-app.put('/turmas/:id/foto', (req, res) => {
-  const { foto } = req.body;
-  console.log('📸 Recebendo foto da turma:', { turma_id: req.params.id, foto_length: foto ? foto.length : 0 });
-  db.query('UPDATE turmas SET foto = ? WHERE id = ?', [foto, req.params.id], (err, result) => {
-    if (err) {
-      console.error('❌ Erro ao atualizar foto da turma:', err);
-      return res.status(500).json({ message: 'Erro ao atualizar foto', error: err.message });
-    }
-    console.log('✅ Foto atualizada com sucesso:', { turma_id: req.params.id, affectedRows: result.affectedRows });
-    res.json({ message: 'Foto atualizada' });
-  });
-});
-
 // Alunos por Turma
 app.get('/turmas/:id/alunos', (req, res) => {
   const sql = `SELECT a.* FROM alunos a 
