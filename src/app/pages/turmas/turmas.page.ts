@@ -336,22 +336,46 @@ export class TurmasPage implements OnInit {
   }
 
   private atualizarTurma(payload: any) {
-    this.http.put(`${this.apiUrl}/turmas/${this.selectedTurma.id}`, payload).subscribe({
+    console.log('📝 Atualizando turma:', { id: this.selectedTurma.id, temFoto: !!payload.foto });
+    
+    // Atualiza nome e ano
+    this.http.put(`${this.apiUrl}/turmas/${this.selectedTurma.id}`, { nome: payload.nome, ano: payload.ano }).subscribe({
       next: (response) => {
+        console.log('✅ Nome atualizado');
         this.selectedTurma.nome = payload.nome;
-        if (payload.foto) this.selectedTurma.foto = payload.foto;
-        const turma = this.turmas.find(t => t.id === this.selectedTurma.id);
-        if (turma) {
-          turma.nome = payload.nome;
-          if (payload.foto) turma.foto = payload.foto;
+        
+        // Se tem foto, atualiza em endpoint separado
+        if (payload.foto) {
+          console.log('📸 Enviando foto da turma...');
+          this.http.put(`${this.apiUrl}/turmas/${this.selectedTurma.id}/foto`, { foto: payload.foto }).subscribe({
+            next: () => {
+              console.log('✅ Foto atualizada com sucesso!');
+              this.selectedTurma.foto = payload.foto;
+              const turma = this.turmas.find(t => t.id === this.selectedTurma.id);
+              if (turma) {
+                turma.nome = payload.nome;
+                turma.foto = payload.foto;
+              }
+              alert('Turma atualizada com sucesso!');
+              this.fecharModal();
+              this.carregarTurmas();
+            },
+            error: (err) => {
+              console.error('❌ Erro ao atualizar foto:', err);
+              alert('Nome atualizado, mas erro ao salvar foto');
+              this.fecharModal();
+            }
+          });
+        } else {
+          const turma = this.turmas.find(t => t.id === this.selectedTurma.id);
+          if (turma) turma.nome = payload.nome;
+          alert('Turma atualizada com sucesso!');
+          this.fecharModal();
+          this.carregarTurmas();
         }
-        alert('Turma atualizada com sucesso!');
-        this.fecharModal();
-        // Força recarregamento das turmas para garantir que a foto apareça
-        this.carregarTurmas();
       },
       error: (err) => {
-        console.error('Erro:', err);
+        console.error('❌ Erro ao atualizar nome:', err);
         alert('Erro ao atualizar turma: ' + (err.error?.message || err.message));
       }
     });
