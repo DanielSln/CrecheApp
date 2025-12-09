@@ -716,5 +716,4 @@ app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
   // Executar limpeza na inicialização
   limparComunicadosAntigos();
-});     
- 
+});
