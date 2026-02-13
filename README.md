@@ -1,4 +1,8 @@
-# 📌 PokeCreche
+# 📌 CrecheApp
+
+Aplicação fullstack para comunicação entre pais e creches, permitindo acompanhamento da rotina infantil em tempo real.
+
+🚧 Em desenvolvimento ativo
 
 ## 📖 Descrição
 
