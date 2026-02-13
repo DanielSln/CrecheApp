@@ -8,6 +8,13 @@ Aplicação fullstack para comunicação entre pais e creches, permitindo acompa
 
 PokeCreche é um sistema híbrido (aplicativo móvel com Ionic/Angular + API em Node/Express) para gestão de creches e comunicação entre docentes e responsáveis. Oferece cadastro e autenticação de alunos e docentes, envio de comunicados com controle de visibilidade, gerenciamento de turmas, registros diários de alimentação/presença/comportamento, calendário de eventos e rascunhos de comunicados.
 
+## 🛠 Tecnologias
+
+- Ionic
+- Angular
+- Node.js
+- MySQL
+
 ## 🚀 Funcionalidades principais
 
 - Cadastro e login de alunos (por matrícula + CPF) e docentes (identificador + senha)
@@ -18,14 +25,6 @@ PokeCreche é um sistema híbrido (aplicativo móvel com Ionic/Angular + API em 
 - Calendário de eventos (criar, listar, remover)
 - Upload/atualização de avatar para alunos e docentes (armazenado em LONGTEXT no banco)
 - Endpoints de setup para ajustar esquema (ex.: colunas de avatar, tabelas de visibilidade)
-
-## 🛠 Tecnologias Utilizadas
-
-- Front-end: Ionic 8, Angular 20
-- Back-end: Node.js, Express
-- Banco de dados: MySQL (pacote `mysql2`)
-- Nativo/Capacitor: `@capacitor/*` (ex.: câmera)
-- Outras libs: `bcryptjs` (hash de senhas), `jsonwebtoken`, `cors`, `ng-circle-progress`, `qrcode-generator`
 
 ## 📂 Estrutura relevante do projeto
 
